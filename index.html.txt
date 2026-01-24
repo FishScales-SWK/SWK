@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SWK FishScales - ผู้นำนวัตกรรมเกล็ดปลาคุณภาพระดับสากล</title>
+    
+    <!-- Google Fonts: Prompt for modern Thai typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Prompt', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            800: '#075985',
+                            900: '#0c4a6e', // Deep Ocean Blue
+                        },
+                        accent: {
+                            gold: '#d4af37',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Smooth Scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Animations */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .gradient-text {
+            background: linear-gradient(to right, #0284c7, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Hero Overlay */
+        .hero-bg {
+            background-image: linear-gradient(to right, rgba(12, 74, 110, 0.9), rgba(12, 74, 110, 0.6)), url('https://images.unsplash.com/photo-1583212292454-1fe6229603b7?q=80&w=2000&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        /* Parallax Section */
+        .parallax-bg {
+            background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1518837695005-2083093ee35b?q=80&w=2070&auto=format&fit=crop');
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        /* Bubble Animation */
+        .bubble {
+            position: absolute;
+            bottom: -20px;
+            background-color: rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: floatUp linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-120vh); opacity: 0; }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #0284c7;
+            border-radius: 5px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #075985;
+        }
+
+        /* Accordion transition */
+        .accordion-content {
+            transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+        .accordion-content.active {
+            opacity: 1;
+        }
+
+        /* Gallery Overlay */
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="font-sans text-gray-700 bg-gray-50 antialiased relative overflow-x-hidden">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-white/95 backdrop-blur-md shadow-sm transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center gap-2 cursor-pointer" onclick="window.scrollTo(0,0)">
+                    <i class="fa-solid fa-fish-fins text-brand-600 text-3xl animate-pulse"></i>
+                    <div class="flex flex-col">
+                        <span class="font-bold text-xl text-brand-900 leading-none tracking-tight">SWK</span>
+                        <span class="text-sm text-brand-500 font-medium tracking-widest">FISHSCALES</span>
+                    </div>
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex space-x-8 items-center">
+                    <a href="#home" class="text-gray-600 hover:text-brand-600 font-medium transition relative group">
+                        หน้าแรก
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand-600 transition-all group-hover:w-full"></span>
+                    </a>
+                    <a href="#products" class="text-gray-600 hover:text-brand-600 font-medium transition relative group">
+                        ผลิตภัณฑ์
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand-600 transition-all group-hover:w-full"></span>
+                    </a>
+                    <a href="#gallery" class="text-gray-600 hover:text-brand-600 font-medium transition relative group">
+                        ผลงาน
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand-600 transition-all group-hover:w-full"></span>
+                    </a>
+                    <a href="#standards" class="text-gray-600 hover:text-brand-600 font-medium transition relative group">
+                        มาตรฐาน
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand-600 transition-all group-hover:w-full"></span>
+                    </a>
+                    <a href="#contact" class="px-5 py-2.5 bg-brand-600 text-white font-medium rounded-full hover:bg-brand-700 transition shadow-lg shadow-brand-500/30 transform hover:scale-105 active:scale-95">
+                        ติดต่อเรา
+                    </a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-gray-600 hover:text-brand-600 focus:outline-none transition-transform active:scale-90">
+                        <i class="fa-solid fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu Panel -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
+            <div class="px-4 pt-2 pb-6 space-y-2 shadow-lg">
+                <a href="#home" class="block px-3 py-2 text-brand-900 font-medium hover:bg-brand-50 rounded-md">หน้าแรก</a>
+                <a href="#products" class="block px-3 py-2 text-gray-600 hover:bg-brand-50 rounded-md">ผลิตภัณฑ์</a>
+                <a href="#gallery" class="block px-3 py-2 text-gray-600 hover:bg-brand-50 rounded-md">ผลงานของเรา</a>
+                <a href="#standards" class="block px-3 py-2 text-gray-600 hover:bg-brand-50 rounded-md">มาตรฐาน</a>
+                <a href="#contact" class="block px-3 py-2 text-brand-600 font-bold">ติดต่อเรา</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative min-h-[100dvh] flex items-center hero-bg overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full pt-20 pb-20">
+            <div class="md:w-2/3 fade-in-up">
+                <h1 class="text-3xl sm:text-4xl md:text-6xl font-bold text-white leading-tight mb-6 drop-shadow-lg">
+                    ยกระดับคุณค่า<span class="whitespace-nowrap">ทรัพยากรทางทะเล</span> <br>
+                    <span class="text-sky-300">สู่มาตรฐานอุตสาหกรรม</span>
+                </h1>
+                <p class="text-lg md:text-xl text-gray-200 mb-10 max-w-2xl font-light drop-shadow-md">
+                    SWK FishScales ผู้นำด้านการแปรรูปและส่งออกเกล็ดปลาคุณภาพสูง สำหรับอุตสาหกรรมคอลลาเจน อาหารเสริม และเครื่องสำอาง มุ่งมั่นสร้างความยั่งยืนด้วยนวัตกรรม
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="#products" class="px-8 py-4 bg-white text-brand-900 font-bold rounded-full hover:bg-gray-100 transition shadow-lg text-center transform hover:-translate-y-1">
+                        ผลิตภัณฑ์ของเรา
+                    </a>
+                    <a href="#contact" class="px-8 py-4 bg-transparent border-2 border-white text-white font-bold rounded-full hover:bg-white/10 transition text-center transform hover:-translate-y-1">
+                        ติดต่อสอบถาม
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Animated Wave Bottom -->
+        <div class="absolute bottom-0 left-0 w-full overflow-hidden leading-none rotate-180 pointer-events-none">
+            <svg class="relative block w-[calc(100%+1.3px)] h-[60px] md:h-[120px]" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" class="fill-gray-50"></path>
+            </svg>
+        </div>
+    </section>
+
+    <!-- Standards & Trust -->
+    <section id="standards" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row items-center gap-12">
+                <!-- Carousel Image Section (Updated) -->
+                <div class="md:w-1/2 fade-in-up relative group">
+                    <!-- Decorative background -->
+                    <div class="absolute inset-0 bg-brand-500 rounded-2xl transform rotate-3 transition-transform group-hover:rotate-6 opacity-20"></div>
+                    
+                    <!-- Carousel Container -->
+                    <div class="relative rounded-2xl shadow-2xl overflow-hidden h-[400px] w-full bg-gray-100 group-hover:scale-[1.01] transition-transform duration-500">
+                        <!-- Images -->
+                        <div id="standards-carousel" class="w-full h-full relative">
+                            <!-- Image 1 -->
+                            <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=2070&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-700 opacity-100" data-index="0" alt="Lab Testing">
+                            
+                            <!-- Image 2 -->
+                            <img src="https://images.unsplash.com/photo-1576086213369-97a306d36557?q=80&w=2080&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-700 opacity-0" data-index="1" alt="Microscope Analysis">
+                            
+                            <!-- Image 3 -->
+                            <img src="https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?q=80&w=2070&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-700 opacity-0" data-index="2" alt="Quality Control">
+                        </div>
+
+                        <!-- Navigation Controls -->
+                        <button onclick="changeStandardSlide(-1)" class="absolute left-4 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-brand-600/80 text-white w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-sm transition z-20 group/btn">
+                            <i class="fa-solid fa-chevron-left group-hover/btn:-translate-x-0.5 transition-transform"></i>
+                        </button>
+                        <button onclick="changeStandardSlide(1)" class="absolute right-4 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-brand-600/80 text-white w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-sm transition z-20 group/btn">
+                            <i class="fa-solid fa-chevron-right group-hover/btn:translate-x-0.5 transition-transform"></i>
+                        </button>
+                        
+                        <!-- Dots Indicators -->
+                        <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20 bg-black/20 px-3 py-1.5 rounded-full backdrop-blur-sm">
+                            <button class="w-2.5 h-2.5 rounded-full bg-white transition-all duration-300 standard-dot scale-110 shadow-sm" onclick="setStandardSlide(0)"></button>
+                            <button class="w-2.5 h-2.5 rounded-full bg-white/40 hover:bg-white transition-all duration-300 standard-dot shadow-sm" onclick="setStandardSlide(1)"></button>
+                            <button class="w-2.5 h-2.5 rounded-full bg-white/40 hover:bg-white transition-all duration-300 standard-dot shadow-sm" onclick="setStandardSlide(2)"></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="md:w-1/2 fade-in-up">
+                    <h2 class="text-3xl font-bold text-brand-900 mb-6 border-l-4 border-brand-500 pl-4">มาตรฐานคุณภาพที่คุณวางใจได้</h2>
+                    <p class="text-gray-600 mb-6 leading-relaxed">
+                        SWK FishScales ให้ความสำคัญสูงสุดกับคุณภาพและความปลอดภัย กระบวนการผลิตของเราผ่านการตรวจสอบอย่างเข้มงวดในทุกขั้นตอน ตั้งแต่การรับวัตถุดิบจนถึงการส่งมอบสินค้า เพื่อให้มั่นใจว่าเกล็ดปลาของเราบริสุทธิ์และพร้อมสำหรับการนำไปแปรรูปต่อ
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Parallax Vision Section (New Gimmick) -->
+    <section class="py-24 parallax-bg relative flex items-center justify-center text-center">
+        <div class="max-w-4xl mx-auto px-4 z-10 fade-in-up">
+            <i class="fa-solid fa-quote-left text-4xl text-accent-gold mb-6 opacity-80"></i>
+            <h2 class="text-3xl md:text-5xl font-bold text-white mb-6 leading-tight">
+                "เราเปลี่ยนสิ่งเหลือใช้จากธรรมชาติ <br>ให้กลายเป็นนวัตกรรมที่ล้ำค่า"
+            </h2>
+        </div>
+    </section>
+
+    <!-- Products (Added Bubbles) -->
+    <section id="products" class="py-20 bg-brand-900 text-white relative overflow-hidden">
+        <!-- Bubbles Container -->
+        <div id="bubbles-container" class="absolute inset-0 w-full h-full overflow-hidden z-0">
+            <!-- JS will inject bubbles here -->
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-brand-500 font-bold tracking-wide uppercase text-sm mb-2">Our Products</h2>
+                <h3 class="text-3xl md:text-4xl font-bold text-white">ผลิตภัณฑ์เกล็ดปลาคุณภาพสูง</h3>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Product 1 -->
+                <div class="bg-brand-800 rounded-2xl overflow-hidden group hover:shadow-2xl hover:shadow-brand-500/30 transition-all duration-300 transform hover:-translate-y-2 fade-in-up border border-brand-700/50">
+                    <div class="h-56 overflow-hidden relative">
+                        <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition z-10"></div>
+                        <img src="https://images.unsplash.com/photo-1522778526097-ce0a22ce718d?q=80&w=2070&auto=format&fit=crop" alt="Dried Fish Scales" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700">
+                    </div>
+                    <div class="p-8 relative z-20 bg-brand-800">
+                        <h4 class="text-xl font-bold mb-3 group-hover:text-brand-400 transition">เกล็ดปลาแห้ง (Dried Scales)</h4>
+                        <p class="text-gray-300 text-sm mb-4">ผ่านกระบวนการทำความสะอาดและตากแห้งด้วยระบบ Solar Dome ควบคุมความชื้นต่ำกว่า 10%</p>
+                        <ul class="text-xs text-brand-200 space-y-2">
+                            <li class="flex items-center"><i class="fa-solid fa-check text-green-400 mr-2"></i>ปลานิล (Tilapia)</li>
+                            <li class="flex items-center"><i class="fa-solid fa-check text-green-400 mr-2"></i>ไม่มีสารเคมีตกค้าง</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Product 2 -->
+                <div class="bg-brand-800 rounded-2xl overflow-hidden group hover:shadow-2xl hover:shadow-brand-500/30 transition-all duration-300 transform hover:-translate-y-2 fade-in-up border border-brand-700/50" style="transition-delay: 100ms;">
+                    <div class="h-56 overflow-hidden relative">
+                         <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition z-10"></div>
+                        <img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?q=80&w=1887&auto=format&fit=crop" alt="Decalcified Scales" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700">
+                    </div>
+                    <div class="p-8 relative z-20 bg-brand-800">
+                        <h4 class="text-xl font-bold mb-3 group-hover:text-brand-400 transition">เกล็ดปลาขจัดแคลเซียม (Ossein)</h4>
+                        <p class="text-gray-300 text-sm mb-4">วัตถุดิบตั้งต้นสำหรับการผลิตคอลลาเจนและเจลาติน ผ่านการดึงแร่ธาตุออกด้วยเทคโนโลยีขั้นสูง</p>
+                        <ul class="text-xs text-brand-200 space-y-2">
+                            <li class="flex items-center"><i class="fa-solid fa-check text-green-400 mr-2"></i>ความบริสุทธิ์สูง</li>
+                            <li class="flex items-center"><i class="fa-solid fa-check text-green-400 mr-2"></i>ละลายน้ำได้ง่าย</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Product 3 -->
+                <div class="bg-brand-800 rounded-2xl overflow-hidden group hover:shadow-2xl hover:shadow-brand-500/30 transition-all duration-300 transform hover:-translate-y-2 fade-in-up border border-brand-700/50" style="transition-delay: 200ms;">
+                    <div class="h-56 overflow-hidden relative">
+                         <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition z-10"></div>
+                        <img src="https://images.unsplash.com/photo-1599423300746-b62507ac9741?q=80&w=1964&auto=format&fit=crop" alt="Collagen Peptide" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700">
+                    </div>
+                    <div class="p-8 relative z-20 bg-brand-800">
+                        <h4 class="text-xl font-bold mb-3 group-hover:text-brand-400 transition">คอลลาเจน เปปไทด์ (OEM)</h4>
+                        <p class="text-gray-300 text-sm mb-4">บริการผลิตคอลลาเจนผงเกรดพรีเมียมจากเกล็ดปลา โมเลกุลขนาดเล็ก ดูดซึมไว</p>
+                        <ul class="text-xs text-brand-200 space-y-2">
+                            <li class="flex items-center"><i class="fa-solid fa-check text-green-400 mr-2"></i>สำหรับอุตสาหกรรมอาหารเสริม</li>
+                            <li class="flex items-center"><i class="fa-solid fa-check text-green-400 mr-2"></i>ไร้กลิ่นคาว</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery / Our Works (NEW FEATURE) -->
+    <section id="gallery" class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12 fade-in-up">
+                <h2 class="text-brand-600 font-bold tracking-wide uppercase text-sm mb-2">Portfolio</h2>
+                <h3 class="text-3xl font-bold text-gray-900">ภาพความสำเร็จและผลงานของเรา</h3>
+                <p class="mt-2 text-gray-600 max-w-2xl mx-auto">ภาพบรรยากาศจากโรงงานผลิตที่ได้รับมาตรฐาน กระบวนการตรวจสอบคุณภาพ และการส่งออกไปยังคู่ค้าทั่วโลก</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 fade-in-up">
+                <!-- Gallery Item 1 -->
+                <div class="gallery-item relative h-64 rounded-xl overflow-hidden cursor-pointer shadow-md hover:shadow-xl transition-all duration-300 group" onclick="openLightbox('https://images.unsplash.com/photo-1581093450021-4a7360e9a6b5?q=80&w=2070&auto=format&fit=crop')">
+                    <img src="https://images.unsplash.com/photo-1581093450021-4a7360e9a6b5?q=80&w=2070&auto=format&fit=crop" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
+                    <div class="gallery-overlay absolute inset-0 bg-brand-900/70 opacity-0 transition-opacity duration-300 flex items-center justify-center flex-col text-white">
+                        <i class="fa-solid fa-magnifying-glass-plus text-3xl mb-2"></i>
+                        <span class="font-medium">กระบวนการผลิต</span>
+                    </div>
+                </div>
+
+                <!-- Gallery Item 2 -->
+                <div class="gallery-item relative h-64 rounded-xl overflow-hidden cursor-pointer shadow-md hover:shadow-xl transition-all duration-300 group" onclick="openLightbox('https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?q=80&w=2070&auto=format&fit=crop')">
+                    <img src="https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?q=80&w=2070&auto=format&fit=crop" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
+                    <div class="gallery-overlay absolute inset-0 bg-brand-900/70 opacity-0 transition-opacity duration-300 flex items-center justify-center flex-col text-white">
+                        <i class="fa-solid fa-magnifying-glass-plus text-3xl mb-2"></i>
+                        <span class="font-medium">ห้องปฏิบัติการตรวจสอบ</span>
+                    </div>
+                </div>
+
+                <!-- Gallery Item 3 -->
+                <div class="gallery-item relative h-64 rounded-xl overflow-hidden cursor-pointer shadow-md hover:shadow-xl transition-all duration-300 group" onclick="openLightbox('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=2070&auto=format&fit=crop')">
+                    <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=2070&auto=format&fit=crop" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
+                    <div class="gallery-overlay absolute inset-0 bg-brand-900/70 opacity-0 transition-opacity duration-300 flex items-center justify-center flex-col text-white">
+                        <i class="fa-solid fa-magnifying-glass-plus text-3xl mb-2"></i>
+                        <span class="font-medium">คลังสินค้า</span>
+                    </div>
+                </div>
+
+                <!-- Gallery Item 4 -->
+                <div class="gallery-item relative h-64 rounded-xl overflow-hidden cursor-pointer shadow-md hover:shadow-xl transition-all duration-300 group" onclick="openLightbox('https://images.unsplash.com/photo-1578575437130-527eed3abbec?q=80&w=2070&auto=format&fit=crop')">
+                    <img src="https://images.unsplash.com/photo-1578575437130-527eed3abbec?q=80&w=2070&auto=format&fit=crop" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
+                    <div class="gallery-overlay absolute inset-0 bg-brand-900/70 opacity-0 transition-opacity duration-300 flex items-center justify-center flex-col text-white">
+                        <i class="fa-solid fa-magnifying-glass-plus text-3xl mb-2"></i>
+                        <span class="font-medium">การส่งออกสินค้า</span>
+                    </div>
+                </div>
+
+                <!-- Gallery Item 5 -->
+                <div class="gallery-item relative h-64 rounded-xl overflow-hidden cursor-pointer shadow-md hover:shadow-xl transition-all duration-300 group" onclick="openLightbox('https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=2032&auto=format&fit=crop')">
+                    <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=2032&auto=format&fit=crop" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
+                    <div class="gallery-overlay absolute inset-0 bg-brand-900/70 opacity-0 transition-opacity duration-300 flex items-center justify-center flex-col text-white">
+                        <i class="fa-solid fa-magnifying-glass-plus text-3xl mb-2"></i>
+                        <span class="font-medium">การประชุมคู่ค้า</span>
+                    </div>
+                </div>
+
+                 <!-- Gallery Item 6 -->
+                 <div class="gallery-item relative h-64 rounded-xl overflow-hidden cursor-pointer shadow-md hover:shadow-xl transition-all duration-300 group" onclick="openLightbox('https://images.unsplash.com/photo-1628194411442-76342898950d?q=80&w=1974&auto=format&fit=crop')">
+                    <img src="https://images.unsplash.com/photo-1628194411442-76342898950d?q=80&w=1974&auto=format&fit=crop" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
+                    <div class="gallery-overlay absolute inset-0 bg-brand-900/70 opacity-0 transition-opacity duration-300 flex items-center justify-center flex-col text-white">
+                        <i class="fa-solid fa-magnifying-glass-plus text-3xl mb-2"></i>
+                        <span class="font-medium">วัตถุดิบคุณภาพสูง</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Accordion (New Gimmick) -->
+    <section id="faq" class="py-20 bg-white">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12 fade-in-up">
+                <h3 class="text-3xl font-bold text-gray-900">คำถามที่พบบ่อย (FAQ)</h3>
+                <p class="mt-2 text-gray-600">ข้อมูลเบื้องต้นสำหรับผู้ที่สนใจร่วมธุรกิจ</p>
+            </div>
+
+            <div class="space-y-4 fade-in-up">
+                <!-- FAQ Item 1 -->
+                <div class="border border-gray-200 rounded-xl overflow-hidden hover:border-brand-300 transition">
+                    <button class="w-full px-6 py-4 text-left bg-gray-50 hover:bg-white flex justify-between items-center transition focus:outline-none" onclick="toggleAccordion(this)">
+                        <span class="font-medium text-gray-800">ปริมาณการสั่งซื้อขั้นต่ำ (MOQ) เท่าไหร่?</span>
+                        <i class="fa-solid fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+                    </button>
+                    <div class="accordion-content bg-white px-6">
+                        <div class="py-4 text-gray-600 border-t border-gray-100">
+                            สำหรับการส่งออก ปริมาณการสั่งซื้อขั้นต่ำคือ 1 ตู้คอนเทนเนอร์ (20 ฟุต) หรือประมาณ 15-20 ตัน ขึ้นอยู่กับประเภทของผลิตภัณฑ์ หากต้องการตัวอย่างสินค้า สามารถติดต่อฝ่ายขายได้โดยตรง
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 2 -->
+                <div class="border border-gray-200 rounded-xl overflow-hidden hover:border-brand-300 transition">
+                    <button class="w-full px-6 py-4 text-left bg-gray-50 hover:bg-white flex justify-between items-center transition focus:outline-none" onclick="toggleAccordion(this)">
+                        <span class="font-medium text-gray-800">ระยะเวลาในการจัดส่ง (Lead Time) นานแค่ไหน?</span>
+                        <i class="fa-solid fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+                    </button>
+                    <div class="accordion-content bg-white px-6">
+                        <div class="py-4 text-gray-600 border-t border-gray-100">
+                            โดยปกติใช้เวลาเตรียมสินค้าและดำเนินการด้านเอกสารการส่งออกประมาณ 15-30 วัน หลังจากได้รับการยืนยันคำสั่งซื้อและวางเงินมัดจำ
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 3 -->
+                <div class="border border-gray-200 rounded-xl overflow-hidden hover:border-brand-300 transition">
+                    <button class="w-full px-6 py-4 text-left bg-gray-50 hover:bg-white flex justify-between items-center transition focus:outline-none" onclick="toggleAccordion(this)">
+                        <span class="font-medium text-gray-800">มีใบรับรอง Health Certificate ให้หรือไม่?</span>
+                        <i class="fa-solid fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+                    </button>
+                    <div class="accordion-content bg-white px-6">
+                        <div class="py-4 text-gray-600 border-t border-gray-100">
+                            ใช่ เรามีเอกสารรับรองครบถ้วน ทั้ง Health Certificate, Certificate of Origin, และผลการวิเคราะห์คุณภาพ (COA) เพื่อใช้ในการผ่านพิธีการศุลกากรปลายทาง
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action / Contact -->
+    <section id="contact" class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden flex flex-col md:flex-row fade-in-up">
+                <!-- Info Side -->
+                <div class="md:w-5/12 bg-gradient-to-br from-brand-600 to-brand-800 p-10 text-white flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-3xl font-bold mb-6">ร่วมธุรกิจกับเรา</h3>
+                        <p class="text-brand-100 mb-8">
+                            ต้องการข้อมูลเพิ่มเติมเกี่ยวกับผลิตภัณฑ์ สามารถติดต่อเราได้ทันที
+                        </p>
+                        
+                        <div class="space-y-6">
+                            <div class="flex items-start gap-4">
+                                <div class="bg-white/20 p-3 rounded-lg"><i class="fa-solid fa-location-dot"></i></div>
+                                <div>
+                                    <h5 class="font-bold">ที่อยู่สำนักงาน</h5>
+                                    <p class="text-sm text-brand-100">9/1 ตำบลบางตะบูนออก <br>อำเภอบ้านแหลม จังหวัดเพชรบุรี</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-4">
+                                <div class="bg-white/20 p-3 rounded-lg"><i class="fa-solid fa-phone"></i></div>
+                                <div>
+                                    <h5 class="font-bold">โทรศัพท์</h5>
+                                    <p class="text-sm text-brand-100">062 261 5155</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-4">
+                                <div class="bg-white/20 p-3 rounded-lg"><i class="fa-solid fa-envelope"></i></div>
+                                <div>
+                                    <h5 class="font-bold">อีเมล</h5>
+                                    <p class="text-sm text-brand-100">sales@swkfishscales.com</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-10 flex gap-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center hover:bg-white hover:text-brand-600 transition hover:scale-110"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center hover:bg-white hover:text-brand-600 transition hover:scale-110"><i class="fa-brands fa-linkedin-in"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center hover:bg-white hover:text-brand-600 transition hover:scale-110"><i class="fa-brands fa-line"></i></a>
+                    </div>
+                </div>
+
+                <!-- QR Code & Page Side (Updated) -->
+                <div class="md:w-7/12 p-10 flex flex-col items-center justify-center bg-gray-50/50">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-8">ช่องทางติดต่อออนไลน์</h3>
+                    
+                    <div class="flex flex-col md:flex-row items-center gap-8 w-full justify-center">
+                        <!-- QR Code Section -->
+                        <div class="flex flex-col items-center p-6 bg-white rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-300">
+                            <div class="w-48 h-48 bg-white p-2 rounded-lg mb-4 border border-gray-100">
+                                <!-- Placeholder QR Code -->
+                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://line.me/ti/p/~swkfishscales" alt="Line QR Code" class="w-full h-full object-contain">
+                            </div>
+                            <div class="text-center">
+                                <div class="flex items-center justify-center gap-2 mb-1">
+                                    <i class="fa-brands fa-line text-green-500 text-2xl"></i>
+                                    <p class="font-bold text-gray-800 text-lg">LINE Official</p>
+                                </div>
+                                <p class="text-sm text-gray-500">สแกนเพื่อสอบถามข้อมูลทันที</p>
+                            </div>
+                        </div>
+
+                        <!-- Divider Text (visible on mobile) -->
+                        <div class="md:hidden text-gray-400 font-medium">หรือ</div>
+
+                        <!-- Facebook Page Section -->
+                        <a href="#" class="group flex flex-col items-center justify-center p-6 bg-white rounded-2xl shadow-sm border border-gray-100 hover:border-blue-500 hover:shadow-md transition-all duration-300 w-full md:w-56 h-full min-h-[280px]">
+                            <div class="w-20 h-20 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-4xl mb-4 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300 transform group-hover:scale-110">
+                                <i class="fa-brands fa-facebook-f"></i>
+                            </div>
+                            <div class="text-center">
+                                <p class="font-bold text-gray-800 text-lg mb-1 group-hover:text-blue-600 transition">Facebook Page</p>
+                                <p class="text-sm text-gray-500 mb-4">ติดตามข่าวสารและผลงาน</p>
+                                <span class="inline-block px-4 py-2 bg-gray-100 text-gray-600 text-sm rounded-full group-hover:bg-blue-600 group-hover:text-white transition">ไปที่เพจ <i class="fa-solid fa-arrow-right ml-1"></i></span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-400 py-12 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div class="col-span-1 md:col-span-1">
+                    <div class="flex items-center gap-2 mb-4">
+                        <i class="fa-solid fa-fish-fins text-brand-500 text-2xl"></i>
+                        <span class="font-bold text-white text-lg">SWK FishScales</span>
+                    </div>
+                    <p class="text-sm mb-4">
+                        มุ่งมั่นสร้างสรรค์ผลิตภัณฑ์จากธรรมชาติ ด้วยนวัตกรรมที่ยั่งยืน เพื่อคุณภาพชีวิตที่ดีกว่า
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-4">เมนูหลัก</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#home" class="hover:text-brand-500 transition">หน้าแรก</a></li>
+                        <li><a href="#about" class="hover:text-brand-500 transition">เกี่ยวกับเรา</a></li>
+                        <li><a href="#products" class="hover:text-brand-500 transition">ผลิตภัณฑ์</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-4">กฎหมาย & นโยบาย</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-brand-500 transition">นโยบายความเป็นส่วนตัว</a></li>
+                        <li><a href="#" class="hover:text-brand-500 transition">ข้อกำหนดการใช้งาน</a></li>
+                        <li><a href="#" class="hover:text-brand-500 transition">นโยบายคุกกี้</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-4">ติดตามข่าวสาร</h4>
+                    <div class="flex gap-2">
+                        <input type="email" placeholder="อีเมลของคุณ" class="bg-gray-800 border-none rounded px-3 py-2 text-sm w-full focus:ring-1 focus:ring-brand-500 text-white transition focus:ring-brand-500">
+                        <button class="bg-brand-600 text-white px-3 py-2 rounded hover:bg-brand-700 transition hover:scale-105"><i class="fa-solid fa-paper-plane"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-8 text-center text-sm">
+                <p>&copy; 2024 SWK FishScales Co., Ltd. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button id="back-to-top" onclick="window.scrollTo(0,0)" class="fixed bottom-8 right-8 bg-brand-600 text-white w-12 h-12 rounded-full shadow-lg flex items-center justify-center translate-y-20 opacity-0 transition-all duration-500 hover:bg-brand-700 hover:scale-110 z-40">
+        <i class="fa-solid fa-arrow-up"></i>
+    </button>
+
+    <!-- Lightbox Modal (New Feature) -->
+    <div id="lightbox" class="fixed inset-0 z-[100] hidden bg-black/90 flex items-center justify-center p-4 backdrop-blur-md opacity-0 transition-opacity duration-300" onclick="closeLightbox()">
+        <button class="absolute top-6 right-6 text-white text-5xl hover:text-gray-300 focus:outline-none z-[101]">&times;</button>
+        <img id="lightbox-img" src="" class="max-h-[90vh] max-w-[90vw] object-contain rounded-lg shadow-2xl transform scale-95 transition-transform duration-300" onclick="event.stopPropagation()">
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // --- 1. Mobile Menu Toggle ---
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+
+        // --- 2. Navbar Scroll Effect & Back to Top ---
+        const navbar = document.getElementById('navbar');
+        const backToTopBtn = document.getElementById('back-to-top');
+        
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 10) {
+                navbar.classList.add('shadow-md');
+                navbar.classList.replace('bg-white/95', 'bg-white/100');
+            } else {
+                navbar.classList.remove('shadow-md');
+                navbar.classList.replace('bg-white/100', 'bg-white/95');
+            }
+
+            // Back to top Logic
+            if (window.scrollY > 500) {
+                backToTopBtn.classList.remove('translate-y-20', 'opacity-0');
+            } else {
+                backToTopBtn.classList.add('translate-y-20', 'opacity-0');
+            }
+        });
+
+        // --- 3. Intersection Observer for Fade In Animations ---
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in-up').forEach(el => {
+            observer.observe(el);
+        });
+
+        // --- 4. Bubble Animation Generator ---
+        function createBubbles() {
+            const container = document.getElementById('bubbles-container');
+            const bubbleCount = 20;
+
+            for (let i = 0; i < bubbleCount; i++) {
+                const bubble = document.createElement('div');
+                bubble.classList.add('bubble');
+                
+                // Random size
+                const size = Math.random() * 40 + 10 + 'px';
+                bubble.style.width = size;
+                bubble.style.height = size;
+                
+                // Random position
+                bubble.style.left = Math.random() * 100 + '%';
+                
+                // Random animation duration and delay
+                const duration = Math.random() * 10 + 5 + 's';
+                const delay = Math.random() * 5 + 's';
+                bubble.style.animationDuration = duration;
+                bubble.style.animationDelay = delay;
+                
+                container.appendChild(bubble);
+            }
+        }
+        createBubbles();
+
+        // --- 5. Accordion Logic ---
+        function toggleAccordion(button) {
+            const content = button.nextElementSibling;
+            const icon = button.querySelector('i');
+            
+            // Toggle current
+            if (content.style.maxHeight) {
+                content.style.maxHeight = null;
+                content.classList.remove('active');
+                icon.style.transform = 'rotate(0deg)';
+            } else {
+                // Close others (optional - if you want only one open at a time)
+                document.querySelectorAll('.accordion-content').forEach(el => {
+                    el.style.maxHeight = null;
+                    el.classList.remove('active');
+                    el.previousElementSibling.querySelector('i').style.transform = 'rotate(0deg)';
+                });
+
+                content.style.maxHeight = content.scrollHeight + "px";
+                content.classList.add('active');
+                icon.style.transform = 'rotate(180deg)';
+            }
+        }
+
+        // --- 6. Form Submission Logic (Removed) ---
+        // ฟังก์ชันนี้ไม่ได้ใช้แล้ว แต่เก็บไว้เผื่อขยายผลในอนาคต หรือสามารถลบออกได้
+        // function showSuccess() {
+        //    document.getElementById('successModal').classList.remove('hidden');
+        // }
+
+        // --- 7. Lightbox Logic (New Feature) ---
+        function openLightbox(src) {
+            const lightbox = document.getElementById('lightbox');
+            const img = document.getElementById('lightbox-img');
+            
+            img.src = src;
+            lightbox.classList.remove('hidden');
+            // Small timeout to allow display:block to apply before opacity transition
+            setTimeout(() => {
+                lightbox.classList.remove('opacity-0');
+                img.classList.remove('scale-95');
+                img.classList.add('scale-100');
+            }, 10);
+            
+            document.body.style.overflow = 'hidden'; // Prevent scrolling background
+        }
+
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            const img = document.getElementById('lightbox-img');
+            
+            lightbox.classList.add('opacity-0');
+            img.classList.remove('scale-100');
+            img.classList.add('scale-95');
+            
+            setTimeout(() => {
+                lightbox.classList.add('hidden');
+                img.src = '';
+                document.body.style.overflow = 'auto'; // Restore scrolling
+            }, 300);
+        }
+
+        // --- 8. Standards Carousel Logic (New Feature) ---
+        let currentStandardSlide = 0;
+        const standardSlides = document.querySelectorAll('#standards-carousel img');
+        const standardDots = document.querySelectorAll('.standard-dot');
+        let standardInterval;
+
+        function updateStandardCarousel() {
+            // Update Images
+            standardSlides.forEach((slide, index) => {
+                slide.style.opacity = index === currentStandardSlide ? '1' : '0';
+                slide.style.zIndex = index === currentStandardSlide ? '10' : '0'; // Ensure clickability if needed
+            });
+            
+            // Update Dots
+            standardDots.forEach((dot, index) => {
+                if (index === currentStandardSlide) {
+                    dot.classList.remove('bg-white/40');
+                    dot.classList.add('bg-white', 'scale-110');
+                } else {
+                    dot.classList.add('bg-white/40');
+                    dot.classList.remove('bg-white', 'scale-110');
+                }
+            });
+        }
+
+        function changeStandardSlide(direction) {
+            currentStandardSlide = (currentStandardSlide + direction + standardSlides.length) % standardSlides.length;
+            updateStandardCarousel();
+            resetStandardInterval();
+        }
+
+        function setStandardSlide(index) {
+            currentStandardSlide = index;
+            updateStandardCarousel();
+            resetStandardInterval();
+        }
+
+        function resetStandardInterval() {
+            clearInterval(standardInterval);
+            standardInterval = setInterval(() => changeStandardSlide(1), 5000);
+        }
+
+        // Initialize Carousel
+        if (standardSlides.length > 0) {
+            resetStandardInterval();
+        }
+
+    </script>
+</body>
+</html>
