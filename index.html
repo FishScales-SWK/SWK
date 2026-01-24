@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SWK FishScales - ผู้นำนวัตกรรมเกล็ดปลาคุณภาพระดับสากล</title>
+    <title>SWK FishScales (ศิวกรณ์ ค้าเกล็ดปลา) - ผู้นำนวัตกรรมเกล็ดปลาคุณภาพระดับสากล</title>
     
-    <!-- Google Fonts: Prompt for modern Thai typography -->
-    <link rel="preconnect" href="https://drive.google.com/uc?export=view&id=1XzkGf-dTglVp2AQ4q89R32U989DlFKgZ">
+    <!-- Google Fonts: Prompt & Kanit for beautiful typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;600;800&family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -28,6 +28,7 @@
                 extend: {
                     fontFamily: {
                         sans: ['Prompt', 'sans-serif'],
+                        display: ['Kanit', 'sans-serif'], // Added Kanit for headers/brand
                     },
                     colors: {
                         brand: {
@@ -164,24 +165,30 @@
         <div class="absolute inset-0 bg-gradient-to-r from-white/95 via-brand-50/80 to-white/95 pointer-events-none"></div>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="flex justify-between items-center h-16 transition-all duration-300" id="nav-container">
-                <div class="flex-shrink-0 flex items-center gap-2 cursor-pointer group" onclick="window.scrollTo(0,0)">
+                <div class="flex-shrink-0 flex items-center gap-3 cursor-pointer group" onclick="window.scrollTo(0,0)">
                     <div class="relative">
-                        <i class="fa-solid fa-fish-fins text-brand-600 text-3xl group-hover:rotate-12 transition-transform duration-300 drop-shadow-sm"></i>
+                        <i class="fa-solid fa-fish-fins text-brand-600 text-4xl group-hover:rotate-12 transition-transform duration-300 drop-shadow-sm"></i>
                         <span class="absolute -top-1 -right-1 flex h-3 w-3">
                           <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
                           <span class="relative inline-flex rounded-full h-3 w-3 bg-sky-500"></span>
                         </span>
                     </div>
-                    <div class="flex flex-col group-hover:scale-105 transition-transform origin-left">
-                        <span class="font-bold text-xl text-brand-900 leading-none tracking-tight">SWK</span>
-                        <span class="text-xs text-brand-500 font-medium tracking-widest uppercase">FishScales</span>
+                    <!-- Updated Brand Name with Thai -->
+                    <div class="flex flex-col group-hover:scale-105 transition-transform origin-left justify-center">
+                        <!-- 🔤 ขนาดฟอนต์ "ศิวกรณ์ ค้าเกล็ดปลา": text-xl (มือถือ), md:text-3xl (คอม) -->
+                        <h1 class="font-display font-extrabold text-xl md:text-3xl leading-none tracking-tight drop-shadow-sm">
+                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-800 via-brand-600 to-sky-500">ศิวกรณ์ ค้าเกล็ดปลา</span>
+                        </h1>
+                        <!-- 🔤 ขนาดฟอนต์ "SWK FishScales": text-xs (เล็กมาก) -->
+                        <span class="text-xs text-brand-400 font-bold tracking-[0.25em] uppercase mt-0.5">SWK FishScales</span>
                     </div>
                 </div>
                 <div class="hidden md:flex space-x-8 items-center">
-                    <a href="#home" class="text-gray-600 hover:text-brand-600 font-medium transition relative group text-sm uppercase tracking-wide">หน้าแรก<span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand-600 transition-all group-hover:w-full"></span></a>
-                    <a href="#products" class="text-gray-600 hover:text-brand-600 font-medium transition relative group text-sm uppercase tracking-wide">ผลงาน<span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand-600 transition-all group-hover:w-full"></span></a>
-                    <a href="#standards" class="text-gray-600 hover:text-brand-600 font-medium transition relative group text-sm uppercase tracking-wide">มาตรฐาน<span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand-600 transition-all group-hover:w-full"></span></a>
-                    <a href="#contact" class="px-6 py-2.5 bg-gradient-to-r from-brand-600 to-brand-500 text-white font-medium rounded-full hover:shadow-lg hover:shadow-brand-500/40 transition-all transform hover:-translate-y-0.5 active:translate-y-0">ติดต่อเรา</a>
+                    <!-- 🔤 ปรับขนาดฟอนต์เมนูจาก text-sm เป็น text-base (ใหญ่ขึ้น) -->
+                    <a href="#home" class="text-gray-600 hover:text-brand-600 font-medium transition relative group text-base uppercase tracking-wide">หน้าแรก<span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand-600 transition-all group-hover:w-full"></span></a>
+                    <a href="#products" class="text-gray-600 hover:text-brand-600 font-medium transition relative group text-base uppercase tracking-wide">ผลงาน<span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand-600 transition-all group-hover:w-full"></span></a>
+                    <a href="#standards" class="text-gray-600 hover:text-brand-600 font-medium transition relative group text-base uppercase tracking-wide">มาตรฐาน<span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand-600 transition-all group-hover:w-full"></span></a>
+                    <a href="#contact" class="px-6 py-2.5 bg-gradient-to-r from-brand-600 to-brand-500 text-white font-medium rounded-full hover:shadow-lg hover:shadow-brand-500/40 transition-all transform hover:-translate-y-0.5 active:translate-y-0 text-base">ติดต่อเรา</a>
                 </div>
                 <div class="md:hidden flex items-center">
                     <button id="mobile-menu-btn" class="text-gray-600 hover:text-brand-600 focus:outline-none p-2 rounded-md hover:bg-gray-100 transition"><i class="fa-solid fa-bars text-2xl"></i></button>
@@ -201,15 +208,17 @@
     <!-- Hero Section -->
     <section id="home" class="relative min-h-[85dvh] md:min-h-[100dvh] flex items-center overflow-hidden">
         <div class="hero-bg-container"><div class="hero-bg-image animate-pan-slow"></div></div>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full pt-20 pb-10 md:pt-28 md:pb-20"> <!-- Reduced padding further -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full pt-20 pb-10 md:pt-28 md:pb-20"> 
             <div class="md:w-3/4 fade-in-up">
-                <h1 class="text-3xl sm:text-4xl md:text-6xl font-bold text-white leading-tight mb-4 drop-shadow-xl"> <!-- Reduced mb -->
+                <!-- 🔤 ขนาดฟอนต์ "ยกระดับคุณค่า...": text-3xl (มือถือ), sm:text-4xl (แท็บเล็ต), md:text-6xl (คอม) -->
+                <h1 class="text-3xl sm:text-4xl md:text-6xl font-bold text-white leading-tight mb-4 drop-shadow-xl"> 
                     ยกระดับคุณค่า<span class="whitespace-nowrap text-transparent bg-clip-text bg-gradient-to-r from-sky-200 via-white to-sky-200">ทรัพยากรทางทะเล</span> <br>
                     <span class="inline-block min-h-[1.2em]"><span class="text-sky-400 typing-cursor" id="typing-text"></span>&nbsp;</span>
                 </h1>
-                <div class="mb-8 max-w-3xl border-l-4 border-sky-400 pl-6 py-6 bg-black/40 backdrop-blur-sm rounded-r-xl shadow-lg"> <!-- Reduced mb -->
+                <div class="mb-8 max-w-3xl border-l-4 border-sky-400 pl-6 py-6 bg-black/40 backdrop-blur-sm rounded-r-xl shadow-lg"> 
+                    <!-- 🔤 ขนาดฟอนต์ "คำอธิบายใต้หัวข้อ": text-base (ปกติ), md:text-xl (คอม) -->
                     <p class="text-base md:text-xl text-white font-normal drop-shadow-md leading-relaxed">
-                        SWK FishScales ผู้นำด้านการแปรรูปและส่งออกเกล็ดปลาคุณภาพสูง <br>
+                        <strong class="text-sky-300">ศิวกรณ์ ค้าเกล็ดปลา (SWK)</strong> ผู้นำด้านการแปรรูปและส่งออกเกล็ดปลาคุณภาพสูง <br>
                         สำหรับอุตสาหกรรมคอลลาเจน อาหารเสริม และเครื่องสำอาง <br>
                         เพื่อส่งต่อวัตถุดิบคุณภาพสูงสู่อุตสาหกรรมสุขภาพ
                     </p>
@@ -233,12 +242,12 @@
     </section>
 
     <!-- Standards & Trust -->
-    <section id="standards" class="py-8 md:py-20 bg-white"> <!-- Reduced padding -->
+    <section id="standards" class="py-8 md:py-20 bg-white"> 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col md:flex-row items-center gap-6 md:gap-12"> <!-- Reduced gap -->
+            <div class="flex flex-col md:flex-row items-center gap-6 md:gap-12"> 
                 <div class="md:w-1/2 fade-in-up relative group">
                     <div class="absolute inset-0 bg-brand-500 rounded-2xl transform rotate-3 transition-transform group-hover:rotate-6 opacity-20"></div>
-                    <div class="relative rounded-2xl shadow-2xl overflow-hidden h-[250px] md:h-[400px] w-full bg-gray-100 group-hover:scale-[1.01] transition-transform duration-500"> <!-- Reduced height for mobile -->
+                    <div class="relative rounded-2xl shadow-2xl overflow-hidden h-[250px] md:h-[400px] w-full bg-gray-100 group-hover:scale-[1.01] transition-transform duration-500"> 
                         <div id="standards-carousel" class="w-full h-full relative">
                             <img src="https://i.postimg.cc/Gt1WkVRD/42685.jpg" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-700 opacity-100" data-index="0" alt="Standard Quality">
                             <img src="https://i.postimg.cc/vZGK85YP/Gemini-Generated-Image-hv4j9nhv4j9nhv4j.png" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-700 opacity-0" data-index="1" alt="Microscope Analysis">
@@ -254,6 +263,7 @@
                     </div>
                 </div>
                 <div class="md:w-1/2 fade-in-up">
+                    <!-- 🔤 ขนาดฟอนต์ "มาตรฐานคุณภาพ...": text-3xl (ใหญ่มาก) -->
                     <h2 class="text-3xl font-bold text-brand-900 mb-6 border-l-4 border-brand-500 pl-4">มาตรฐานคุณภาพที่คุณวางใจได้</h2>
                     <p class="text-gray-600 mb-6 leading-relaxed">SWK FishScales ให้ความสำคัญสูงสุดกับคุณภาพและความปลอดภัย กระบวนการผลิตของเราผ่านการตรวจสอบอย่างเข้มงวดในทุกขั้นตอน ตั้งแต่การรับวัตถุดิบจนถึงการส่งมอบสินค้า เพื่อให้มั่นใจว่าเกล็ดปลาของเราบริสุทธิ์และพร้อมสำหรับการนำไปแปรรูปต่อ</p>
                 </div>
@@ -264,6 +274,7 @@
     <!-- Parallax Vision -->
     <section class="py-24 parallax-bg relative flex items-center justify-center text-center">
         <div class="max-w-6xl mx-auto px-4 z-10 fade-in-up">
+            <!-- 🔤 ขนาดฟอนต์ "เราเปลี่ยนสิ่งเหลือใช้...": text-3xl (มือถือ), md:text-5xl (คอม) -->
             <h2 class="text-3xl md:text-5xl font-bold text-white mb-6 leading-tight">
                 <span class="text-yellow-400">"</span>เราเปลี่ยนสิ่งเหลือใช้จากธรรมชาติ <div class="h-[12pt] w-full"></div> ให้กลายเป็นนวัตกรรมที่ล้ำค่า<span class="text-yellow-400">"</span>
             </h2>
@@ -276,9 +287,11 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="text-center mb-16 fade-in-up">
                 <h2 class="text-brand-500 font-bold tracking-wide uppercase text-sm mb-2">Our Operations</h2>
+                <!-- 🔤 ขนาดฟอนต์ "ผลการดำเนินงาน...": text-3xl (มือถือ), md:text-4xl (คอม) -->
                 <h3 class="text-3xl md:text-4xl font-bold text-white">ผลการดำเนินงานของ SWK FishScales</h3>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 fade-in-up">
+                <!-- Gallery Items -->
                 <div class="rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-brand-500/30 transition-all duration-300 transform hover:-translate-y-2 cursor-pointer group h-64 relative border-2 border-white/10" onclick="openLightbox('https://i.postimg.cc/zXwWNcG0/42674.jpg')"><img src="https://i.postimg.cc/zXwWNcG0/42674.jpg" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700"><div class="absolute inset-0 bg-black/0 group-hover:bg-white/10 transition z-10"></div></div>
                 <div class="rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-brand-500/30 transition-all duration-300 transform hover:-translate-y-2 cursor-pointer group h-64 relative border-2 border-white/10" onclick="openLightbox('https://i.postimg.cc/J477y6Qp/E2758541-8C3A-43AA-896B-5ADFEF2DE6A0.jpg')"><img src="https://i.postimg.cc/J477y6Qp/E2758541-8C3A-43AA-896B-5ADFEF2DE6A0.jpg" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700"><div class="absolute inset-0 bg-black/0 group-hover:bg-white/10 transition z-10"></div></div>
                 <div class="rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-brand-500/30 transition-all duration-300 transform hover:-translate-y-2 cursor-pointer group h-64 relative border-2 border-white/10" onclick="openLightbox('https://i.postimg.cc/JnqVM8Sw/52A3B5EF-3A63-4101-9A91-40440D85A2A4.jpg')"><img src="https://i.postimg.cc/JnqVM8Sw/52A3B5EF-3A63-4101-9A91-40440D85A2A4.jpg" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700"><div class="absolute inset-0 bg-black/0 group-hover:bg-white/10 transition z-10"></div></div>
@@ -296,6 +309,7 @@
             <div class="bg-white rounded-3xl shadow-xl overflow-hidden flex flex-col md:flex-row fade-in-up">
                 <div class="md:w-5/12 bg-gradient-to-br from-brand-600 to-brand-800 p-10 text-white flex flex-col justify-center">
                     <div>
+                        <!-- 🔤 ขนาดฟอนต์ "ร่วมธุรกิจกับเรา": text-3xl (ใหญ่มาก) -->
                         <h3 class="text-3xl font-bold mb-8">ร่วมธุรกิจกับเรา</h3>
                         <div class="space-y-8">
                             <div class="flex items-start gap-4"><div class="bg-white/20 p-3 rounded-lg"><i class="fa-solid fa-location-dot"></i></div><div><h5 class="font-bold text-lg">ที่อยู่สำนักงาน</h5><p class="text-brand-100 leading-relaxed">9/1 ตำบลบางตะบูนออก <br>อำเภอบ้านแหลม จังหวัดเพชรบุรี</p></div></div>
@@ -307,10 +321,10 @@
                 <div class="md:w-7/12 p-10 flex flex-col items-center justify-center bg-gray-50/50">
                     <h3 class="text-2xl font-bold text-gray-800 mb-8">ช่องทางติดต่อออนไลน์</h3>
                     <div class="flex flex-col md:flex-row items-center md:items-stretch gap-8 w-full justify-center">
-                        <!-- LINE Card (Updated with Button) -->
+                        <!-- LINE Card -->
                         <div class="flex flex-col items-center p-6 bg-white rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 w-full md:w-[320px] min-h-[340px]">
                             <div class="w-48 h-48 bg-white p-2 rounded-lg mb-4 border border-gray-100 flex items-center justify-center">
-                                <img src="https://i.postimg.cc/k4pGDsr8/S-7798823.jpg" alt="Line QR Code" class="w-full h-full object-contain">
+                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://line.me/ti/p/~swkfishscales" alt="Line QR Code" class="w-full h-full object-contain">
                             </div>
                             <div class="text-center mt-auto">
                                 <div class="flex items-center justify-center gap-2 mb-1">
@@ -349,6 +363,7 @@
                 <div><h4 class="text-white font-bold mb-3">กฎหมาย & นโยบาย</h4><ul class="space-y-1 text-sm"><li><a href="#" class="hover:text-brand-500 transition">นโยบายความเป็นส่วนตัว</a></li><li><a href="#" class="hover:text-brand-500 transition">ข้อกำหนดการใช้งาน</a></li></ul></div>
                 <div><h4 class="text-white font-bold mb-3">ติดตามข่าวสาร</h4><div class="flex gap-2"><input type="email" placeholder="อีเมลของคุณ" class="bg-gray-800 border-none rounded px-3 py-2 text-sm w-full focus:ring-1 focus:ring-brand-500 text-white transition focus:ring-brand-500"><button class="bg-brand-600 text-white px-3 py-2 rounded hover:bg-brand-700 transition hover:scale-105"><i class="fa-solid fa-paper-plane"></i></button></div></div>
             </div>
+            <!-- ส่วนท้ายที่มีขนาดเล็กลง -->
             <div class="border-t border-gray-800 pt-6 text-sm">
                 <div class="flex justify-end w-full mb-3">
                     <button onclick="openAdminModal()" class="text-gray-600 hover:text-brand-500 transition flex items-center gap-2">
@@ -356,7 +371,8 @@
                     </button>
                 </div>
                 <div class="text-center">
-                    <p>&copy; 2024 SWK FishScales Co., Ltd. .</p>
+                    <!-- 🔤 ขนาดฟอนต์ "ลิขสิทธิ์ Footer": text-sm -->
+                    <p>&copy; 2024 SWK Fish Scales Trade Co.,LTD </p>
                 </div>
             </div>
         </div>
