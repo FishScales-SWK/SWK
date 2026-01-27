@@ -73,17 +73,6 @@
         ::-webkit-scrollbar-thumb { background: #0284c7; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #075985; }
         
-        /* Bubble Animation (Fix: Added opacity steps) */
-        .bubble {
-            position: absolute; bottom: -20px; background-color: rgba(255, 255, 255, 0.15); border-radius: 50%; pointer-events: none; animation: floatUp linear infinite;
-        }
-        @keyframes floatUp {
-            0% { transform: translateY(0); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(-120vh); opacity: 0; }
-        }
-        
         .loader { border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
@@ -133,13 +122,13 @@
         <div class="max-w-[1920px] w-full mx-auto px-4 sm:px-6 lg:px-16 xl:px-24 2xl:px-32 relative z-10 pt-20 pb-10 md:pt-32 md:pb-24"> 
             <div class="md:w-3/4 2xl:w-2/3 fade-in-up">
                 <h1 class="text-3xl sm:text-5xl md:text-6xl 2xl:text-8xl font-bold text-white leading-tight mb-4 md:mb-6 drop-shadow-xl"> 
-                    <!-- ใช้ md:whitespace-nowrap เพื่อให้ตัดคำได้บนมือถือ แต่บรรทัดเดียวบนจอใหญ่ -->
                     <span class="md:whitespace-nowrap">ยกระดับคุณค่า<span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-200 via-white to-sky-200">ทรัพยากรทางทะเล</span></span> <br>
                     <span class="inline-block min-h-[1.2em]"><span class="text-sky-400 typing-cursor" id="typing-text"></span>&nbsp;</span>
                 </h1>
                 <div class="mb-6 md:mb-10 max-w-4xl border-l-4 border-sky-400 pl-4 md:pl-6 py-4 md:py-6 bg-black/40 backdrop-blur-sm rounded-r-xl shadow-lg"> 
                     <p class="text-sm md:text-xl 2xl:text-3xl text-white font-normal drop-shadow-md leading-relaxed">
-                        <strong class="text-sky-300">ศิวกรณ์ ค้าเกล็ดปลา (SWK)</strong> ผู้นำด้านการแปรรูปและส่งออกเกล็ดปลาคุณภาพสูง <br class="hidden sm:block">
+                        <!-- ปรับขนาดตัวอักษรชื่อแบรนด์ให้ใหญ่ขึ้น (text-base, text-2xl, text-4xl) -->
+                        <strong class="text-sky-300 text-base md:text-2xl 2xl:text-4xl">ศิวกรณ์ ค้าเกล็ดปลา (SWK)</strong> ผู้นำด้านการแปรรูปและส่งออกเกล็ดปลาคุณภาพสูง <br class="hidden sm:block">
                         สำหรับอุตสาหกรรมคอลลาเจน อาหารเสริม และเครื่องสำอาง เพื่อส่งต่อวัตถุดิบคุณภาพสูงสู่อุตสาหกรรมสุขภาพ
                     </p>
                 </div>
@@ -360,9 +349,12 @@
             </form>
         </div>
     </div>
-    <!-- ... Admin Modal and Scripts same as previous ... -->
+
+    <!-- ADMIN MODAL -->
     <div id="admin-modal" class="fixed inset-0 z-[110] hidden bg-black/80 flex items-center justify-center p-0 md:p-4 backdrop-blur-sm opacity-0 transition-opacity duration-300">
         <div class="w-full h-full md:rounded-2xl shadow-2xl overflow-hidden relative flex flex-col transform scale-100 md:scale-95 transition-transform duration-300 bg-white">
+            
+            <!-- Login -->
             <div id="admin-login-screen" class="absolute inset-0 bg-white z-[60] flex flex-col items-center justify-center p-8">
                 <div class="w-full max-w-sm text-center">
                     <div class="mb-6 inline-block p-4 rounded-full bg-brand-100 text-brand-600"><i class="fa-solid fa-shield-halved text-4xl"></i></div>
@@ -375,20 +367,28 @@
                     <button onclick="closeAdminModal()" class="mt-4 text-gray-400 hover:text-gray-600 text-sm">กลับสู่หน้าหลัก</button>
                 </div>
             </div>
+
+            <!-- Loader -->
             <div id="loading-overlay" class="absolute inset-0 bg-black/50 z-[55] hidden flex-col items-center justify-center text-white">
                 <div class="loader mb-4"></div>
                 <p id="loading-text" class="text-lg font-medium">กำลังดำเนินการ...</p>
             </div>
+
+            <!-- VIEW 1: PRODUCTION (Green Theme) -->
             <div id="view-production" class="min-h-full bg-gradient-to-br from-emerald-100 to-green-200 p-4 md:p-8 relative overflow-y-auto">
+                <!-- Top Buttons -->
                 <button onclick="switchAdminTab('inventory')" class="absolute top-4 right-4 md:top-8 md:right-8 z-20 bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-5 py-3 rounded-full font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center gap-2">
                     <i class="fa-solid fa-file-lines"></i> <span class="hidden sm:inline">รายงานสถานะสินค้า</span>
                 </button>
                 <button onclick="closeAdminModal()" class="absolute top-4 left-4 z-20 bg-white/50 hover:bg-white p-3 rounded-full shadow-md transition text-gray-700"><i class="fa-solid fa-arrow-left"></i></button>
+
                 <div class="max-w-7xl mx-auto space-y-8 pt-16 md:pt-10">
                     <div class="text-center">
                         <h1 class="text-4xl md:text-6xl font-black text-gray-800 mb-2">ปริมาณสินค้า</h1>
                         <p class="text-lg md:text-xl text-gray-600">เกล็ดปลาตากแห้ง</p>
                     </div>
+
+                    <!-- Production Stats (Updated Layout) -->
                     <div class="flex flex-wrap justify-center gap-4">
                         <div class="bg-gradient-to-br from-emerald-100 to-emerald-200 border border-emerald-300 p-6 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 flex-1 min-w-[280px] h-40 relative flex flex-col">
                             <div class="flex justify-between items-start z-10">
@@ -398,8 +398,11 @@
                             <div class="flex-grow flex items-center justify-center">
                                 <p class="text-5xl md:text-6xl font-bold text-emerald-900" id="prod-today">0</p>
                             </div>
-                            <div class="absolute bottom-4 right-6 z-10"><span class="text-lg text-emerald-700 font-bold">กระสอบ</span></div>
+                            <div class="absolute bottom-4 right-6 z-10">
+                                <span class="text-lg text-emerald-700 font-bold">กระสอบ</span>
+                            </div>
                         </div>
+                        
                         <div class="bg-gradient-to-br from-violet-100 to-violet-200 border border-violet-300 p-6 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 flex-1 min-w-[280px] h-40 relative flex flex-col">
                             <div class="flex justify-between items-start z-10">
                                 <h3 class="text-lg md:text-xl font-semibold text-violet-800">ทำได้เดือนนี้</h3>
@@ -408,8 +411,11 @@
                             <div class="flex-grow flex items-center justify-center">
                                 <p class="text-5xl md:text-6xl font-bold text-violet-900" id="prod-month">0</p>
                             </div>
-                            <div class="absolute bottom-4 right-6 z-10"><span class="text-lg text-violet-700 font-bold">กระสอบ</span></div>
+                            <div class="absolute bottom-4 right-6 z-10">
+                                <span class="text-lg text-violet-700 font-bold">กระสอบ</span>
+                            </div>
                         </div>
+                        
                         <div class="bg-gradient-to-br from-sky-100 to-sky-200 border border-sky-300 p-6 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 flex-1 min-w-[280px] h-40 relative flex flex-col">
                             <div class="flex justify-between items-start z-10">
                                 <h3 class="text-lg md:text-xl font-semibold text-sky-800">ของพร้อมส่ง</h3>
@@ -418,9 +424,13 @@
                             <div class="flex-grow flex items-center justify-center">
                                 <p class="text-5xl md:text-6xl font-bold text-sky-900" id="prod-stock">0</p>
                             </div>
-                            <div class="absolute bottom-4 right-6 z-10"><span class="text-lg text-sky-700 font-bold">กระสอบ</span></div>
+                            <div class="absolute bottom-4 right-6 z-10">
+                                <span class="text-lg text-sky-700 font-bold">กระสอบ</span>
+                            </div>
                         </div>
                     </div>
+
+                    <!-- Production Input -->
                     <div class="bg-white backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 p-8 md:p-10">
                         <div class="flex items-center gap-3 mb-8">
                             <div class="bg-gradient-to-r from-emerald-500 to-teal-600 p-3 rounded-2xl text-white"><i class="fa-solid fa-flask text-xl"></i></div>
@@ -435,18 +445,22 @@
                             <button onclick="submitProduction()" class="w-full max-w-md py-4 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white text-xl font-bold rounded-2xl shadow-lg transform active:scale-95 transition-all">บันทึกข้อมูล</button>
                         </div>
                     </div>
+
+                    <!-- Production History (Table) -->
                     <div class="bg-white backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 p-8 md:p-10">
                         <div class="mb-6">
                             <div class="flex items-center gap-3 mb-4">
                                 <div class="bg-gradient-to-r from-emerald-500 to-teal-600 p-3 rounded-2xl text-white"><i class="fa-solid fa-clock-rotate-left text-xl"></i></div>
                                 <h2 class="text-3xl md:text-4xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">รายการผลิตย้อนหลัง</h2>
                             </div>
+                            <!-- Modified Filter Position -->
                             <div class="flex gap-2">
                                 <label class="self-center text-gray-600 font-medium">ตัวกรอง:</label>
                                 <select id="prod-filter-year" onchange="renderProductionView()" class="px-3 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 text-sm md:text-base bg-white"></select>
                                 <select id="prod-filter-month" onchange="renderProductionView()" class="px-3 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 text-sm md:text-base bg-white"></select>
                             </div>
                         </div>
+
                         <div class="overflow-auto max-h-[400px] rounded-xl border border-gray-200 bg-white">
                             <table class="w-full text-left">
                                 <thead class="bg-gray-100 text-gray-600 text-sm sticky top-0 font-semibold">
@@ -456,12 +470,16 @@
                             </table>
                         </div>
                     </div>
+
+                    <!-- NEW Daily Production Chart (Last 10 Days) -->
                     <div class="bg-white backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 p-8 md:p-10 mt-8">
                         <div class="flex flex-col gap-4 mb-6">
                             <div class="flex items-center gap-3">
                                 <div class="bg-gradient-to-r from-emerald-500 to-teal-600 p-3 rounded-2xl text-white"><i class="fa-solid fa-chart-column text-xl"></i></div>
                                 <h2 class="text-3xl md:text-4xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">จำนวนที่ทำได้รายวัน</h2>
                             </div>
+                            
+                            <!-- Filters moved below title with Checkboxes -->
                             <div class="flex flex-wrap gap-4 items-center bg-gray-50 p-3 rounded-xl border border-gray-100">
                                 <div class="flex items-center gap-2">
                                     <span class="text-sm font-medium text-gray-700">ปี:</span>
@@ -474,58 +492,83 @@
                                 </div>
                             </div>
                         </div>
+                        
+                        <!-- Fixed Y-Axis Layout -->
                         <div class="flex w-full h-[450px] border border-gray-100 rounded-xl overflow-hidden relative bg-white">
+                            
+                            <!-- Fixed Y Axis Column - Increased width to 80px -->
                             <div class="w-[80px] h-full flex-shrink-0 relative z-20 bg-white pb-12">
                                 <div id="chart-daily-y" class="absolute -top-3 -left-2 w-[90px] h-full"></div> 
                             </div>
+                            
+                            <!-- Scrollable X Axis Column -->
                             <div id="daily-chart-scroller" class="flex-grow h-full overflow-x-auto overflow-y-hidden relative z-10 bg-white custom-scrollbar pb-12"> 
                                 <div id="chart-daily-production" class="h-full"></div>
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
+
+            <!-- VIEW 2: INVENTORY/MANAGEMENT (Blue Theme) -->
             <div id="view-inventory" class="min-h-full bg-gradient-to-br from-blue-100 to-indigo-200 p-4 md:p-8 relative overflow-y-auto hidden">
                 <button onclick="switchAdminTab('production')" class="absolute top-4 right-4 md:top-8 md:right-8 z-20 bg-white/80 hover:bg-white text-gray-700 px-6 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 shadow-sm">
                     <i class="fa-solid fa-arrow-left"></i> กลับไปหน้าปริมาณสินค้า
                 </button>
+                
                 <div class="max-w-7xl mx-auto space-y-8 pt-16 md:pt-10">
                     <div class="text-center">
                         <h1 class="text-4xl md:text-6xl font-black text-gray-800 mb-2">รายงานสถานะสินค้า</h1>
                         <p class="text-lg md:text-xl text-gray-600">จัดการสต็อก ซื้อเข้า - ขายออก</p>
                     </div>
+
+                    <!-- Inventory Stats -->
                     <div class="flex flex-wrap justify-center gap-4">
+                        <!-- Buy In Card -->
                         <div class="bg-gradient-to-br from-green-100 to-green-200 border border-green-300 p-6 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 flex-1 min-w-[280px] h-40 relative flex flex-col">
                             <div class="flex justify-between items-start z-10">
                                 <h3 class="text-xl font-semibold text-green-800">ซื้อเข้าเดือนนี้</h3>
                                 <div class="bg-green-500 p-2 rounded-full text-white"><i class="fa-solid fa-arrow-trend-up"></i></div>
                             </div>
                             <div class="flex-grow flex items-center justify-center">
-                                <p class="text-5xl font-bold text-green-900" id="inv-in">0</p>
+                                <p class="text-5xl md:text-6xl font-bold text-green-900" id="inv-in">0</p>
                             </div>
-                            <div class="absolute bottom-4 right-6 z-10"><span class="text-lg text-green-700 font-medium">KG</span></div>
+                            <div class="absolute bottom-4 right-6 z-10">
+                                <span class="text-lg text-green-700 font-medium">KG</span>
+                            </div>
                         </div>
-                        <div class="bg-gradient-to-br from-red-100 to-red-200 border border-red-300 p-6 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 flex-1 min-w-[280px] h-40 relative flex flex-col">
+
+                        <!-- Sell Out Card -->
+                        <div class="bg-gradient-to-br from-blue-100 to-blue-200 border border-blue-300 p-6 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 flex-1 min-w-[280px] h-40 relative flex flex-col">
                             <div class="flex justify-between items-start z-10">
-                                <h3 class="text-xl font-semibold text-red-800">ขายออกเดือนนี้</h3>
-                                <div class="bg-red-500 p-2 rounded-full text-white"><i class="fa-solid fa-arrow-trend-down"></i></div>
+                                <h3 class="text-xl font-semibold text-blue-800">ขายออกเดือนนี้</h3>
+                                <div class="bg-blue-500 p-2 rounded-full text-white"><i class="fa-solid fa-arrow-trend-down"></i></div>
                             </div>
                             <div class="flex-grow flex items-center justify-center">
-                                <p class="text-5xl font-bold text-red-900" id="inv-out">0</p>
+                                <p class="text-5xl md:text-6xl font-bold text-blue-900" id="inv-out">0</p>
                             </div>
-                            <div class="absolute bottom-4 right-6 z-10"><span class="text-lg text-red-700 font-medium">KG</span></div>
+                            <div class="absolute bottom-4 right-6 z-10">
+                                <span class="text-lg text-blue-700 font-medium">KG</span>
+                            </div>
                         </div>
+
+                        <!-- Stock Card -->
                         <div class="bg-gradient-to-br from-violet-100 to-violet-200 border border-violet-300 p-6 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 flex-1 min-w-[280px] h-40 relative flex flex-col">
                             <div class="flex justify-between items-start z-10">
                                 <h3 class="text-xl font-semibold text-violet-800">ของพร้อมส่ง</h3>
                                 <div class="bg-violet-500 p-2 rounded-full text-white"><i class="fa-solid fa-box-open"></i></div>
                             </div>
                             <div class="flex-grow flex items-center justify-center">
-                                <p class="text-5xl font-bold text-violet-900" id="inv-stock">0</p>
+                                <p class="text-5xl md:text-6xl font-bold text-violet-900" id="inv-stock">0</p>
                             </div>
-                            <div class="absolute bottom-4 right-6 z-10"><span class="text-lg text-violet-700 font-medium">กระสอบ</span></div>
+                            <div class="absolute bottom-4 right-6 z-10">
+                                <span class="text-lg text-violet-700 font-medium">กระสอบ</span>
+                            </div>
                         </div>
                     </div>
+
+                    <!-- Inventory Input Form -->
                     <div class="bg-white backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 p-8 md:p-10">
                         <div class="flex items-center gap-3 mb-8">
                             <div class="bg-gradient-to-r from-blue-500 to-purple-600 p-3 rounded-2xl text-white"><i class="fa-solid fa-file-pen text-xl"></i></div>
@@ -538,7 +581,7 @@
                                     <select id="inv-type" onchange="toggleInvForm(this.value)" class="w-full px-4 py-4 border-2 rounded-2xl focus:ring-4 focus:ring-blue-200 focus:border-blue-500 outline-none text-lg bg-gray-50">
                                         <option value="">-- เลือกสถานะ --</option>
                                         <option value="ซื้อเข้า" class="text-green-600">📦 ซื้อเข้า</option>
-                                        <option value="ขายออก" class="text-red-600">🚛 ขายออก</option>
+                                        <option value="ขายออก" class="text-blue-600">🚛 ขายออก</option>
                                     </select>
                                 </div>
                                 <div class="space-y-2">
@@ -567,12 +610,16 @@
                             <button type="submit" class="w-full py-4 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold rounded-2xl shadow-lg text-xl transform active:scale-95 transition-all">บันทึกรายการ</button>
                         </form>
                     </div>
+
+                    <!-- Inventory History (Table) -->
                     <div class="bg-white backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 p-8 md:p-10">
                         <div class="flex flex-col gap-4 mb-8">
                             <div class="flex items-center gap-3">
                                 <div class="bg-gradient-to-r from-indigo-500 to-purple-600 p-3 rounded-2xl text-white"><i class="fa-solid fa-table-list text-xl"></i></div>
                                 <h2 class="text-3xl md:text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">รายการสินค้าทั้งหมด</h2>
                             </div>
+                            
+                            <!-- Filters moved below title -->
                             <div class="flex gap-3 flex-wrap items-center bg-gray-50 p-3 rounded-xl border border-gray-100 self-start">
                                 <select id="inv-filter-year" onchange="renderInventoryView()" class="px-3 py-1.5 border rounded-lg focus:ring-2 focus:ring-indigo-500 text-sm bg-white"></select>
                                 <select id="inv-filter-month" onchange="renderInventoryView()" class="px-3 py-1.5 border rounded-lg focus:ring-2 focus:ring-indigo-500 text-sm bg-white"></select>
@@ -583,6 +630,8 @@
                                 </select>
                             </div>
                         </div>
+                        
+                        <!-- Table -->
                         <div class="overflow-auto max-h-[500px] rounded-xl border border-gray-200 bg-white mb-8">
                             <table class="w-full text-left border-collapse">
                                 <thead class="bg-gray-100 text-gray-600 text-base sticky top-0 font-semibold z-10">
@@ -598,12 +647,16 @@
                             </table>
                         </div>
                     </div>
+
+                    <!-- NEW Inventory Chart Container (Buy vs Sell) -->
                     <div class="bg-white backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 p-8 md:p-10">
                         <div class="flex flex-col gap-4 mb-6">
                             <div class="flex items-center gap-3">
                                 <div class="bg-gradient-to-r from-indigo-500 to-purple-600 p-3 rounded-2xl text-white"><i class="fa-solid fa-chart-bar text-xl"></i></div>
                                 <h2 class="text-3xl md:text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">ปริมาณสินค้า (ซื้อเข้า/ขายออก)</h2>
                             </div>
+
+                            <!-- Inventory Chart Filters -->
                             <div class="flex flex-wrap gap-4 items-center bg-gray-50 p-3 rounded-xl border border-gray-100">
                                 <div class="flex items-center gap-2">
                                     <span class="text-sm font-medium text-gray-700">ปี:</span>
@@ -624,17 +677,32 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Scrollable Inventory Chart Layout (Fixed Height Sync) -->
                         <div class="flex w-full h-[450px] border border-gray-100 rounded-xl overflow-hidden relative bg-white">
+                            
+                            <!-- Fixed Y Axis Column - Set to 80px -->
                             <div class="w-[80px] h-full flex-shrink-0 relative z-20 bg-white pb-12">
                                 <div id="chart-inventory-y" class="absolute -top-3 -left-2 w-[90px] h-full"></div> 
                             </div>
+                            
+                            <!-- Scrollable X Axis Column -->
                             <div id="inventory-chart-scroller" class="flex-grow h-full overflow-x-auto overflow-y-hidden relative z-10 bg-white custom-scrollbar pb-12">
                                 <div id="chart-inventory" class="h-full"></div>
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Image Preview Modal (Admin) -->
+    <div id="admin-image-modal" class="fixed inset-0 z-[120] hidden bg-black/95 flex items-center justify-center p-4 backdrop-blur-sm" onclick="closeAdminImageModal()">
+        <button class="absolute top-6 right-6 text-white text-4xl hover:text-gray-300 focus:outline-none z-[121]">&times;</button>
+        <div class="max-h-[90vh] max-w-[90vw] overflow-auto flex flex-col items-center gap-4" onclick="event.stopPropagation()">
+            <div id="admin-image-container" class="flex flex-col gap-4"></div>
         </div>
     </div>
 
@@ -670,21 +738,6 @@
         }, { threshold: 0.1 });
         document.querySelectorAll('.fade-in-up').forEach(el => observer.observe(el));
 
-        function createBubbles() {
-            const container = document.getElementById('bubbles-container');
-            for (let i = 0; i < 50; i++) {
-                const bubble = document.createElement('div');
-                bubble.classList.add('bubble');
-                const size = Math.random() * 40 + 10 + 'px';
-                bubble.style.width = size; bubble.style.height = size;
-                bubble.style.left = Math.random() * 100 + '%';
-                bubble.style.animationDuration = Math.random() * 10 + 5 + 's';
-                bubble.style.animationDelay = Math.random() * 5 + 's';
-                container.appendChild(bubble);
-            }
-        }
-        createBubbles();
-
         // --- Typing Effect ---
         const textsToType = ["สู่มาตรฐานอุตสาหกรรม"];
         let txtIndex = 0, charIndex = 0, isDeleting = false;
@@ -699,8 +752,19 @@
             setTimeout(type, typeDelay);
         }
 
+        // Visitor Counter Logic
+        function updateVisitorCount() {
+            const counterElement = document.getElementById('visitor-counter');
+            let count = localStorage.getItem('swk_page_views');
+            if (!count) { count = 12540; } 
+            else { count = parseInt(count) + 1; }
+            localStorage.setItem('swk_page_views', count);
+            if(counterElement) { counterElement.innerText = count.toLocaleString(); }
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             type();
+            updateVisitorCount();
         });
 
         function toggleAccordion(button) {
@@ -1568,7 +1632,7 @@
                     <td class="p-4 text-gray-700 align-middle">
                         <div class="flex items-center flex-wrap gap-2">
                             <span>${r.name}</span>
-                            <span class="text-sm px-2 py-0.5 rounded border ${r.status==='ซื้อเข้า'?'bg-green-50 text-green-700 border-green-100':'bg-red-50 text-red-700 border-red-100'}">${r.status}</span>
+                            <span class="text-sm px-2 py-0.5 rounded border ${r.status==='ซื้อเข้า'?'bg-green-50 text-green-700 border-green-100':'bg-blue-50 text-blue-700 border-blue-100'}">${r.status}</span>
                         </div>
                     </td>
                     <td class="p-4 text-center align-middle">
@@ -1769,7 +1833,7 @@
                     selection: { enabled: false },
                     zoom: { enabled: false }
                 },
-                colors: ['#22c55e', '#ef4444'],
+                colors: ['#22c55e', '#3b82f6'],
                 plotOptions: {
                     bar: { 
                         borderRadius: 4, 
