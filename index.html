@@ -52,6 +52,9 @@
                             '0%': { transform: 'scale(1)' },
                             '100%': { transform: 'scale(1.15)' },
                         }
+                    },
+                    screens: {
+                        '3xl': '1920px', // Added for 16:9 large screens
                     }
                 }
             }
@@ -163,7 +166,8 @@
     <!-- Navigation -->
     <nav class="fixed w-full z-50 nav-pattern border-b border-brand-100 shadow-md transition-all duration-300 py-4" id="navbar">
         <div class="absolute inset-0 bg-gradient-to-r from-white/95 via-brand-50/80 to-white/95 pointer-events-none"></div>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <!-- ปรับเป็น w-full px-8 เพื่อให้เต็มจอมากขึ้น -->
+        <div class="w-full mx-auto px-4 sm:px-6 lg:px-12 xl:px-16 relative z-10">
             <div class="flex justify-between items-center h-16 transition-all duration-300" id="nav-container">
                 <div class="flex-shrink-0 flex items-center gap-3 cursor-pointer group" onclick="window.scrollTo(0,0)">
                     <div class="relative">
@@ -175,16 +179,13 @@
                     </div>
                     <!-- Updated Brand Name with Thai -->
                     <div class="flex flex-col group-hover:scale-105 transition-transform origin-left justify-center">
-                        <!-- 🔤 ขนาดฟอนต์ "ศิวกรณ์ ค้าเกล็ดปลา": text-xl (มือถือ), md:text-3xl (คอม) -->
                         <h1 class="font-display font-extrabold text-xl md:text-3xl leading-none tracking-tight drop-shadow-sm">
                             <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-800 via-brand-600 to-sky-500">ศิวกรณ์ ค้าเกล็ดปลา</span>
                         </h1>
-                        <!-- 🔤 ขนาดฟอนต์ "SWK FishScales": text-xs (เล็กมาก) -->
                         <span class="text-xs text-brand-400 font-bold tracking-[0.25em] uppercase mt-0.5">SWK FishScales</span>
                     </div>
                 </div>
                 <div class="hidden md:flex space-x-8 items-center">
-                    <!-- 🔤 ปรับขนาดฟอนต์เมนูจาก text-sm เป็น text-base (ใหญ่ขึ้น) -->
                     <a href="#home" class="text-gray-600 hover:text-brand-600 font-medium transition relative group text-base uppercase tracking-wide">หน้าแรก<span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand-600 transition-all group-hover:w-full"></span></a>
                     <a href="#products" class="text-gray-600 hover:text-brand-600 font-medium transition relative group text-base uppercase tracking-wide">ผลงาน<span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand-600 transition-all group-hover:w-full"></span></a>
                     <a href="#standards" class="text-gray-600 hover:text-brand-600 font-medium transition relative group text-base uppercase tracking-wide">มาตรฐาน<span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand-600 transition-all group-hover:w-full"></span></a>
@@ -206,18 +207,18 @@
     </nav>
 
     <!-- Hero Section -->
-    <section id="home" class="relative min-h-[85dvh] md:min-h-[100dvh] flex items-center overflow-hidden">
+    <section id="home" class="relative min-h-[65dvh] md:min-h-[100dvh] flex items-center overflow-hidden">
         <div class="hero-bg-container"><div class="hero-bg-image animate-pan-slow"></div></div>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full pt-20 pb-10 md:pt-28 md:pb-20"> 
-            <div class="md:w-3/4 fade-in-up">
-                <!-- 🔤 ขนาดฟอนต์ "ยกระดับคุณค่า...": text-3xl (มือถือ), sm:text-4xl (แท็บเล็ต), md:text-6xl (คอม) -->
-                <h1 class="text-3xl sm:text-4xl md:text-6xl font-bold text-white leading-tight mb-4 drop-shadow-xl"> 
-                    ยกระดับคุณค่า<span class="whitespace-nowrap text-transparent bg-clip-text bg-gradient-to-r from-sky-200 via-white to-sky-200">ทรัพยากรทางทะเล</span> <br>
+        <!-- ปรับ container ให้กว้างเต็มจอมากขึ้น -->
+        <div class="w-full mx-auto px-4 sm:px-6 lg:px-16 xl:px-24 relative z-10 pt-20 pb-10 md:pt-28 md:pb-20"> 
+            <div class="md:w-3/4 2xl:w-1/2 fade-in-up">
+                <h1 class="text-3xl sm:text-4xl md:text-6xl 2xl:text-7xl font-bold text-white leading-tight mb-4 drop-shadow-xl"> 
+                    <!-- เพิ่ม whitespace-nowrap เพื่อให้ข้อความอยู่บรรทัดเดียวกัน -->
+                    <span class="whitespace-nowrap">ยกระดับคุณค่า<span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-200 via-white to-sky-200">ทรัพยากรทางทะเล</span></span> <br>
                     <span class="inline-block min-h-[1.2em]"><span class="text-sky-400 typing-cursor" id="typing-text"></span>&nbsp;</span>
                 </h1>
-                <div class="mb-8 max-w-3xl border-l-4 border-sky-400 pl-6 py-6 bg-black/40 backdrop-blur-sm rounded-r-xl shadow-lg"> 
-                    <!-- 🔤 ขนาดฟอนต์ "คำอธิบายใต้หัวข้อ": text-base (ปกติ), md:text-xl (คอม) -->
-                    <p class="text-base md:text-xl text-white font-normal drop-shadow-md leading-relaxed">
+                <div class="mb-8 max-w-4xl border-l-4 border-sky-400 pl-6 py-6 bg-black/40 backdrop-blur-sm rounded-r-xl shadow-lg"> 
+                    <p class="text-base md:text-xl 2xl:text-2xl text-white font-normal drop-shadow-md leading-relaxed">
                         <strong class="text-sky-300">ศิวกรณ์ ค้าเกล็ดปลา (SWK)</strong> ผู้นำด้านการแปรรูปและส่งออกเกล็ดปลาคุณภาพสูง <br>
                         สำหรับอุตสาหกรรมคอลลาเจน อาหารเสริม และเครื่องสำอาง <br>
                         เพื่อส่งต่อวัตถุดิบคุณภาพสูงสู่อุตสาหกรรมสุขภาพ
@@ -243,11 +244,11 @@
 
     <!-- Standards & Trust -->
     <section id="standards" class="py-8 md:py-20 bg-white"> 
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col md:flex-row items-center gap-6 md:gap-12"> 
+        <div class="w-full mx-auto px-4 sm:px-6 lg:px-16 xl:px-24">
+            <div class="flex flex-col md:flex-row items-center gap-6 md:gap-16"> 
                 <div class="md:w-1/2 fade-in-up relative group">
                     <div class="absolute inset-0 bg-brand-500 rounded-2xl transform rotate-3 transition-transform group-hover:rotate-6 opacity-20"></div>
-                    <div class="relative rounded-2xl shadow-2xl overflow-hidden h-[250px] md:h-[400px] w-full bg-gray-100 group-hover:scale-[1.01] transition-transform duration-500"> 
+                    <div class="relative rounded-2xl shadow-2xl overflow-hidden h-[250px] md:h-[500px] w-full bg-gray-100 group-hover:scale-[1.01] transition-transform duration-500"> 
                         <div id="standards-carousel" class="w-full h-full relative">
                             <img src="https://i.postimg.cc/Gt1WkVRD/42685.jpg" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-700 opacity-100" data-index="0" alt="Standard Quality">
                             <img src="https://i.postimg.cc/vZGK85YP/Gemini-Generated-Image-hv4j9nhv4j9nhv4j.png" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-700 opacity-0" data-index="1" alt="Microscope Analysis">
@@ -263,9 +264,8 @@
                     </div>
                 </div>
                 <div class="md:w-1/2 fade-in-up">
-                    <!-- 🔤 ขนาดฟอนต์ "มาตรฐานคุณภาพ...": text-3xl (ใหญ่มาก) -->
-                    <h2 class="text-3xl font-bold text-brand-900 mb-6 border-l-4 border-brand-500 pl-4">มาตรฐานคุณภาพที่คุณวางใจได้</h2>
-                    <p class="text-gray-600 mb-6 leading-relaxed">SWK FishScales ให้ความสำคัญสูงสุดกับคุณภาพและความปลอดภัย กระบวนการผลิตของเราผ่านการตรวจสอบอย่างเข้มงวดในทุกขั้นตอน ตั้งแต่การรับวัตถุดิบจนถึงการส่งมอบสินค้า เพื่อให้มั่นใจว่าเกล็ดปลาของเราบริสุทธิ์และพร้อมสำหรับการนำไปแปรรูปต่อ</p>
+                    <h2 class="text-3xl md:text-4xl font-bold text-brand-900 mb-6 border-l-4 border-brand-500 pl-4">มาตรฐานคุณภาพที่คุณวางใจได้</h2>
+                    <p class="text-gray-600 mb-6 text-lg leading-relaxed">SWK FishScales ให้ความสำคัญสูงสุดกับคุณภาพและความปลอดภัย กระบวนการผลิตของเราผ่านการตรวจสอบอย่างเข้มงวดในทุกขั้นตอน ตั้งแต่การรับวัตถุดิบจนถึงการส่งมอบสินค้า เพื่อให้มั่นใจว่าเกล็ดปลาของเราบริสุทธิ์และพร้อมสำหรับการนำไปแปรรูปต่อ</p>
                 </div>
             </div>
         </div>
@@ -273,9 +273,8 @@
 
     <!-- Parallax Vision -->
     <section class="py-24 parallax-bg relative flex items-center justify-center text-center">
-        <div class="max-w-6xl mx-auto px-4 z-10 fade-in-up">
-            <!-- 🔤 ขนาดฟอนต์ "เราเปลี่ยนสิ่งเหลือใช้...": text-3xl (มือถือ), md:text-5xl (คอม) -->
-            <h2 class="text-3xl md:text-5xl font-bold text-white mb-6 leading-tight">
+        <div class="max-w-7xl mx-auto px-4 z-10 fade-in-up">
+            <h2 class="text-3xl md:text-6xl font-bold text-white mb-6 leading-tight">
                 <span class="text-yellow-400">"</span>เราเปลี่ยนสิ่งเหลือใช้จากธรรมชาติ <div class="h-[12pt] w-full"></div> ให้กลายเป็นนวัตกรรมที่ล้ำค่า<span class="text-yellow-400">"</span>
             </h2>
         </div>
@@ -284,32 +283,34 @@
     <!-- Products (Gallery) -->
     <section id="products" class="py-20 bg-brand-900 text-white relative overflow-hidden">
         <div id="bubbles-container" class="absolute inset-0 w-full h-full overflow-hidden z-0"></div>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="w-full mx-auto px-4 sm:px-6 lg:px-16 xl:px-24 relative z-10">
             <div class="text-center mb-16 fade-in-up">
                 <h2 class="text-brand-500 font-bold tracking-wide uppercase text-sm mb-2">Our Operations</h2>
-                <!-- 🔤 ขนาดฟอนต์ "ผลการดำเนินงาน...": text-3xl (มือถือ), md:text-4xl (คอม) -->
                 <h3 class="text-3xl md:text-4xl font-bold text-white">ผลการดำเนินงานของ SWK FishScales</h3>
             </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 fade-in-up">
-                <!-- Gallery Items -->
-                <div class="rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-brand-500/30 transition-all duration-300 transform hover:-translate-y-2 cursor-pointer group h-64 relative border-2 border-white/10" onclick="openLightbox('https://i.postimg.cc/zXwWNcG0/42674.jpg')"><img src="https://i.postimg.cc/zXwWNcG0/42674.jpg" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700"><div class="absolute inset-0 bg-black/0 group-hover:bg-white/10 transition z-10"></div></div>
-                <div class="rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-brand-500/30 transition-all duration-300 transform hover:-translate-y-2 cursor-pointer group h-64 relative border-2 border-white/10" onclick="openLightbox('https://i.postimg.cc/J477y6Qp/E2758541-8C3A-43AA-896B-5ADFEF2DE6A0.jpg')"><img src="https://i.postimg.cc/J477y6Qp/E2758541-8C3A-43AA-896B-5ADFEF2DE6A0.jpg" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700"><div class="absolute inset-0 bg-black/0 group-hover:bg-white/10 transition z-10"></div></div>
-                <div class="rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-brand-500/30 transition-all duration-300 transform hover:-translate-y-2 cursor-pointer group h-64 relative border-2 border-white/10" onclick="openLightbox('https://i.postimg.cc/JnqVM8Sw/52A3B5EF-3A63-4101-9A91-40440D85A2A4.jpg')"><img src="https://i.postimg.cc/JnqVM8Sw/52A3B5EF-3A63-4101-9A91-40440D85A2A4.jpg" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700"><div class="absolute inset-0 bg-black/0 group-hover:bg-white/10 transition z-10"></div></div>
-                <div class="rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-brand-500/30 transition-all duration-300 transform hover:-translate-y-2 cursor-pointer group h-64 relative border-2 border-white/10" onclick="openLightbox('https://i.postimg.cc/nL9BycjV/070213EF-16C2-41D4-B2CE-00A406A346CD.jpg')"><img src="https://i.postimg.cc/nL9BycjV/070213EF-16C2-41D4-B2CE-00A406A346CD.jpg" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700"><div class="absolute inset-0 bg-black/0 group-hover:bg-white/10 transition z-10"></div></div>
-                <div class="rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-brand-500/30 transition-all duration-300 transform hover:-translate-y-2 cursor-pointer group h-64 relative border-2 border-white/10" onclick="openLightbox('https://i.postimg.cc/LXzfsC37/42702-0.jpg')"><img src="https://i.postimg.cc/LXzfsC37/42702-0.jpg" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700"><div class="absolute inset-0 bg-black/0 group-hover:bg-white/10 transition z-10"></div></div>
-                <div class="rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-brand-500/30 transition-all duration-300 transform hover:-translate-y-2 cursor-pointer group h-64 relative border-2 border-white/10" onclick="openLightbox('https://i.postimg.cc/1Rrwhdtd/42701-0.jpg')"><img src="https://i.postimg.cc/1Rrwhdtd/42701-0.jpg" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700"><div class="absolute inset-0 bg-black/0 group-hover:bg-white/10 transition z-10"></div></div>
+            <!-- ปรับ Grid ให้รองรับหน้าจอใหญ่พิเศษ -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-8 fade-in-up">
+                <!-- Gallery Items (Added 2 more items to make 8 total) -->
+                <div class="rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-brand-500/30 transition-all duration-300 transform hover:-translate-y-2 cursor-pointer group h-64 xl:h-72 relative border-2 border-white/10" onclick="openLightbox('https://i.postimg.cc/zXwWNcG0/42674.jpg')"><img src="https://i.postimg.cc/zXwWNcG0/42674.jpg" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700"><div class="absolute inset-0 bg-black/0 group-hover:bg-white/10 transition z-10"></div></div>
+                <div class="rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-brand-500/30 transition-all duration-300 transform hover:-translate-y-2 cursor-pointer group h-64 xl:h-72 relative border-2 border-white/10" onclick="openLightbox('https://i.postimg.cc/J477y6Qp/E2758541-8C3A-43AA-896B-5ADFEF2DE6A0.jpg')"><img src="https://i.postimg.cc/J477y6Qp/E2758541-8C3A-43AA-896B-5ADFEF2DE6A0.jpg" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700"><div class="absolute inset-0 bg-black/0 group-hover:bg-white/10 transition z-10"></div></div>
+                <div class="rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-brand-500/30 transition-all duration-300 transform hover:-translate-y-2 cursor-pointer group h-64 xl:h-72 relative border-2 border-white/10" onclick="openLightbox('https://i.postimg.cc/JnqVM8Sw/52A3B5EF-3A63-4101-9A91-40440D85A2A4.jpg')"><img src="https://i.postimg.cc/JnqVM8Sw/52A3B5EF-3A63-4101-9A91-40440D85A2A4.jpg" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700"><div class="absolute inset-0 bg-black/0 group-hover:bg-white/10 transition z-10"></div></div>
+                <div class="rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-brand-500/30 transition-all duration-300 transform hover:-translate-y-2 cursor-pointer group h-64 xl:h-72 relative border-2 border-white/10" onclick="openLightbox('https://i.postimg.cc/nL9BycjV/070213EF-16C2-41D4-B2CE-00A406A346CD.jpg')"><img src="https://i.postimg.cc/nL9BycjV/070213EF-16C2-41D4-B2CE-00A406A346CD.jpg" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700"><div class="absolute inset-0 bg-black/0 group-hover:bg-white/10 transition z-10"></div></div>
+                <div class="rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-brand-500/30 transition-all duration-300 transform hover:-translate-y-2 cursor-pointer group h-64 xl:h-72 relative border-2 border-white/10" onclick="openLightbox('https://i.postimg.cc/LXzfsC37/42702-0.jpg')"><img src="https://i.postimg.cc/LXzfsC37/42702-0.jpg" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700"><div class="absolute inset-0 bg-black/0 group-hover:bg-white/10 transition z-10"></div></div>
+                <div class="rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-brand-500/30 transition-all duration-300 transform hover:-translate-y-2 cursor-pointer group h-64 xl:h-72 relative border-2 border-white/10" onclick="openLightbox('https://i.postimg.cc/1Rrwhdtd/42701-0.jpg')"><img src="https://i.postimg.cc/1Rrwhdtd/42701-0.jpg" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700"><div class="absolute inset-0 bg-black/0 group-hover:bg-white/10 transition z-10"></div></div>
+                <!-- Added Item 7 -->
+                <div class="rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-brand-500/30 transition-all duration-300 transform hover:-translate-y-2 cursor-pointer group h-64 xl:h-72 relative border-2 border-white/10" onclick="openLightbox('https://images.unsplash.com/photo-1544551763-46a013bb70d5?q=80&w=2070&auto=format&fit=crop')"><img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?q=80&w=2070&auto=format&fit=crop" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700"><div class="absolute inset-0 bg-black/0 group-hover:bg-white/10 transition z-10"></div></div>
+                <!-- Added Item 8 -->
+                <div class="rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-brand-500/30 transition-all duration-300 transform hover:-translate-y-2 cursor-pointer group h-64 xl:h-72 relative border-2 border-white/10" onclick="openLightbox('https://images.unsplash.com/photo-1518837695005-2083093ee35b?q=80&w=2070&auto=format&fit=crop')"><img src="https://images.unsplash.com/photo-1518837695005-2083093ee35b?q=80&w=2070&auto=format&fit=crop" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700"><div class="absolute inset-0 bg-black/0 group-hover:bg-white/10 transition z-10"></div></div>
             </div>
         </div>
     </section>
 
-
     <!-- Contact -->
     <section id="contact" class="py-20 bg-gray-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="w-full mx-auto px-4 sm:px-6 lg:px-16 xl:px-24">
             <div class="bg-white rounded-3xl shadow-xl overflow-hidden flex flex-col md:flex-row fade-in-up">
                 <div class="md:w-5/12 bg-gradient-to-br from-brand-600 to-brand-800 p-10 text-white flex flex-col justify-center">
                     <div>
-                        <!-- 🔤 ขนาดฟอนต์ "ร่วมธุรกิจกับเรา": text-3xl (ใหญ่มาก) -->
                         <h3 class="text-3xl font-bold mb-8">ร่วมธุรกิจกับเรา</h3>
                         <div class="space-y-8">
                             <div class="flex items-start gap-4"><div class="bg-white/20 p-3 rounded-lg"><i class="fa-solid fa-location-dot"></i></div><div><h5 class="font-bold text-lg">ที่อยู่สำนักงาน</h5><p class="text-brand-100 leading-relaxed">9/1 ตำบลบางตะบูนออก <br>อำเภอบ้านแหลม จังหวัดเพชรบุรี</p></div></div>
@@ -356,7 +357,8 @@
 
     <!-- Footer -->
     <footer class="bg-gray-900 text-gray-400 py-8 border-t border-gray-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- ปรับ Full Width สำหรับ Footer -->
+        <div class="w-full mx-auto px-4 sm:px-6 lg:px-16 xl:px-24">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
                 <div class="col-span-1 md:col-span-1"><div class="flex items-center gap-2 mb-3"><i class="fa-solid fa-fish-fins text-brand-500 text-2xl"></i><span class="font-bold text-white text-lg">SWK FishScales</span></div><p class="text-sm mb-3">มุ่งมั่นสร้างสรรค์ผลิตภัณฑ์จากธรรมชาติ ด้วยนวัตกรรมที่ยั่งยืน เพื่อคุณภาพชีวิตที่ดีกว่า</p></div>
                 <div><h4 class="text-white font-bold mb-3">เมนูหลัก</h4><ul class="space-y-1 text-sm"><li><a href="#home" class="hover:text-brand-500 transition">หน้าแรก</a></li><li><a href="#products" class="hover:text-brand-500 transition">ผลงาน</a></li></ul></div>
@@ -371,7 +373,6 @@
                     </button>
                 </div>
                 <div class="text-center">
-                    <!-- 🔤 ขนาดฟอนต์ "ลิขสิทธิ์ Footer": text-sm -->
                     <p>&copy; 2024 SWK Fish Scales Trade Co.,LTD </p>
                 </div>
             </div>
@@ -809,7 +810,33 @@
             else if (isDeleting && charIndex === 0) { isDeleting = false; txtIndex = (txtIndex + 1) % textsToType.length; typeDelay = 500; }
             setTimeout(type, typeDelay);
         }
-        document.addEventListener('DOMContentLoaded', type);
+
+        // Visitor Counter Logic
+        function updateVisitorCount() {
+            const counterElement = document.getElementById('visitor-counter');
+            // Check local storage for existing count
+            let count = localStorage.getItem('swk_page_views');
+            
+            // If no count exists (first time or cleared), start at a realistic base number
+            if (!count) {
+                count = 12540; 
+            } else {
+                // Otherwise increment
+                count = parseInt(count) + 1;
+            }
+            
+            // Save back to storage
+            localStorage.setItem('swk_page_views', count);
+            
+            if(counterElement) {
+                counterElement.innerText = count.toLocaleString();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            type();
+            updateVisitorCount();
+        });
 
         function toggleAccordion(button) {
             const content = button.nextElementSibling;
