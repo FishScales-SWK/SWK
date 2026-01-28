@@ -62,10 +62,14 @@
         html { scroll-behavior: smooth; }
         .fade-in-up { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
         .fade-in-up.visible { opacity: 1; transform: translateY(0); }
-        .typing-cursor::after { content: ''; }
+        .typing-cursor::after { content: '|'; animation: blink 1s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+        
         .hero-bg-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: 0; }
         .hero-bg-image { width: 100%; height: 100%; background-image: linear-gradient(to right, rgba(12, 74, 110, 0.9), rgba(12, 74, 110, 0.5)), url('https://images.unsplash.com/photo-1583212292454-1fe6229603b7?q=80&w=2000&auto=format&fit=crop'); background-size: cover; background-position: center; }
+        
         .nav-pattern { background-color: #ffffff; background-image: radial-gradient(#e0f2fe 1.5px, transparent 1.5px), radial-gradient(#e0f2fe 1.5px, #ffffff 1.5px); background-size: 20px 20px; background-position: 0 0, 10px 10px; }
+        
         .parallax-bg { background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1518837695005-2083093ee35b?q=80&w=2070&auto=format&fit=crop'); background-attachment: fixed; background-position: center; background-repeat: no-repeat; background-size: cover; }
         
         ::-webkit-scrollbar { width: 8px; height: 8px; }
@@ -92,6 +96,22 @@
         
         .loader { border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Custom Scrollbar for Charts */
+        .custom-scrollbar::-webkit-scrollbar {
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
     </style>
 </head>
 <body class="font-sans text-gray-700 bg-gray-50 antialiased relative overflow-x-hidden">
@@ -364,6 +384,12 @@
         </div>
     </div>
 
+    <!-- ADMIN IMAGE MODAL -->
+    <div id="admin-image-modal" class="fixed inset-0 z-[120] hidden bg-black/90 flex items-center justify-center p-4 backdrop-blur-md" onclick="closeAdminImageModal()">
+        <button class="absolute top-6 right-6 text-white text-4xl hover:text-gray-300 focus:outline-none z-[121]">&times;</button>
+        <div id="admin-image-container" class="max-h-[90vh] max-w-[90vw] overflow-auto flex flex-col gap-4 items-center" onclick="event.stopPropagation()"></div>
+    </div>
+
     <!-- ADMIN MODAL -->
     <div id="admin-modal" class="fixed inset-0 z-[110] hidden bg-black/80 flex items-center justify-center p-0 md:p-4 backdrop-blur-sm opacity-0 transition-opacity duration-300">
         <div class="w-full h-full md:rounded-2xl shadow-2xl overflow-hidden relative flex flex-col transform scale-100 md:scale-95 transition-transform duration-300 bg-white">
@@ -550,8 +576,18 @@
                                     <input type="text" id="inv-name" class="w-full px-4 py-4 border-2 rounded-2xl focus:ring-4 focus:ring-blue-200 focus:border-blue-500 outline-none text-lg" placeholder="กรอกชื่อ...">
                                 </div>
                             </div>
+
+                            <!-- New: Bag Input Container (Hidden by default) -->
+                            <div id="inv-bags-container" class="space-y-2 hidden">
+                                <label class="font-semibold text-slate-700 text-lg">จำนวน (กระสอบ)</label>
+                                <div class="relative">
+                                    <input type="number" id="inv-bags-input" class="w-full px-4 py-4 pr-16 border-2 rounded-2xl focus:ring-4 focus:ring-blue-200 focus:border-blue-500 outline-none text-lg" placeholder="0">
+                                    <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 font-bold">กระสอบ</span>
+                                </div>
+                            </div>
+
                             <div class="space-y-2">
-                                <label class="font-semibold text-slate-700 text-lg" id="inv-qty-label">จำนวน (KG)</label>
+                                <label class="font-semibold text-slate-700 text-lg" id="inv-qty-label">จำนวน (กิโลกรัม)</label>
                                 <div class="relative">
                                     <input type="number" id="inv-qty" step="0.01" class="w-full px-4 py-4 pr-16 border-2 rounded-2xl focus:ring-4 focus:ring-blue-200 focus:border-blue-500 outline-none text-lg" placeholder="0.00">
                                     <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 font-bold" id="inv-unit">KG</span>
@@ -824,7 +860,11 @@
 
         const calculateReadyStockBags = () => {
             const totalProd = appData.production.reduce((s, r) => s + (parseInt(r.bags) || 0), 0);
-            const totalSold = appData.records.filter(r => r.status === 'ขายออก').reduce((s, r) => s + (parseFloat(r.quantity) || 0), 0) / 10;
+            const totalSold = appData.records.filter(r => r.status === 'ขายออก').reduce((s, r) => {
+                // ใช้ค่าจาก bags โดยตรง ถ้าไม่มีให้คำนวณจาก quantity / 10
+                const soldBags = r.bags ? parseInt(r.bags) : (parseFloat(r.quantity) || 0) / 10;
+                return s + soldBags;
+            }, 0);
             return Math.max(0, totalProd - totalSold);
         };
 
@@ -970,24 +1010,37 @@
             renderInventoryChart();
         }
 
+        function calculateBags() {
+            // Deprecated for Sell, used for visual check only if needed
+        }
+
         function toggleInvForm(type) {
             const nameInput = document.getElementById('inv-name');
             const qtyLabel = document.getElementById('inv-qty-label');
             const unitLabel = document.getElementById('inv-unit');
             const qtyInput = document.getElementById('inv-qty');
+            const bagsContainer = document.getElementById('inv-bags-container');
 
             if (type === 'ขายออก') {
+                // Show Bag Input
+                bagsContainer.classList.remove('hidden');
+                
+                // Adjust KG Input
+                qtyLabel.innerText = 'น้ำหนักจริง (กิโลกรัม)';
+                qtyInput.placeholder = 'ระบุน้ำหนักชั่งจริง...';
+                
+                // Auto-fill customer
                 nameInput.value = 'ลูกค้าทั่วไป'; nameInput.readOnly = true; nameInput.classList.add('bg-gray-100');
-                // เปลี่ยน Label และหน่วยเป็นกระสอบ
-                qtyLabel.innerText = 'จำนวน (กระสอบ)'; 
-                unitLabel.innerText = 'Bags'; 
-                qtyInput.placeholder = '0';
             } else {
-                nameInput.value = ''; nameInput.readOnly = false; nameInput.classList.remove('bg-gray-100');
-                // คืนค่าเป็นกิโลกรัมสำหรับซื้อเข้า
-                qtyLabel.innerText = 'จำนวน (กิโลกรัม)'; 
-                unitLabel.innerText = 'KG'; 
+                // Hide Bag Input
+                bagsContainer.classList.add('hidden');
+                
+                // Reset KG Input
+                qtyLabel.innerText = 'จำนวน (กิโลกรัม)';
                 qtyInput.placeholder = '0.00';
+                
+                // Reset customer
+                nameInput.value = ''; nameInput.readOnly = false; nameInput.classList.remove('bg-gray-100');
             }
         }
 
@@ -1077,7 +1130,14 @@
                         }
                         // Fix: Clean comma before parsing float
                         const cleanQty = String(r.quantity).replace(/,/g, '');
-                        return {...r, quantity: parseFloat(cleanQty) || 0, images: imgs};
+                        // Map bags info as well
+                        const cleanBags = r.bags ? String(r.bags).replace(/,/g, '') : 0;
+                        return {
+                            ...r, 
+                            quantity: parseFloat(cleanQty) || 0, 
+                            bags: parseInt(cleanBags) || 0,
+                            images: imgs
+                        };
                     });
                     
                     if(!document.getElementById('view-production').classList.contains('hidden')) { 
@@ -1190,33 +1250,56 @@
         function submitInventory(e) {
             e.preventDefault();
             const type = document.getElementById('inv-type').value;
-            const name = document.getElementById('inv-name').value;
-            let inputQty = parseFloat(document.getElementById('inv-qty').value);
+            let name = document.getElementById('inv-name').value;
+            let inputQty = parseFloat(document.getElementById('inv-qty').value); // KG (น้ำหนักจริง)
             
-            if (!type || !name || !inputQty) { return Swal.fire({title: 'ข้อมูลไม่ครบถ้วน', text: 'กรุณากรอกข้อมูลให้ครบทุกช่อง', icon: 'warning', confirmButtonColor: '#0ea5e9'}); }
+            if (!type || !name) { return Swal.fire({title: 'ข้อมูลไม่ครบถ้วน', text: 'กรุณากรอกข้อมูลให้ครบ', icon: 'warning', confirmButtonColor: '#0ea5e9'}); }
             
-            let finalQty = inputQty;
+            let bagsVal = 0;
             let displayHtml = '';
 
             if (type === 'ขายออก') {
-                // ตรวจสอบสต็อก (หน่วยกระสอบ)
+                const inputBags = parseInt(document.getElementById('inv-bags-input').value);
+                
+                if (!inputBags || inputBags <= 0) {
+                    return Swal.fire({title: 'ข้อมูลไม่ครบถ้วน', text: 'กรุณาระบุจำนวนกระสอบที่ขาย', icon: 'warning', confirmButtonColor: '#0ea5e9'});
+                }
+                
+                if (!inputQty) {
+                     return Swal.fire({title: 'ข้อมูลไม่ครบถ้วน', text: 'กรุณาระบุน้ำหนักจริง', icon: 'warning', confirmButtonColor: '#0ea5e9'});
+                }
+
+                // Check Stock
                 const stockBags = calculateReadyStockBags();
-                if (inputQty > stockBags) { return Swal.fire({title: 'สต็อกไม่เพียงพอ', text: `สินค้ามีเพียง ${stockBags} กระสอบ ไม่สามารถขายออก ${inputQty} กระสอบได้`, icon: 'error', confirmButtonColor: '#0ea5e9'}); }
-                // คำนวณเป็นกิโลกรัม (กระสอบ * 10)
-                finalQty = inputQty * 10;
+                if (inputBags > stockBags) { 
+                    return Swal.fire({
+                        title: 'สต็อกไม่เพียงพอ', 
+                        text: `สินค้ามีเพียง ${stockBags.toLocaleString()} กระสอบ ไม่สามารถขายออก ${inputBags.toLocaleString()} กระสอบได้`, 
+                        icon: 'error', 
+                        confirmButtonColor: '#0ea5e9'
+                    }); 
+                }
+                
+                // Logic Update: Use explicit values provided by user
+                bagsVal = inputBags;
+                // ไม่ต้องคูณ 10 แล้ว และไม่ต้องแก้ชื่อ
+                // finalQty = inputQty (ใช้น้ำหนักจริงที่กรอกมาเลย)
                 
                 displayHtml = `
-                    <p class="text-lg">จำนวน: <b>${inputQty.toLocaleString()}</b> กระสอบ</p>
-                    <p class="text-sm text-gray-500">(${finalQty.toLocaleString()} กิโลกรัม)</p>
+                    <div class="bg-blue-50 p-4 rounded-xl border border-blue-100 mb-2">
+                        <p class="text-xl font-bold text-blue-900 mb-1">ขายออก: ${inputBags.toLocaleString()} กระสอบ</p>
+                        <p class="text-gray-600">น้ำหนักจริง: ${inputQty.toLocaleString()} กิโลกรัม</p>
+                    </div>
                 `;
             } else {
-                displayHtml = `<p class="text-lg">จำนวน: <b>${inputQty.toLocaleString()}</b> กิโลกรัม</p>`;
+                if (!inputQty) { return Swal.fire({title: 'ข้อมูลไม่ครบถ้วน', text: 'กรุณาระบุจำนวนกิโลกรัม', icon: 'warning', confirmButtonColor: '#0ea5e9'}); }
+                displayHtml = `<p class="text-lg">ซื้อเข้า: <b>${inputQty.toLocaleString()}</b> กิโลกรัม</p>`;
             }
 
-            // เพิ่ม Popup ยืนยันก่อนบันทึก
+            // Popup Confirmation
             Swal.fire({
                 title: 'ยืนยันการบันทึก',
-                html: `<p class="text-xl font-bold text-brand-600 mb-2">${type}</p>${displayHtml}`,
+                html: displayHtml,
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonColor: '#059669',
@@ -1224,12 +1307,20 @@
                 cancelButtonText: 'ยกเลิก'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    sendData('add', 'Records', { status: type, name, quantity: finalQty, images: currentInvImages });
+                    // Send bags specifically for Sell, or 0/null for Buy
+                    sendData('add', 'Records', { 
+                        status: type, 
+                        name: name, 
+                        quantity: inputQty, // Always save Real Weight
+                        bags: bagsVal,      // Save Real Bags
+                        images: currentInvImages 
+                    });
                     e.target.reset();
                     document.getElementById('image-preview-container').innerHTML = '';
                     document.getElementById('image-upload-placeholder').classList.remove('hidden');
+                    document.getElementById('inv-bags-container').classList.add('hidden'); 
                     currentInvImages = [];
-                    // Force refresh to current date filter so user sees the new item
+                    // Force refresh filters
                     document.getElementById('inv-filter-year').value = new Date().getFullYear();
                     document.getElementById('inv-filter-month').value = new Date().getMonth() + 1;
                     document.getElementById('inv-filter-status').value = "";
@@ -1497,8 +1588,8 @@
                     formatter: function (val) { return val > 0 ? val : ""; }
                 },
                 states: { 
-                     hover: { filter: { type: 'none' } },
-                     active: { filter: { type: 'none' } }
+                      hover: { filter: { type: 'none' } },
+                      active: { filter: { type: 'none' } }
                 },
                 xaxis: {
                     categories: categories,
@@ -1530,7 +1621,7 @@
                     borderColor: '#cbd5e1', 
                     strokeDashArray: 4, 
                     padding: { top: 0, bottom: 0, left: 20, right: 20 },
-                    xaxis: { lines: { show: true } },   
+                    xaxis: { lines: { show: true } },    
                     yaxis: { lines: { show: true } }
                 }, 
                 tooltip: { enabled: false }
@@ -1551,6 +1642,7 @@
         }
 
         function renderInventoryView() {
+            // ... variables setup ...
             const thisMonth = new Date().getMonth();
             const thisYear = new Date().getFullYear();
             let inKg = 0, outKg = 0;
@@ -1569,12 +1661,10 @@
             const fStatus = document.getElementById('inv-filter-status').value;
 
             let filtered = appData.records;
-            // Fix: Loose equality (==) for year/month to handle string vs number
             if(fYear) filtered = filtered.filter(r => parseDate(r.timestamp).getFullYear() == fYear);
             if(fMonth) filtered = filtered.filter(r => parseDate(r.timestamp).getMonth() + 1 == fMonth);
             if(fStatus) filtered = filtered.filter(r => r.status == fStatus);
 
-            // CASE 1: Specific Month Selected -> Show Details
             if (fMonth) {
                 filtered.sort((a,b) => parseDate(b.timestamp) - parseDate(a.timestamp));
                 if (filtered.length === 0) {
@@ -1585,25 +1675,22 @@
                 tbody.innerHTML = '';
                 filtered.forEach(r => {
                     const d = parseDate(r.timestamp);
-                    const datePart = `${d.getDate().toString().padStart(2,'0')}/${(d.getMonth()+1).toString().padStart(2,'0')}/${d.getFullYear()+543}`;
-                    const timePart = `${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')} น.`;
-                    const ds = `${datePart} ${timePart}`;
+                    const ds = `${d.getDate().toString().padStart(2,'0')}/${(d.getMonth()+1).toString().padStart(2,'0')}/${d.getFullYear()+543} ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')} น.`;
                     
                     let detailBtnClass = "text-gray-400 cursor-not-allowed";
                     let detailOnClick = "";
-                    let detailIcon = "fa-solid fa-circle-info";
                     
                     if (r.images && r.images.length > 0) {
                         const imgJson = JSON.stringify(r.images).replace(/"/g, '&quot;');
                         detailBtnClass = "text-brand-600 hover:text-brand-800 hover:underline";
                         detailOnClick = `onclick="openAdminImageModal(${imgJson})"`;
                     }
-
-                    const detailBtn = `<button ${detailOnClick} class="${detailBtnClass} font-medium text-base flex items-center justify-center gap-1 mx-auto transition-colors"><i class="${detailIcon}"></i> ดูรายละเอียด</button>`;
+                    const detailBtn = `<button ${detailOnClick} class="${detailBtnClass} font-medium text-base flex items-center justify-center gap-1 mx-auto transition-colors"><i class="fa-solid fa-circle-info"></i> ดูรายละเอียด</button>`;
 
                     let amountHtml = '';
                     if (r.status === 'ขายออก') {
-                        const bags = r.quantity / 10;
+                        // Use r.bags if available, else fallback
+                        const bags = r.bags ? r.bags : (r.quantity / 10); 
                         amountHtml = `<span class="font-semibold text-blue-700">${r.quantity.toLocaleString()} กิโลกรัม</span><div class="text-sm text-gray-500 mt-1">(${bags.toLocaleString()} กระสอบ)</div>`;
                     } else {
                         amountHtml = `<span class="font-semibold text-gray-800">${r.quantity.toLocaleString()} กิโลกรัม</span>`;
@@ -1619,33 +1706,28 @@
                                 <span class="text-sm px-2 py-0.5 rounded border ${r.status==='ซื้อเข้า'?'bg-green-50 text-green-700 border-green-100':'bg-blue-50 text-blue-700 border-blue-100'}">${r.status}</span>
                             </div>
                         </td>
-                        <td class="p-4 text-center align-middle">
-                            ${amountHtml}
-                        </td>
+                        <td class="p-4 text-center align-middle">${amountHtml}</td>
                         <td class="p-4 text-center align-middle">${detailBtn}</td>
                         <td class="p-4 text-center align-middle">
-                            <button onclick="deleteData('${r.id}', 'Records')" class="w-10 h-10 flex items-center justify-center bg-red-100 hover:bg-red-200 text-red-500 hover:text-red-700 rounded-full transition-all duration-200 shadow-sm mx-auto">
-                                <i class="fa-solid fa-trash-can"></i>
-                            </button>
+                            <button onclick="deleteData('${r.id}', 'Records')" class="w-10 h-10 flex items-center justify-center bg-red-100 hover:bg-red-200 text-red-500 hover:text-red-700 rounded-full transition-all duration-200 shadow-sm mx-auto"><i class="fa-solid fa-trash-can"></i></button>
                         </td>
                     `;
                     tbody.appendChild(tr);
                 });
             }
-            // CASE 2: All Months Selected -> Show Summary
+            // ... (Summary view logic remains same, just aggregated) ...
             else {
+                // ... (Existing summary logic) ...
                 const monthlyData = {};
                 filtered.forEach(r => {
                     const d = parseDate(r.timestamp);
                     const key = `${d.getFullYear()}-${d.getMonth()}`; 
-                    if (!monthlyData[key]) {
-                        monthlyData[key] = { year: d.getFullYear(), month: d.getMonth(), buy: 0, sell: 0, count: 0 };
-                    }
+                    if (!monthlyData[key]) { monthlyData[key] = { year: d.getFullYear(), month: d.getMonth(), buy: 0, sell: 0, count: 0 }; }
                     if (r.status === 'ซื้อเข้า') monthlyData[key].buy += r.quantity;
                     else if (r.status === 'ขายออก') monthlyData[key].sell += r.quantity;
                     monthlyData[key].count++;
                 });
-
+                
                 const sortedMonths = Object.values(monthlyData).sort((a, b) => {
                     if (a.year !== b.year) return b.year - a.year;
                     return b.month - a.month;
@@ -1654,14 +1736,13 @@
                 const tbody = document.getElementById('table-inv-body'); 
                 tbody.innerHTML = '';
                 if (sortedMonths.length === 0) {
-                     tbody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-gray-500">ไม่พบข้อมูล</td></tr>';
-                     return;
+                      tbody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-gray-500">ไม่พบข้อมูล</td></tr>';
+                      return;
                 }
 
                 sortedMonths.forEach(m => {
                     const monthName = getThaiMonthName(m.month + 1);
                     const yearThai = m.year + 543;
-                    
                     const buyText = m.buy > 0 ? `<div class="text-green-700 font-medium">เข้า: ${m.buy.toLocaleString()} KG</div>` : '';
                     const sellText = m.sell > 0 ? `<div class="text-blue-700 font-medium">ออก: ${m.sell.toLocaleString()} KG</div>` : '';
                     const summaryText = (buyText + sellText) || '<span class="text-gray-400">-</span>';
