@@ -73,6 +73,23 @@
         ::-webkit-scrollbar-thumb { background: #0284c7; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #075985; }
         
+        /* Bubble Animation */
+        .bubble {
+            position: absolute; 
+            bottom: -50px; 
+            background-color: rgba(255, 255, 255, 0.3); 
+            border-radius: 50%; 
+            pointer-events: none; 
+            animation: floatUp linear infinite;
+            z-index: 0; 
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(0); opacity: 0; }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% { transform: translateY(-100vh); opacity: 0; }
+        }
+        
         .loader { border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
@@ -155,6 +172,7 @@
             <div class="flex flex-col md:flex-row items-center gap-8 md:gap-16 2xl:gap-24"> 
                 <div class="w-full md:w-1/2 fade-in-up relative group">
                     <div class="absolute inset-0 bg-brand-500 rounded-2xl transform rotate-3 transition-transform group-hover:rotate-6 opacity-20"></div>
+                    <!-- 16:9 Aspect Ratio Container for Image -->
                     <div class="relative rounded-2xl shadow-2xl overflow-hidden w-full aspect-video bg-gray-100 group-hover:scale-[1.01] transition-transform duration-500"> 
                         <div id="standards-carousel" class="w-full h-full relative">
                             <img src="https://i.postimg.cc/Gt1WkVRD/42685.jpg" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-700 opacity-100" data-index="0" alt="Standard Quality">
@@ -189,6 +207,7 @@
 
     <!-- Products (Gallery) -->
     <section id="products" class="py-12 md:py-20 2xl:py-28 bg-brand-900 text-white relative overflow-hidden">
+        <!-- BUBBLE ANIMATION RESTORED & VISIBLE -->
         <div id="bubbles-container" class="absolute inset-0 w-full h-full overflow-hidden z-0"></div>
         <div class="max-w-[1920px] w-full mx-auto px-4 sm:px-6 lg:px-16 xl:px-24 2xl:px-32 relative z-10">
             <div class="text-center mb-10 md:mb-16 2xl:mb-20 fade-in-up">
@@ -197,26 +216,32 @@
             </div>
             
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 2xl:gap-12 fade-in-up">
+                <!-- Gallery Item 1 -->
                 <div class="aspect-video w-full rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-brand-500/30 transition-all duration-300 transform hover:-translate-y-2 cursor-pointer group relative border-2 border-white/10" onclick="openLightbox('https://i.postimg.cc/zXwWNcG0/42674.jpg')">
                     <img src="https://i.postimg.cc/zXwWNcG0/42674.jpg" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700">
                     <div class="absolute inset-0 bg-black/0 group-hover:bg-white/10 transition z-10"></div>
                 </div>
+                <!-- Gallery Item 2 -->
                 <div class="aspect-video w-full rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-brand-500/30 transition-all duration-300 transform hover:-translate-y-2 cursor-pointer group relative border-2 border-white/10" onclick="openLightbox('https://i.postimg.cc/J477y6Qp/E2758541-8C3A-43AA-896B-5ADFEF2DE6A0.jpg')">
                     <img src="https://i.postimg.cc/J477y6Qp/E2758541-8C3A-43AA-896B-5ADFEF2DE6A0.jpg" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700">
                     <div class="absolute inset-0 bg-black/0 group-hover:bg-white/10 transition z-10"></div>
                 </div>
+                <!-- Gallery Item 3 -->
                 <div class="aspect-video w-full rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-brand-500/30 transition-all duration-300 transform hover:-translate-y-2 cursor-pointer group relative border-2 border-white/10" onclick="openLightbox('https://i.postimg.cc/JnqVM8Sw/52A3B5EF-3A63-4101-9A91-40440D85A2A4.jpg')">
                     <img src="https://i.postimg.cc/JnqVM8Sw/52A3B5EF-3A63-4101-9A91-40440D85A2A4.jpg" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700">
                     <div class="absolute inset-0 bg-black/0 group-hover:bg-white/10 transition z-10"></div>
                 </div>
+                <!-- Gallery Item 4 -->
                 <div class="aspect-video w-full rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-brand-500/30 transition-all duration-300 transform hover:-translate-y-2 cursor-pointer group relative border-2 border-white/10" onclick="openLightbox('https://i.postimg.cc/nL9BycjV/070213EF-16C2-41D4-B2CE-00A406A346CD.jpg')">
                     <img src="https://i.postimg.cc/nL9BycjV/070213EF-16C2-41D4-B2CE-00A406A346CD.jpg" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700">
                     <div class="absolute inset-0 bg-black/0 group-hover:bg-white/10 transition z-10"></div>
                 </div>
+                <!-- Gallery Item 5 -->
                 <div class="aspect-video w-full rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-brand-500/30 transition-all duration-300 transform hover:-translate-y-2 cursor-pointer group relative border-2 border-white/10" onclick="openLightbox('https://i.postimg.cc/LXzfsC37/42702-0.jpg')">
                     <img src="https://i.postimg.cc/LXzfsC37/42702-0.jpg" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700">
                     <div class="absolute inset-0 bg-black/0 group-hover:bg-white/10 transition z-10"></div>
                 </div>
+                <!-- Gallery Item 6 -->
                 <div class="aspect-video w-full rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-brand-500/30 transition-all duration-300 transform hover:-translate-y-2 cursor-pointer group relative border-2 border-white/10" onclick="openLightbox('https://i.postimg.cc/1Rrwhdtd/42701-0.jpg')">
                     <img src="https://i.postimg.cc/1Rrwhdtd/42701-0.jpg" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700">
                     <div class="absolute inset-0 bg-black/0 group-hover:bg-white/10 transition z-10"></div>
@@ -242,6 +267,7 @@
                 <div class="md:w-7/12 p-8 md:p-14 flex flex-col items-center justify-center bg-gray-50/50">
                     <h3 class="text-xl md:text-2xl 2xl:text-3xl font-bold text-gray-800 mb-6 md:mb-8">ช่องทางติดต่อออนไลน์</h3>
                     <div class="flex flex-col md:flex-row items-center md:items-stretch gap-6 md:gap-8 w-full justify-center">
+                        <!-- LINE Card -->
                         <div class="flex flex-col items-center p-6 bg-white rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 w-full md:w-[320px] 2xl:w-[360px] min-h-[300px] md:min-h-[340px] 2xl:min-h-[400px]">
                             <div class="w-40 h-40 md:w-48 md:h-48 2xl:w-56 2xl:h-56 bg-white p-2 rounded-lg mb-4 border border-gray-100 flex items-center justify-center">
                                 <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://line.me/ti/p/~swkfishscales" alt="Line QR Code" class="w-full h-full object-contain">
@@ -257,7 +283,10 @@
                                 </a>
                             </div>
                         </div>
+                        
                         <div class="md:hidden text-gray-400 font-medium my-2">หรือ</div>
+                        
+                        <!-- Facebook Card -->
                         <a href="https://www.facebook.com/swk.DriedFishScales" target="_blank" class="group flex flex-col items-center p-6 bg-white rounded-2xl shadow-sm border border-gray-100 hover:border-blue-500 hover:shadow-md transition-all duration-300 w-full md:w-[320px] 2xl:w-[360px] min-h-[300px] md:min-h-[340px] 2xl:min-h-[400px]">
                             <div class="w-40 h-40 md:w-48 md:h-48 2xl:w-56 2xl:h-56 bg-white p-1 rounded-full mb-4 border border-gray-200 relative shadow-sm group-hover:shadow-md transition-all flex items-center justify-center">
                                 <img src="https://i.postimg.cc/26pcJt5H/ภาพ_2026_01_17_212935153.png" class="w-full h-full object-cover rounded-full transform group-hover:scale-105 transition duration-500" alt="Profile Picture">
@@ -338,8 +367,6 @@
     <!-- ADMIN MODAL -->
     <div id="admin-modal" class="fixed inset-0 z-[110] hidden bg-black/80 flex items-center justify-center p-0 md:p-4 backdrop-blur-sm opacity-0 transition-opacity duration-300">
         <div class="w-full h-full md:rounded-2xl shadow-2xl overflow-hidden relative flex flex-col transform scale-100 md:scale-95 transition-transform duration-300 bg-white">
-            
-            <!-- Login -->
             <div id="admin-login-screen" class="absolute inset-0 bg-white z-[60] flex flex-col items-center justify-center p-8">
                 <div class="w-full max-w-sm text-center">
                     <div class="mb-6 inline-block p-4 rounded-full bg-brand-100 text-brand-600"><i class="fa-solid fa-shield-halved text-4xl"></i></div>
@@ -352,28 +379,20 @@
                     <button onclick="closeAdminModal()" class="mt-4 text-gray-400 hover:text-gray-600 text-sm">กลับสู่หน้าหลัก</button>
                 </div>
             </div>
-
-            <!-- Loader -->
             <div id="loading-overlay" class="absolute inset-0 bg-black/50 z-[55] hidden flex-col items-center justify-center text-white">
                 <div class="loader mb-4"></div>
                 <p id="loading-text" class="text-lg font-medium">กำลังดำเนินการ...</p>
             </div>
-
-            <!-- VIEW 1: PRODUCTION (Green Theme) -->
             <div id="view-production" class="min-h-full bg-gradient-to-br from-emerald-100 to-green-200 p-4 md:p-8 relative overflow-y-auto">
-                <!-- Top Buttons -->
                 <button onclick="switchAdminTab('inventory')" class="absolute top-4 right-4 md:top-8 md:right-8 z-20 bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-5 py-3 rounded-full font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center gap-2">
                     <i class="fa-solid fa-file-lines"></i> <span class="hidden sm:inline">รายงานสถานะสินค้า</span>
                 </button>
                 <button onclick="closeAdminModal()" class="absolute top-4 left-4 z-20 bg-white/50 hover:bg-white p-3 rounded-full shadow-md transition text-gray-700"><i class="fa-solid fa-arrow-left"></i></button>
-
                 <div class="max-w-7xl mx-auto space-y-8 pt-16 md:pt-10">
                     <div class="text-center">
                         <h1 class="text-4xl md:text-6xl font-black text-gray-800 mb-2">ปริมาณสินค้า</h1>
                         <p class="text-lg md:text-xl text-gray-600">เกล็ดปลาตากแห้ง</p>
                     </div>
-
-                    <!-- Production Stats (Updated Layout) -->
                     <div class="flex flex-wrap justify-center gap-4">
                         <div class="bg-gradient-to-br from-emerald-100 to-emerald-200 border border-emerald-300 p-6 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 flex-1 min-w-[280px] h-40 relative flex flex-col">
                             <div class="flex justify-between items-start z-10">
@@ -383,11 +402,8 @@
                             <div class="flex-grow flex items-center justify-center">
                                 <p class="text-5xl md:text-6xl font-bold text-emerald-900" id="prod-today">0</p>
                             </div>
-                            <div class="absolute bottom-4 right-6 z-10">
-                                <span class="text-lg text-emerald-700 font-bold">กระสอบ</span>
-                            </div>
+                            <div class="absolute bottom-4 right-6 z-10"><span class="text-lg text-emerald-700 font-bold">กระสอบ</span></div>
                         </div>
-                        
                         <div class="bg-gradient-to-br from-violet-100 to-violet-200 border border-violet-300 p-6 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 flex-1 min-w-[280px] h-40 relative flex flex-col">
                             <div class="flex justify-between items-start z-10">
                                 <h3 class="text-lg md:text-xl font-semibold text-violet-800">ทำได้เดือนนี้</h3>
@@ -396,11 +412,8 @@
                             <div class="flex-grow flex items-center justify-center">
                                 <p class="text-5xl md:text-6xl font-bold text-violet-900" id="prod-month">0</p>
                             </div>
-                            <div class="absolute bottom-4 right-6 z-10">
-                                <span class="text-lg text-violet-700 font-bold">กระสอบ</span>
-                            </div>
+                            <div class="absolute bottom-4 right-6 z-10"><span class="text-lg text-violet-700 font-bold">กระสอบ</span></div>
                         </div>
-                        
                         <div class="bg-gradient-to-br from-sky-100 to-sky-200 border border-sky-300 p-6 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 flex-1 min-w-[280px] h-40 relative flex flex-col">
                             <div class="flex justify-between items-start z-10">
                                 <h3 class="text-lg md:text-xl font-semibold text-sky-800">ของพร้อมส่ง</h3>
@@ -409,13 +422,9 @@
                             <div class="flex-grow flex items-center justify-center">
                                 <p class="text-5xl md:text-6xl font-bold text-sky-900" id="prod-stock">0</p>
                             </div>
-                            <div class="absolute bottom-4 right-6 z-10">
-                                <span class="text-lg text-sky-700 font-bold">กระสอบ</span>
-                            </div>
+                            <div class="absolute bottom-4 right-6 z-10"><span class="text-lg text-sky-700 font-bold">กระสอบ</span></div>
                         </div>
                     </div>
-
-                    <!-- Production Input -->
                     <div class="bg-white backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 p-8 md:p-10">
                         <div class="flex items-center gap-3 mb-8">
                             <div class="bg-gradient-to-r from-emerald-500 to-teal-600 p-3 rounded-2xl text-white"><i class="fa-solid fa-flask text-xl"></i></div>
@@ -430,22 +439,18 @@
                             <button onclick="submitProduction()" class="w-full max-w-md py-4 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white text-xl font-bold rounded-2xl shadow-lg transform active:scale-95 transition-all">บันทึกข้อมูล</button>
                         </div>
                     </div>
-
-                    <!-- Production History (Table) -->
                     <div class="bg-white backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 p-8 md:p-10">
                         <div class="mb-6">
                             <div class="flex items-center gap-3 mb-4">
                                 <div class="bg-gradient-to-r from-emerald-500 to-teal-600 p-3 rounded-2xl text-white"><i class="fa-solid fa-clock-rotate-left text-xl"></i></div>
                                 <h2 class="text-3xl md:text-4xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">รายการผลิตย้อนหลัง</h2>
                             </div>
-                            <!-- Modified Filter Position -->
                             <div class="flex gap-2">
                                 <label class="self-center text-gray-600 font-medium">ตัวกรอง:</label>
                                 <select id="prod-filter-year" onchange="renderProductionView()" class="px-3 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 text-sm md:text-base bg-white"></select>
                                 <select id="prod-filter-month" onchange="renderProductionView()" class="px-3 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 text-sm md:text-base bg-white"></select>
                             </div>
                         </div>
-
                         <div class="overflow-auto max-h-[400px] rounded-xl border border-gray-200 bg-white">
                             <table class="w-full text-left">
                                 <thead class="bg-gray-100 text-gray-600 text-sm sticky top-0 font-semibold">
@@ -455,16 +460,12 @@
                             </table>
                         </div>
                     </div>
-
-                    <!-- NEW Daily Production Chart (Last 10 Days) -->
                     <div class="bg-white backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 p-8 md:p-10 mt-8">
                         <div class="flex flex-col gap-4 mb-6">
                             <div class="flex items-center gap-3">
                                 <div class="bg-gradient-to-r from-emerald-500 to-teal-600 p-3 rounded-2xl text-white"><i class="fa-solid fa-chart-column text-xl"></i></div>
                                 <h2 class="text-3xl md:text-4xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">จำนวนที่ทำได้รายวัน</h2>
                             </div>
-                            
-                            <!-- Filters moved below title with Checkboxes -->
                             <div class="flex flex-wrap gap-4 items-center bg-gray-50 p-3 rounded-xl border border-gray-100">
                                 <div class="flex items-center gap-2">
                                     <span class="text-sm font-medium text-gray-700">ปี:</span>
@@ -477,40 +478,27 @@
                                 </div>
                             </div>
                         </div>
-                        
-                        <!-- Fixed Y-Axis Layout -->
                         <div class="flex w-full h-[450px] border border-gray-100 rounded-xl overflow-hidden relative bg-white">
-                            
-                            <!-- Fixed Y Axis Column - Increased width to 80px -->
                             <div class="w-[80px] h-full flex-shrink-0 relative z-20 bg-white pb-12">
                                 <div id="chart-daily-y" class="absolute -top-3 -left-2 w-[90px] h-full"></div> 
                             </div>
-                            
-                            <!-- Scrollable X Axis Column -->
                             <div id="daily-chart-scroller" class="flex-grow h-full overflow-x-auto overflow-y-hidden relative z-10 bg-white custom-scrollbar pb-12"> 
                                 <div id="chart-daily-production" class="h-full"></div>
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
-
-            <!-- VIEW 2: INVENTORY/MANAGEMENT (Blue Theme) -->
             <div id="view-inventory" class="min-h-full bg-gradient-to-br from-blue-100 to-indigo-200 p-4 md:p-8 relative overflow-y-auto hidden">
                 <button onclick="switchAdminTab('production')" class="absolute top-4 right-4 md:top-8 md:right-8 z-20 bg-white/80 hover:bg-white text-gray-700 px-6 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 shadow-sm">
                     <i class="fa-solid fa-arrow-left"></i> กลับไปหน้าปริมาณสินค้า
                 </button>
-                
                 <div class="max-w-7xl mx-auto space-y-8 pt-16 md:pt-10">
                     <div class="text-center">
                         <h1 class="text-4xl md:text-6xl font-black text-gray-800 mb-2">รายงานสถานะสินค้า</h1>
                         <p class="text-lg md:text-xl text-gray-600">จัดการสต็อก ซื้อเข้า - ขายออก</p>
                     </div>
-
-                    <!-- Inventory Stats -->
                     <div class="flex flex-wrap justify-center gap-4">
-                        <!-- Buy In Card -->
                         <div class="bg-gradient-to-br from-green-100 to-green-200 border border-green-300 p-6 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 flex-1 min-w-[280px] h-40 relative flex flex-col">
                             <div class="flex justify-between items-start z-10">
                                 <h3 class="text-xl font-semibold text-green-800">ซื้อเข้าเดือนนี้</h3>
@@ -519,12 +507,8 @@
                             <div class="flex-grow flex items-center justify-center">
                                 <p class="text-5xl md:text-6xl font-bold text-green-900" id="inv-in">0</p>
                             </div>
-                            <div class="absolute bottom-4 right-6 z-10">
-                                <span class="text-lg text-green-700 font-medium">KG</span>
-                            </div>
+                            <div class="absolute bottom-4 right-6 z-10"><span class="text-lg text-green-700 font-medium">KG</span></div>
                         </div>
-
-                        <!-- Sell Out Card -->
                         <div class="bg-gradient-to-br from-blue-100 to-blue-200 border border-blue-300 p-6 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 flex-1 min-w-[280px] h-40 relative flex flex-col">
                             <div class="flex justify-between items-start z-10">
                                 <h3 class="text-xl font-semibold text-blue-800">ขายออกเดือนนี้</h3>
@@ -533,12 +517,8 @@
                             <div class="flex-grow flex items-center justify-center">
                                 <p class="text-5xl md:text-6xl font-bold text-blue-900" id="inv-out">0</p>
                             </div>
-                            <div class="absolute bottom-4 right-6 z-10">
-                                <span class="text-lg text-blue-700 font-medium">KG</span>
-                            </div>
+                            <div class="absolute bottom-4 right-6 z-10"><span class="text-lg text-blue-700 font-medium">KG</span></div>
                         </div>
-
-                        <!-- Stock Card -->
                         <div class="bg-gradient-to-br from-violet-100 to-violet-200 border border-violet-300 p-6 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 flex-1 min-w-[280px] h-40 relative flex flex-col">
                             <div class="flex justify-between items-start z-10">
                                 <h3 class="text-xl font-semibold text-violet-800">ของพร้อมส่ง</h3>
@@ -547,13 +527,9 @@
                             <div class="flex-grow flex items-center justify-center">
                                 <p class="text-5xl md:text-6xl font-bold text-violet-900" id="inv-stock">0</p>
                             </div>
-                            <div class="absolute bottom-4 right-6 z-10">
-                                <span class="text-lg text-violet-700 font-medium">กระสอบ</span>
-                            </div>
+                            <div class="absolute bottom-4 right-6 z-10"><span class="text-lg text-violet-700 font-medium">กระสอบ</span></div>
                         </div>
                     </div>
-
-                    <!-- Inventory Input Form -->
                     <div class="bg-white backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 p-8 md:p-10">
                         <div class="flex items-center gap-3 mb-8">
                             <div class="bg-gradient-to-r from-blue-500 to-purple-600 p-3 rounded-2xl text-white"><i class="fa-solid fa-file-pen text-xl"></i></div>
@@ -595,16 +571,12 @@
                             <button type="submit" class="w-full py-4 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold rounded-2xl shadow-lg text-xl transform active:scale-95 transition-all">บันทึกรายการ</button>
                         </form>
                     </div>
-
-                    <!-- Inventory History (Table) -->
                     <div class="bg-white backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 p-8 md:p-10">
                         <div class="flex flex-col gap-4 mb-8">
                             <div class="flex items-center gap-3">
                                 <div class="bg-gradient-to-r from-indigo-500 to-purple-600 p-3 rounded-2xl text-white"><i class="fa-solid fa-table-list text-xl"></i></div>
                                 <h2 class="text-3xl md:text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">รายการสินค้าทั้งหมด</h2>
                             </div>
-                            
-                            <!-- Filters moved below title -->
                             <div class="flex gap-3 flex-wrap items-center bg-gray-50 p-3 rounded-xl border border-gray-100 self-start">
                                 <select id="inv-filter-year" onchange="renderInventoryView()" class="px-3 py-1.5 border rounded-lg focus:ring-2 focus:ring-indigo-500 text-sm bg-white"></select>
                                 <select id="inv-filter-month" onchange="renderInventoryView()" class="px-3 py-1.5 border rounded-lg focus:ring-2 focus:ring-indigo-500 text-sm bg-white"></select>
@@ -615,8 +587,6 @@
                                 </select>
                             </div>
                         </div>
-                        
-                        <!-- Table -->
                         <div class="overflow-auto max-h-[500px] rounded-xl border border-gray-200 bg-white mb-8">
                             <table class="w-full text-left border-collapse">
                                 <thead class="bg-gray-100 text-gray-600 text-base sticky top-0 font-semibold z-10">
@@ -632,16 +602,12 @@
                             </table>
                         </div>
                     </div>
-
-                    <!-- NEW Inventory Chart Container (Buy vs Sell) -->
                     <div class="bg-white backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 p-8 md:p-10">
                         <div class="flex flex-col gap-4 mb-6">
                             <div class="flex items-center gap-3">
                                 <div class="bg-gradient-to-r from-indigo-500 to-purple-600 p-3 rounded-2xl text-white"><i class="fa-solid fa-chart-bar text-xl"></i></div>
                                 <h2 class="text-3xl md:text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">ปริมาณสินค้า (ซื้อเข้า/ขายออก)</h2>
                             </div>
-
-                            <!-- Inventory Chart Filters -->
                             <div class="flex flex-wrap gap-4 items-center bg-gray-50 p-3 rounded-xl border border-gray-100">
                                 <div class="flex items-center gap-2">
                                     <span class="text-sm font-medium text-gray-700">ปี:</span>
@@ -662,32 +628,28 @@
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Scrollable Inventory Chart Layout (Fixed Height Sync) -->
                         <div class="flex w-full h-[450px] border border-gray-100 rounded-xl overflow-hidden relative bg-white">
-                            
-                            <!-- Fixed Y Axis Column - Set to 80px -->
                             <div class="w-[80px] h-full flex-shrink-0 relative z-20 bg-white pb-12">
                                 <div id="chart-inventory-y" class="absolute -top-3 -left-2 w-[90px] h-full"></div> 
                             </div>
-                            
-                            <!-- Scrollable X Axis Column -->
-                            <div id="inventory-chart-scroller" class="flex-grow h-full overflow-x-auto overflow-y-hidden relative z-10 bg-white custom-scrollbar pb-12">
+                            <div id="inventory-chart-scroller" class="flex-grow h-full overflow-x-auto overflow-y-hidden relative z-10 bg-white custom-scrollbar pb-2">
                                 <div id="chart-inventory" class="h-full"></div>
                             </div>
                         </div>
+                        <!-- CUSTOM LEGEND ADDED HERE -->
+                        <div class="flex justify-center gap-8 mt-6 pt-4 border-t border-gray-100">
+                            <div class="flex items-center gap-2">
+                                <span class="w-4 h-4 rounded-full bg-[#22c55e]"></span>
+                                <span class="text-lg font-bold text-gray-700">ซื้อเข้า</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="w-4 h-4 rounded-full bg-[#3b82f6]"></span>
+                                <span class="text-lg font-bold text-gray-700">ขายออก</span>
+                            </div>
+                        </div>
                     </div>
-
                 </div>
             </div>
-        </div>
-    </div>
-
-    <!-- Image Preview Modal (Admin) -->
-    <div id="admin-image-modal" class="fixed inset-0 z-[120] hidden bg-black/95 flex items-center justify-center p-4 backdrop-blur-sm" onclick="closeAdminImageModal()">
-        <button class="absolute top-6 right-6 text-white text-4xl hover:text-gray-300 focus:outline-none z-[121]">&times;</button>
-        <div class="max-h-[90vh] max-w-[90vw] overflow-auto flex flex-col items-center gap-4" onclick="event.stopPropagation()">
-            <div id="admin-image-container" class="flex flex-col gap-4"></div>
         </div>
     </div>
 
@@ -739,18 +701,31 @@
 
         // Visitor Counter Logic
         function updateVisitorCount() {
-            const counterElement = document.getElementById('visitor-counter');
-            let count = localStorage.getItem('swk_page_views');
-            if (!count) { count = 12540; } 
-            else { count = parseInt(count) + 1; }
-            localStorage.setItem('swk_page_views', count);
-            if(counterElement) { counterElement.innerText = count.toLocaleString(); }
+            // Functionality removed as per instruction, kept empty for code structure stability if needed
         }
 
         document.addEventListener('DOMContentLoaded', () => {
             type();
             updateVisitorCount();
+            createBubbles();
         });
+
+        function createBubbles() {
+            const container = document.getElementById('bubbles-container');
+            if (!container) return;
+            container.innerHTML = ''; 
+            for (let i = 0; i < 50; i++) { // Increased to 50 bubbles
+                const bubble = document.createElement('div');
+                bubble.classList.add('bubble');
+                const size = Math.random() * 40 + 10 + 'px';
+                bubble.style.width = size;
+                bubble.style.height = size;
+                bubble.style.left = Math.random() * 100 + '%';
+                bubble.style.animationDuration = Math.random() * 10 + 5 + 's';
+                bubble.style.animationDelay = Math.random() * 5 + 's';
+                container.appendChild(bubble);
+            }
+        }
 
         function toggleAccordion(button) {
             const content = button.nextElementSibling;
@@ -770,16 +745,23 @@
         const standardSlides = document.querySelectorAll('#standards-carousel img');
         const standardDots = document.querySelectorAll('.standard-dot');
         function updateStandardCarousel() {
-            standardSlides.forEach((slide, index) => {
+            const slides = document.querySelectorAll('#standards-carousel img');
+            const dots = document.querySelectorAll('.standard-dot');
+            slides.forEach((slide, index) => {
                 slide.style.opacity = index === currentStandardSlide ? '1' : '0';
                 slide.style.zIndex = index === currentStandardSlide ? '10' : '0';
             });
-            standardDots.forEach((dot, index) => {
+            dots.forEach((dot, index) => {
                 if (index === currentStandardSlide) { dot.classList.remove('bg-white/40'); dot.classList.add('bg-white', 'scale-110'); } 
                 else { dot.classList.add('bg-white/40'); dot.classList.remove('bg-white', 'scale-110'); }
             });
         }
-        function changeStandardSlide(d) { currentStandardSlide = (currentStandardSlide + d + standardSlides.length) % standardSlides.length; updateStandardCarousel(); }
+        function changeStandardSlide(d) { 
+            const slides = document.querySelectorAll('#standards-carousel img');
+            if(slides.length === 0) return;
+            currentStandardSlide = (currentStandardSlide + d + slides.length) % slides.length; 
+            updateStandardCarousel(); 
+        }
         function setStandardSlide(i) { currentStandardSlide = i; updateStandardCarousel(); }
         setInterval(() => changeStandardSlide(1), 5000);
 
@@ -798,33 +780,46 @@
         // Helpers
         const getThaiMonthName = (m) => ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'][m-1];
         
-        // Fixed: More robust date parsing
+        // --- IMPROVED DATE PARSING FUNCTION ---
+        // รองรับทั้ง ค.ศ. และ พ.ศ. + ตัวคั่น / หรือ - และมีหรือไม่มีเวลาก็ได้
         const parseDate = (str) => {
             if (!str) return new Date();
-            // Try ISO format first
-            let d = new Date(str);
-            if (!isNaN(d.getTime())) return d;
             
-            // Try parsing DD/MM/YYYY or similar
-            // Remove timezone names or extra text if any, keep digits and separators
+            // 1. ลองอ่านค่าตัวเลขออกจากสตริง (เช่น "2/1/2569" -> [2, 1, 2569])
             const parts = str.match(/(\d+)/g);
+            
             if (parts && parts.length >= 3) {
-                // Assume Day, Month, Year (common in sheets display values)
-                // Adjust if your sheet is MDY
-                const day = parseInt(parts[0]);
-                const month = parseInt(parts[1]) - 1; 
-                let year = parseInt(parts[2]);
+                let p1 = parseInt(parts[0]); // วัน (หรือปี)
+                let p2 = parseInt(parts[1]); // เดือน
+                let p3 = parseInt(parts[2]); // ปี (หรือวัน)
                 
-                // Handle Thai Year (25xx) -> AD
+                let day, month, year;
+
+                // ตรวจสอบว่าตัวแรกเป็นปีหรือไม่ (ถ้า > 31 น่าจะเป็นปี)
+                if (p1 > 31) {
+                    year = p1; month = p2 - 1; day = p3;
+                } else {
+                    // ถ้าไม่ใช่ ให้ถือว่าเป็นรูปแบบ ไทย: วัน/เดือน/ปี
+                    day = p1; month = p2 - 1; year = p3;
+                }
+
+                // *** จุดสำคัญ: ถ้าปีเป็น พ.ศ. (มากกว่า 2400) ให้ลบ 543 เพื่อเป็น ค.ศ. ***
                 if (year > 2400) year -= 543;
                 
+                // อ่านเวลา (ถ้ามี)
                 const hour = parts[3] ? parseInt(parts[3]) : 0;
                 const min = parts[4] ? parseInt(parts[4]) : 0;
                 const sec = parts[5] ? parseInt(parts[5]) : 0;
                 
-                return new Date(year, month, day, hour, min, sec);
+                // สร้างวันที่
+                const d = new Date(year, month, day, hour, min, sec);
+                
+                // ตรวจสอบว่าวันที่ถูกต้องหรือไม่
+                if (!isNaN(d.getTime())) return d;
             }
-            return new Date(); // Fallback
+            
+            // ถ้าแกะไม่ได้ ให้ลองใช้วิธีมาตรฐาน
+            return new Date(str);
         };
 
         const calculateReadyStockBags = () => {
@@ -853,7 +848,7 @@
         function adminLogin(e) {
             e.preventDefault();
             const pass = document.getElementById('admin-pass').value;
-            if (pass === '032489') { 
+            if (pass === '032489') { // Changed Password
                 const screen = document.getElementById('admin-login-screen');
                 screen.classList.add('opacity-0', 'pointer-events-none');
                 setTimeout(() => { screen.classList.add('hidden'); screen.classList.remove('opacity-0', 'pointer-events-none'); }, 300);
@@ -901,10 +896,14 @@
             const yearOpts = years.map(y => ({value: y, text: y + 543}));
             const monthOpts = Array.from({length:12}, (_,i) => ({value: i+1, text: getThaiMonthName(i+1)}));
 
+            // Table Filters
             ['prod-filter-year', 'inv-filter-year'].forEach(id => createOpts(id, yearOpts, 'ทุกปี'));
             ['prod-filter-month', 'inv-filter-month'].forEach(id => createOpts(id, monthOpts, 'ทุกเดือน'));
+            
+            // Daily Chart Filters
             ['prod-daily-filter-year'].forEach(id => createOpts(id, yearOpts, currentYear));
             
+            // Daily Chart Month Filter (with 'All' option at top)
             const dailyMonthSel = document.getElementById('prod-daily-filter-month');
             if(dailyMonthSel) {
                 dailyMonthSel.innerHTML = `<option value="all">ทั้งหมด</option>`;
@@ -915,6 +914,7 @@
                 });
             }
 
+            // Inventory Chart Filters
             ['inv-chart-filter-year'].forEach(id => createOpts(id, yearOpts, currentYear));
             const invMonthSel = document.getElementById('inv-chart-filter-month');
             if(invMonthSel) {
@@ -926,17 +926,49 @@
                 });
             }
 
+            // Set defaults to current year/month
             const curMonth = new Date().getMonth() + 1;
+            
             ['prod-filter-year', 'inv-filter-year', 'prod-daily-filter-year', 'inv-chart-filter-year'].forEach(id => {
                  const el = document.getElementById(id); if(el) el.value = currentYear;
             });
+            
             ['prod-filter-month', 'inv-filter-month', 'prod-daily-filter-month', 'inv-chart-filter-month'].forEach(id => {
                  const el = document.getElementById(id); if(el) el.value = curMonth;
             });
         }
 
-        function toggleDailyChartFilters() { renderDailyProductionChart(); }
-        function toggleInvChartFilters() { renderInventoryChart(); }
+        function toggleDailyChartFilters() {
+            const monthChk = document.getElementById('chk-daily-month');
+            const yearSel = document.getElementById('prod-daily-filter-year');
+            const monthSel = document.getElementById('prod-daily-filter-month');
+            
+            if (monthChk.checked) {
+                yearSel.disabled = false;
+                monthSel.disabled = false;
+            } else {
+                yearSel.disabled = true;
+                monthSel.disabled = true;
+            }
+
+            renderDailyProductionChart();
+        }
+
+        function toggleInvChartFilters() {
+            const monthChk = document.getElementById('chk-inv-chart-month');
+            const yearSel = document.getElementById('inv-chart-filter-year');
+            const monthSel = document.getElementById('inv-chart-filter-month');
+            
+            if (monthChk.checked) {
+                yearSel.disabled = false;
+                monthSel.disabled = false;
+            } else {
+                yearSel.disabled = true;
+                monthSel.disabled = true;
+            }
+
+            renderInventoryChart();
+        }
 
         function toggleInvForm(type) {
             const nameInput = document.getElementById('inv-name');
@@ -946,11 +978,13 @@
 
             if (type === 'ขายออก') {
                 nameInput.value = 'ลูกค้าทั่วไป'; nameInput.readOnly = true; nameInput.classList.add('bg-gray-100');
+                // เปลี่ยน Label และหน่วยเป็นกระสอบ
                 qtyLabel.innerText = 'จำนวน (กระสอบ)'; 
                 unitLabel.innerText = 'Bags'; 
                 qtyInput.placeholder = '0';
             } else {
                 nameInput.value = ''; nameInput.readOnly = false; nameInput.classList.remove('bg-gray-100');
+                // คืนค่าเป็นกิโลกรัมสำหรับซื้อเข้า
                 qtyLabel.innerText = 'จำนวน (กิโลกรัม)'; 
                 unitLabel.innerText = 'KG'; 
                 qtyInput.placeholder = '0.00';
@@ -990,13 +1024,27 @@
             }
         }
 
-        function openAdminImageModal(images) { const modal = document.getElementById('admin-image-modal'); const container = document.getElementById('admin-image-container'); container.innerHTML = ''; const imgArray = Array.isArray(images) ? images : [images]; imgArray.forEach(src => { const img = document.createElement('img'); img.src = src; img.className = "max-w-full rounded-lg shadow-2xl border-4 border-white"; container.appendChild(img); }); modal.classList.remove('hidden'); }
-        function closeAdminImageModal() { document.getElementById('admin-image-modal').classList.add('hidden'); }
-        function openLightbox(src) { const lb = document.getElementById('lightbox'); const img = document.getElementById('lightbox-img'); img.src = src; lb.classList.remove('hidden'); setTimeout(() => { lb.classList.remove('opacity-0'); img.classList.remove('scale-95'); img.classList.add('scale-100'); }, 10); }
-        function closeLightbox() { const lb = document.getElementById('lightbox'); const img = document.getElementById('lightbox-img'); lb.classList.add('opacity-0'); img.classList.remove('scale-100'); img.classList.add('scale-95'); setTimeout(() => { lb.classList.add('hidden'); img.src = ''; }, 300); }
-        function openContactModal() { const m = document.getElementById('contact-modal'); m.classList.remove('hidden'); setTimeout(() => { m.classList.remove('opacity-0'); m.firstElementChild.classList.remove('scale-95'); }, 10); }
-        function closeContactModal() { const m = document.getElementById('contact-modal'); m.classList.add('opacity-0'); m.firstElementChild.classList.add('scale-95'); setTimeout(() => { m.classList.add('hidden'); }, 300); }
-        function submitContactForm(e) { e.preventDefault(); Swal.fire({title: 'สำเร็จ!', text: 'ขอบคุณสำหรับข้อมูล เราจะติดต่อกลับโดยเร็วที่สุด', icon: 'success', confirmButtonColor: '#0ea5e9', confirmButtonText: 'ตกลง'}); closeContactModal(); e.target.reset(); }
+        function openAdminImageModal(images) {
+            if (!images || images.length === 0) return;
+            const modal = document.getElementById('admin-image-modal');
+            const container = document.getElementById('admin-image-container');
+            container.innerHTML = '';
+            
+            const imgArray = Array.isArray(images) ? images : [images];
+            
+            imgArray.forEach(src => {
+                const img = document.createElement('img');
+                img.src = src;
+                img.className = "max-w-full rounded-lg shadow-2xl border-4 border-white";
+                container.appendChild(img);
+            });
+            
+            modal.classList.remove('hidden');
+        }
+
+        function closeAdminImageModal() {
+            document.getElementById('admin-image-modal').classList.add('hidden');
+        }
 
         // --- Data Logic ---
         
@@ -1004,6 +1052,7 @@
 
         async function fetchData() {
             const overlay = document.getElementById('loading-overlay');
+            // Only show if not already shown (to prevent flickering if called from sendData)
             if (overlay.classList.contains('hidden')) {
                 overlay.classList.remove('hidden'); 
                 overlay.classList.add('flex');
@@ -1013,6 +1062,7 @@
                 const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=load&t=${Date.now()}`);
                 const result = await response.json();
                 if (result.success) { 
+                    // Fix: Handle comma separated numbers from Sheets (e.g. "1,000" -> 1000)
                     appData.production = result.data.production.map(r => ({
                         ...r, 
                         bags: parseInt(String(r.bags).replace(/,/g, '')) || 0, 
@@ -1025,18 +1075,23 @@
                             try { imgs = JSON.parse(r.images); } 
                             catch(e) { imgs = [r.images]; }
                         }
+                        // Fix: Clean comma before parsing float
                         const cleanQty = String(r.quantity).replace(/,/g, '');
                         return {...r, quantity: parseFloat(cleanQty) || 0, images: imgs};
                     });
                     
-                    // Render current view
-                    renderProductionView(); 
-                    renderDailyProductionChart(); 
-                    renderInventoryView();
-                    renderInventoryChart(); 
+                    if(!document.getElementById('view-production').classList.contains('hidden')) { 
+                        renderProductionView(); 
+                        renderDailyProductionChart(); 
+                    }
+                    if(!document.getElementById('view-inventory').classList.contains('hidden')) {
+                        renderInventoryView();
+                        renderInventoryChart(); 
+                    }
                 }
             } catch (error) { console.log('Fetch Failed', error); } 
             finally { 
+                // Always hide overlay when done
                 overlay.classList.add('hidden'); 
                 overlay.classList.remove('flex'); 
                 document.getElementById('loading-text').innerText = 'กำลังดำเนินการ...';
@@ -1047,6 +1102,7 @@
             const overlay = document.getElementById('loading-overlay');
             const loadingText = document.getElementById('loading-text');
             
+            // 1. Start Loading Animation
             loadingText.innerText = 'กำลังบันทึกข้อมูล...';
             overlay.classList.remove('hidden'); 
             overlay.classList.add('flex');
@@ -1059,9 +1115,14 @@
                     headers: { 'Content-Type': 'application/json' } 
                 });
 
-                await delay(2000); // Wait for GAS
-                await fetchData(); // Reload to see new data
+                // 3. Wait for data to be processed on server (2 seconds)
+                await delay(2000);
 
+                // 4. Refresh Data (fetchData will handle closing the overlay in its finally block)
+                // We await it so the success popup only shows AFTER the new data is loaded
+                await fetchData(); 
+
+                // 5. Show Success Popup (after loading is gone)
                 Swal.fire({
                     title: 'สำเร็จ',
                     text: 'บันทึกข้อมูลเรียบร้อยแล้ว',
@@ -1072,6 +1133,7 @@
 
             } catch (e) { 
                 Swal.fire('Error', e.message, 'error');
+                // Ensure overlay is closed on error
                 overlay.classList.add('hidden'); 
                 overlay.classList.remove('flex');
             }
@@ -1137,14 +1199,21 @@
             let displayHtml = '';
 
             if (type === 'ขายออก') {
+                // ตรวจสอบสต็อก (หน่วยกระสอบ)
                 const stockBags = calculateReadyStockBags();
                 if (inputQty > stockBags) { return Swal.fire({title: 'สต็อกไม่เพียงพอ', text: `สินค้ามีเพียง ${stockBags} กระสอบ ไม่สามารถขายออก ${inputQty} กระสอบได้`, icon: 'error', confirmButtonColor: '#0ea5e9'}); }
+                // คำนวณเป็นกิโลกรัม (กระสอบ * 10)
                 finalQty = inputQty * 10;
-                displayHtml = `<p class="text-lg">จำนวน: <b>${inputQty.toLocaleString()}</b> กระสอบ</p><p class="text-sm text-gray-500">(${finalQty.toLocaleString()} กิโลกรัม)</p>`;
+                
+                displayHtml = `
+                    <p class="text-lg">จำนวน: <b>${inputQty.toLocaleString()}</b> กระสอบ</p>
+                    <p class="text-sm text-gray-500">(${finalQty.toLocaleString()} กิโลกรัม)</p>
+                `;
             } else {
                 displayHtml = `<p class="text-lg">จำนวน: <b>${inputQty.toLocaleString()}</b> กิโลกรัม</p>`;
             }
 
+            // เพิ่ม Popup ยืนยันก่อนบันทึก
             Swal.fire({
                 title: 'ยืนยันการบันทึก',
                 html: `<p class="text-xl font-bold text-brand-600 mb-2">${type}</p>${displayHtml}`,
@@ -1157,6 +1226,8 @@
                 if (result.isConfirmed) {
                     sendData('add', 'Records', { status: type, name, quantity: finalQty, images: currentInvImages });
                     e.target.reset();
+                    document.getElementById('image-preview-container').innerHTML = '';
+                    document.getElementById('image-upload-placeholder').classList.remove('hidden');
                     currentInvImages = [];
                     // Force refresh to current date filter so user sees the new item
                     document.getElementById('inv-filter-year').value = new Date().getFullYear();
@@ -1168,6 +1239,7 @@
 
         // --- Render Views ---
         function renderProductionView() {
+            // ... (Same logic as before, just ensured parseDate is used)
             const today = new Date().toDateString();
             const thisMonth = new Date().getMonth();
             const thisYear = new Date().getFullYear();
@@ -1257,9 +1329,11 @@
                         yearMap[y] = (yearMap[y] || 0) + item.bags;
                     });
                 }
+                
                 const years = Object.keys(yearMap).sort();
                 const seriesData = years.map(y => yearMap[y]);
                 const categories = years.map(y => (parseInt(y)+543).toString());
+
                 renderApexChart(categories, seriesData, false);
                 return;
             }
@@ -1274,12 +1348,14 @@
                         }
                     });
                 }
+
                 const chartCategories = [];
                 const seriesData = [];
                 for (let i = 0; i < 12; i++) {
                     chartCategories.push(getThaiMonthName(i + 1));
                     seriesData.push(monthMap[i] || 0);
                 }
+
                 renderApexChart(chartCategories, seriesData, false); 
                 return;
             }
@@ -1289,6 +1365,7 @@
             today.setHours(0,0,0,0);
             
             let isCurrentMonth = false;
+
             if (useMonth && !isAllMonths) {
                 startDate = new Date(selectedYear, selectedMonth - 1, 1);
                 endDate = new Date(selectedYear, selectedMonth, 0);
@@ -1301,25 +1378,36 @@
                 isCurrentMonth = true;
             }
 
+            const dailyMapLocal = {}; // Renamed to avoid conflicts
+            let iter = new Date(startDate);
+            while(iter <= endDate) {
+                const key = iter.getFullYear() + '-' + String(iter.getMonth()+1).padStart(2,'0') + '-' + String(iter.getDate()).padStart(2,'0');
+                dailyMapLocal[key] = 0; 
+                iter.setDate(iter.getDate() + 1);
+            }
+
             if (rawData.length > 0) {
                 rawData.forEach(item => {
                     const d = parseDate(item.timestamp);
                     d.setHours(0,0,0,0);
                     const key = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
-                    dailyMap[key] = (dailyMap[key] || 0) + item.bags;
+                    if (dailyMapLocal.hasOwnProperty(key)) {
+                        dailyMapLocal[key] += item.bags;
+                    }
                 });
             }
 
             const chartCategories = [];
             const seriesData = [];
-            let iter = new Date(startDate);
+            
+            iter = new Date(startDate);
             let todayIndex = -1;
             let i = 0;
 
             while (iter <= endDate) {
                 const key = iter.getFullYear() + '-' + String(iter.getMonth()+1).padStart(2, '0') + '-' + String(iter.getDate()).padStart(2, '0');
                 chartCategories.push(key); 
-                seriesData.push(dailyMap[key] || 0);
+                seriesData.push(dailyMapLocal[key] || 0);
                 if (iter.getTime() === today.getTime()) todayIndex = i;
                 iter.setDate(iter.getDate() + 1);
                 i++;
@@ -1330,51 +1418,136 @@
         function renderApexChart(categories, data, isScrollable, centerIndex = -1) {
             let maxVal = Math.max(...data);
             maxVal = maxVal > 0 ? Math.ceil(maxVal / 10) * 10 : 10; 
+
             if (charts.dailyProduction) charts.dailyProduction.destroy();
             if (charts.dailyY) charts.dailyY.destroy();
-            
+
             let calculatedWidth = '100%';
             const scroller = document.getElementById('daily-chart-scroller');
-            if (isScrollable && scroller) {
-                const containerWidth = scroller.clientWidth || 800; // Fallback width
+            
+            if (isScrollable) {
+                const containerWidth = scroller.clientWidth;
                 const singleBarWidth = containerWidth / 8; 
                 calculatedWidth = Math.max(containerWidth, categories.length * singleBarWidth);
             }
 
             charts.dailyY = new ApexCharts(document.querySelector("#chart-daily-y"), {
                 series: [{ name: 'Dummy', data: data }], 
-                chart: { type: 'bar', height: '100%', width: '100%', fontFamily: 'Prompt, sans-serif', toolbar: { show: false }, animations: { enabled: false }, parentHeightOffset: 0 },
+                chart: {
+                    type: 'bar',
+                    height: '100%',
+                    width: '100%',
+                    fontFamily: 'Prompt, sans-serif',
+                    toolbar: { show: false },
+                    animations: { enabled: false },
+                    parentHeightOffset: 0
+                },
                 colors: ['transparent'], 
                 plotOptions: { bar: { columnWidth: '0%' } },
                 dataLabels: { enabled: false },
                 grid: { show: false, padding: { top: 0, bottom: 0, left: 10 } }, 
-                xaxis: { labels: { show: true, style: { colors: 'transparent', fontSize: '12px' } }, axisBorder: { show: false }, axisTicks: { show: false }, tooltip: { enabled: false } },
-                yaxis: { min: 0, max: maxVal, tickAmount: 5, labels: { formatter: (val) => val.toFixed(0), style: { fontSize: '16px', fontWeight: 700, colors: '#64748b' }, align: 'right', minWidth: 40, offsetX: -15 }, axisBorder: { show: false }, axisTicks: { show: false } }
+                xaxis: {
+                    labels: { show: true, style: { colors: 'transparent', fontSize: '12px' } }, 
+                    axisBorder: { show: false },
+                    axisTicks: { show: false },
+                    tooltip: { enabled: false }
+                },
+                yaxis: {
+                    min: 0,
+                    max: maxVal,
+                    tickAmount: 5,
+                    labels: { 
+                        formatter: (val) => val.toFixed(0),
+                        style: { fontSize: '16px', fontWeight: 700, colors: '#64748b' },
+                        align: 'right',
+                        minWidth: 40,
+                        offsetX: -15
+                    },
+                    axisBorder: { show: false },
+                    axisTicks: { show: false }
+                }
             });
             charts.dailyY.render();
 
             charts.dailyProduction = new ApexCharts(document.querySelector("#chart-daily-production"), {
                 series: [{ name: 'จำนวนผลิต', data: data }],
-                chart: { type: 'bar', height: '100%', width: calculatedWidth, fontFamily: 'Prompt, sans-serif', toolbar: { show: false }, animations: { enabled: false }, parentHeightOffset: 0, selection: { enabled: false }, zoom: { enabled: false } },
+                chart: {
+                    type: 'bar',
+                    height: '100%',
+                    width: calculatedWidth,
+                    fontFamily: 'Prompt, sans-serif',
+                    toolbar: { show: false },
+                    animations: { enabled: false },
+                    parentHeightOffset: 0,
+                    selection: { enabled: false },
+                    zoom: { enabled: false }
+                },
                 colors: ['#8b5cf6'],
-                plotOptions: { bar: { borderRadius: 4, columnWidth: '60%', dataLabels: { position: 'center' } } },
-                dataLabels: { enabled: true, offsetY: 0, style: { fontSize: '14px', colors: ["#000000"], fontWeight: '700' }, formatter: function (val) { return val > 0 ? val : ""; } },
-                states: { hover: { filter: { type: 'none' } }, active: { filter: { type: 'none' } } },
-                xaxis: { categories: categories, labels: { style: { fontSize: '16px', fontWeight: 700, colors: '#64748b' }, formatter: function(val) { if (!val) return ""; if (val.indexOf && val.indexOf('-') > -1) { const d = new Date(val); if (isNaN(d.getTime())) return val; return d.getDate(); } return val; } }, tooltip: { enabled: false }, axisBorder: { show: true }, axisTicks: { show: false }, crosshairs: { show: false } },
-                yaxis: { show: false, min: 0, max: maxVal, tickAmount: 5 },
-                grid: { show: true, borderColor: '#cbd5e1', strokeDashArray: 4, padding: { top: 0, bottom: 0, left: 20, right: 20 }, xaxis: { lines: { show: true } }, yaxis: { lines: { show: true } } }, 
+                plotOptions: {
+                    bar: { 
+                        borderRadius: 4, 
+                        columnWidth: '60%', 
+                        dataLabels: { position: 'center' } 
+                    }
+                },
+                dataLabels: {
+                    enabled: true,
+                    offsetY: 0,
+                    style: { fontSize: '14px', colors: ["#000000"], fontWeight: '700' }, 
+                    formatter: function (val) { return val > 0 ? val : ""; }
+                },
+                states: { 
+                     hover: { filter: { type: 'none' } },
+                     active: { filter: { type: 'none' } }
+                },
+                xaxis: {
+                    categories: categories,
+                    labels: {
+                        style: { fontSize: '16px', fontWeight: 700, colors: '#64748b' },
+                        formatter: function(val) {
+                            if (!val) return "";
+                            if (val.indexOf && val.indexOf('-') > -1) {
+                                const d = new Date(val);
+                                if (isNaN(d.getTime())) return val;
+                                return d.getDate();
+                            }
+                            return val; 
+                        }
+                    },
+                    tooltip: { enabled: false },
+                    axisBorder: { show: true },
+                    axisTicks: { show: false },
+                    crosshairs: { show: false }
+                },
+                yaxis: {
+                    show: false, 
+                    min: 0,
+                    max: maxVal,
+                    tickAmount: 5,
+                },
+                grid: { 
+                    show: true, 
+                    borderColor: '#cbd5e1', 
+                    strokeDashArray: 4, 
+                    padding: { top: 0, bottom: 0, left: 20, right: 20 },
+                    xaxis: { lines: { show: true } },   
+                    yaxis: { lines: { show: true } }
+                }, 
                 tooltip: { enabled: false }
             });
+            
             charts.dailyProduction.render();
 
-            if (isScrollable && centerIndex !== -1 && scroller) {
+            if (isScrollable && centerIndex !== -1) {
                 setTimeout(() => {
                     const containerWidth = scroller.clientWidth;
                     const singleBarWidth = containerWidth / 8; 
                     const centerPos = (centerIndex * singleBarWidth) - (containerWidth / 2) + (singleBarWidth / 2);
                     scroller.scrollLeft = centerPos;
                 }, 200);
-            } else if (isScrollable && scroller) { scroller.scrollLeft = 0; }
+            } else if (isScrollable) {
+                 scroller.scrollLeft = 0;
+            }
         }
 
         function renderInventoryView() {
@@ -1396,65 +1569,117 @@
             const fStatus = document.getElementById('inv-filter-status').value;
 
             let filtered = appData.records;
+            // Fix: Loose equality (==) for year/month to handle string vs number
             if(fYear) filtered = filtered.filter(r => parseDate(r.timestamp).getFullYear() == fYear);
             if(fMonth) filtered = filtered.filter(r => parseDate(r.timestamp).getMonth() + 1 == fMonth);
             if(fStatus) filtered = filtered.filter(r => r.status == fStatus);
 
-            filtered.sort((a,b) => parseDate(b.timestamp) - parseDate(a.timestamp));
+            // CASE 1: Specific Month Selected -> Show Details
+            if (fMonth) {
+                filtered.sort((a,b) => parseDate(b.timestamp) - parseDate(a.timestamp));
+                if (filtered.length === 0) {
+                    document.getElementById('table-inv-body').innerHTML = '<tr><td colspan="5" class="p-8 text-center text-gray-500">ไม่พบข้อมูล</td></tr>';
+                    return;
+                }
+                const tbody = document.getElementById('table-inv-body'); 
+                tbody.innerHTML = '';
+                filtered.forEach(r => {
+                    const d = parseDate(r.timestamp);
+                    const datePart = `${d.getDate().toString().padStart(2,'0')}/${(d.getMonth()+1).toString().padStart(2,'0')}/${d.getFullYear()+543}`;
+                    const timePart = `${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')} น.`;
+                    const ds = `${datePart} ${timePart}`;
+                    
+                    let detailBtnClass = "text-gray-400 cursor-not-allowed";
+                    let detailOnClick = "";
+                    let detailIcon = "fa-solid fa-circle-info";
+                    
+                    if (r.images && r.images.length > 0) {
+                        const imgJson = JSON.stringify(r.images).replace(/"/g, '&quot;');
+                        detailBtnClass = "text-brand-600 hover:text-brand-800 hover:underline";
+                        detailOnClick = `onclick="openAdminImageModal(${imgJson})"`;
+                    }
 
-            const tbody = document.getElementById('table-inv-body'); 
-            tbody.innerHTML = '';
-            filtered.forEach(r => {
-                const d = parseDate(r.timestamp);
-                const datePart = `${d.getDate().toString().padStart(2,'0')}/${(d.getMonth()+1).toString().padStart(2,'0')}/${d.getFullYear()+543}`;
-                const timePart = `${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')} น.`;
-                const ds = `${datePart} ${timePart}`;
-                
-                let detailBtnClass = "text-gray-400 cursor-not-allowed";
-                let detailOnClick = "";
-                let detailIcon = "fa-solid fa-circle-info";
-                
-                if (r.images && r.images.length > 0) {
-                     const imgJson = JSON.stringify(r.images).replace(/"/g, '&quot;');
-                     detailBtnClass = "text-brand-600 hover:text-brand-800 hover:underline";
-                     detailOnClick = `onclick="openAdminImageModal(${imgJson})"`;
+                    const detailBtn = `<button ${detailOnClick} class="${detailBtnClass} font-medium text-base flex items-center justify-center gap-1 mx-auto transition-colors"><i class="${detailIcon}"></i> ดูรายละเอียด</button>`;
+
+                    let amountHtml = '';
+                    if (r.status === 'ขายออก') {
+                        const bags = r.quantity / 10;
+                        amountHtml = `<span class="font-semibold text-blue-700">${r.quantity.toLocaleString()} กิโลกรัม</span><div class="text-sm text-gray-500 mt-1">(${bags.toLocaleString()} กระสอบ)</div>`;
+                    } else {
+                        amountHtml = `<span class="font-semibold text-gray-800">${r.quantity.toLocaleString()} กิโลกรัม</span>`;
+                    }
+
+                    const tr = document.createElement('tr');
+                    tr.className = 'border-b border-gray-50 hover:bg-gray-50 transition text-base'; 
+                    tr.innerHTML = `
+                        <td class="p-4 text-gray-700 align-middle whitespace-nowrap">${ds}</td>
+                        <td class="p-4 text-gray-700 align-middle">
+                            <div class="flex items-center flex-wrap gap-2">
+                                <span>${r.name}</span>
+                                <span class="text-sm px-2 py-0.5 rounded border ${r.status==='ซื้อเข้า'?'bg-green-50 text-green-700 border-green-100':'bg-blue-50 text-blue-700 border-blue-100'}">${r.status}</span>
+                            </div>
+                        </td>
+                        <td class="p-4 text-center align-middle">
+                            ${amountHtml}
+                        </td>
+                        <td class="p-4 text-center align-middle">${detailBtn}</td>
+                        <td class="p-4 text-center align-middle">
+                            <button onclick="deleteData('${r.id}', 'Records')" class="w-10 h-10 flex items-center justify-center bg-red-100 hover:bg-red-200 text-red-500 hover:text-red-700 rounded-full transition-all duration-200 shadow-sm mx-auto">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
+            // CASE 2: All Months Selected -> Show Summary
+            else {
+                const monthlyData = {};
+                filtered.forEach(r => {
+                    const d = parseDate(r.timestamp);
+                    const key = `${d.getFullYear()}-${d.getMonth()}`; 
+                    if (!monthlyData[key]) {
+                        monthlyData[key] = { year: d.getFullYear(), month: d.getMonth(), buy: 0, sell: 0, count: 0 };
+                    }
+                    if (r.status === 'ซื้อเข้า') monthlyData[key].buy += r.quantity;
+                    else if (r.status === 'ขายออก') monthlyData[key].sell += r.quantity;
+                    monthlyData[key].count++;
+                });
+
+                const sortedMonths = Object.values(monthlyData).sort((a, b) => {
+                    if (a.year !== b.year) return b.year - a.year;
+                    return b.month - a.month;
+                });
+
+                const tbody = document.getElementById('table-inv-body'); 
+                tbody.innerHTML = '';
+                if (sortedMonths.length === 0) {
+                     tbody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-gray-500">ไม่พบข้อมูล</td></tr>';
+                     return;
                 }
 
-                const detailBtn = `<button ${detailOnClick} class="${detailBtnClass} font-medium text-base flex items-center justify-center gap-1 mx-auto transition-colors"><i class="${detailIcon}"></i> ดูรายละเอียด</button>`;
-
-                let amountHtml = '';
-                if (r.status === 'ขายออก') {
-                    const bags = r.quantity / 10;
-                    amountHtml = `<span class="font-semibold text-blue-700">${r.quantity.toLocaleString()} กิโลกรัม</span><div class="text-sm text-gray-500 mt-1">(${bags.toLocaleString()} กระสอบ)</div>`;
-                } else {
-                    amountHtml = `<span class="font-semibold text-gray-800">${r.quantity.toLocaleString()} กิโลกรัม</span>`;
-                }
-
-                const tr = document.createElement('tr');
-                tr.className = 'border-b border-gray-50 hover:bg-gray-50 transition text-base'; 
-                tr.innerHTML = `
-                    <td class="p-4 text-gray-700 align-middle whitespace-nowrap">${ds}</td>
-                    <td class="p-4 text-gray-700 align-middle">
-                        <div class="flex items-center flex-wrap gap-2">
-                            <span>${r.name}</span>
-                            <span class="text-sm px-2 py-0.5 rounded border ${r.status==='ซื้อเข้า'?'bg-green-50 text-green-700 border-green-100':'bg-blue-50 text-blue-700 border-blue-100'}">${r.status}</span>
-                        </div>
-                    </td>
-                    <td class="p-4 text-center align-middle">
-                        ${amountHtml}
-                    </td>
-                    <td class="p-4 text-center align-middle">${detailBtn}</td>
-                    <td class="p-4 text-center align-middle">
-                        <button onclick="deleteData('${r.id}', 'Records')" class="w-10 h-10 flex items-center justify-center bg-red-100 hover:bg-red-200 text-red-500 hover:text-red-700 rounded-full transition-all duration-200 shadow-sm mx-auto">
-                            <i class="fa-solid fa-trash-can"></i>
-                        </button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
+                sortedMonths.forEach(m => {
+                    const monthName = getThaiMonthName(m.month + 1);
+                    const yearThai = m.year + 543;
+                    
+                    const buyText = m.buy > 0 ? `<div class="text-green-700 font-medium">เข้า: ${m.buy.toLocaleString()} KG</div>` : '';
+                    const sellText = m.sell > 0 ? `<div class="text-blue-700 font-medium">ออก: ${m.sell.toLocaleString()} KG</div>` : '';
+                    const summaryText = (buyText + sellText) || '<span class="text-gray-400">-</span>';
+                    
+                    const tr = document.createElement('tr');
+                    tr.className = 'border-b border-gray-50 hover:bg-gray-50 transition text-base'; 
+                    tr.innerHTML = `
+                        <td class="p-4 text-gray-700 align-middle font-bold">${monthName} ${yearThai}</td>
+                        <td class="p-4 text-gray-700 align-middle"><span class="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-sm">สรุปยอดรวม</span></td>
+                        <td class="p-4 text-center align-middle">${summaryText}</td>
+                        <td class="p-4 text-center align-middle text-gray-500">${m.count} รายการ</td>
+                         <td class="p-4 text-center align-middle"></td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
         }
 
-        // --- NEW Inventory Chart Functions ---
         function renderInventoryChart() {
             const rawData = appData.records || [];
             
@@ -1466,7 +1691,6 @@
             const isAllMonths = monthVal === 'all';
             const selectedMonth = parseInt(monthVal);
 
-            // Case 1: Yearly (No Month Check)
             if (!monthChk) {
                  const yearMap = {};
                  rawData.forEach(r => {
@@ -1478,15 +1702,16 @@
                      if (r.status === 'ซื้อเข้า') yearMap[y].buy += r.quantity;
                      else if (r.status === 'ขายออก') yearMap[y].sell += r.quantity;
                  });
+                 
                  const years = Object.keys(yearMap).sort();
                  const buySeries = years.map(y => yearMap[y].buy);
                  const sellSeries = years.map(y => yearMap[y].sell);
                  const categories = years.map(y => (parseInt(y)+543).toString());
+
                  renderApexInventoryChart(categories, buySeries, sellSeries, false);
                  return;
             }
 
-            // Case 2: All Months in Year
             if (isAllMonths) {
                 const monthMap = {};
                 rawData.forEach(r => {
@@ -1499,6 +1724,7 @@
                          else if (r.status === 'ขายออก') monthMap[m].sell += r.quantity;
                      }
                 });
+
                 const categories = [];
                 const buySeries = [];
                 const sellSeries = [];
@@ -1508,14 +1734,15 @@
                     buySeries.push(data.buy);
                     sellSeries.push(data.sell);
                 }
+                
                 renderApexInventoryChart(categories, buySeries, sellSeries, false);
                 return;
             }
 
-            // Case 3: Daily in Month
             let startDate, endDate;
             const today = new Date();
             today.setHours(0,0,0,0);
+            
             let isCurrentMonth = false;
 
             if (monthChk && !isAllMonths) {
@@ -1523,17 +1750,18 @@
                 endDate = new Date(yearVal, selectedMonth, 0);
                 isCurrentMonth = (today.getFullYear() === yearVal && (today.getMonth() + 1) === selectedMonth);
             } else {
-                // Default fallback
-                startDate = new Date(today); startDate.setDate(startDate.getDate() - 15);
-                endDate = new Date(today); endDate.setDate(endDate.getDate() + 5);
+                startDate = new Date(today);
+                startDate.setDate(startDate.getDate() - 15);
+                endDate = new Date(today);
+                endDate.setDate(endDate.getDate() + 5);
                 isCurrentMonth = true;
             }
 
-            const dailyMap = {};
+            const dailyMapLocal = {}; // Renamed local variable
             let iter = new Date(startDate);
             while(iter <= endDate) {
                 const key = iter.getFullYear() + '-' + String(iter.getMonth()+1).padStart(2,'0') + '-' + String(iter.getDate()).padStart(2,'0');
-                dailyMap[key] = { buy: 0, sell: 0 };
+                dailyMapLocal[key] = { buy: 0, sell: 0 };
                 iter.setDate(iter.getDate() + 1);
             }
 
@@ -1541,11 +1769,12 @@
                 if (statusVal && r.status !== statusVal) return;
                 const d = parseDate(r.timestamp);
                 d.setHours(0,0,0,0);
+                
                 if (d >= startDate && d <= endDate) {
                      const key = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
-                     if (dailyMap[key]) {
-                         if (r.status === 'ซื้อเข้า') dailyMap[key].buy += r.quantity;
-                         else if (r.status === 'ขายออก') dailyMap[key].sell += r.quantity;
+                     if (dailyMapLocal[key]) {
+                         if (r.status === 'ซื้อเข้า') dailyMapLocal[key].buy += r.quantity;
+                         else if (r.status === 'ขายออก') dailyMapLocal[key].sell += r.quantity;
                      }
                 }
             });
@@ -1560,13 +1789,16 @@
             while(iter <= endDate) {
                 const key = iter.getFullYear() + '-' + String(iter.getMonth()+1).padStart(2,'0') + '-' + String(iter.getDate()).padStart(2,'0');
                 categories.push(key); 
-                const data = dailyMap[key] || { buy: 0, sell: 0 };
+                const data = dailyMapLocal[key] || { buy: 0, sell: 0 };
                 buySeries.push(data.buy);
                 sellSeries.push(data.sell);
+
                 if (iter.getTime() === today.getTime()) todayIndex = i;
+                
                 iter.setDate(iter.getDate() + 1);
                 i++;
             }
+
             renderApexInventoryChart(categories, buySeries, sellSeries, true, isCurrentMonth ? todayIndex : -1);
         }
 
@@ -1589,47 +1821,106 @@
 
             charts.invY = new ApexCharts(document.querySelector("#chart-inventory-y"), {
                 series: [{ name: 'Dummy', data: buyData }], 
-                chart: { type: 'bar', height: '100%', width: '100%', fontFamily: 'Prompt, sans-serif', toolbar: { show: false }, animations: { enabled: false }, parentHeightOffset: 0 },
+                chart: {
+                    type: 'bar', height: '100%', width: '100%',
+                    fontFamily: 'Prompt, sans-serif', toolbar: { show: false },
+                    animations: { enabled: false }, parentHeightOffset: 0
+                },
                 colors: ['transparent'],
                 plotOptions: { bar: { columnWidth: '0%' } },
                 dataLabels: { enabled: false },
                 grid: { show: false, padding: { top: 0, bottom: 0, left: 10 } },
-                xaxis: { labels: { show: true, style: { colors: 'transparent' } }, axisBorder: { show: false }, axisTicks: { show: false }, tooltip: { enabled: false } },
-                yaxis: { min: 0, max: maxVal, tickAmount: 5, labels: { formatter: (val) => val.toLocaleString(), style: { fontSize: '16px', fontWeight: 700, colors: '#64748b' }, align: 'right', minWidth: 40, offsetX: -15 }, axisBorder: { show: false }, axisTicks: { show: false } }
+                xaxis: {
+                    labels: { show: true, style: { colors: 'transparent' } },
+                    axisBorder: { show: false }, axisTicks: { show: false }, tooltip: { enabled: false }
+                },
+                yaxis: {
+                    min: 0, max: maxVal, tickAmount: 5,
+                    labels: { 
+                        formatter: (val) => val.toLocaleString(),
+                        style: { fontSize: '16px', fontWeight: 700, colors: '#64748b' },
+                        align: 'right', minWidth: 40,
+                        offsetX: -15
+                    },
+                    axisBorder: { show: false }, axisTicks: { show: false }
+                }
             });
             charts.invY.render();
 
             charts.invMain = new ApexCharts(document.querySelector("#chart-inventory"), {
-                series: [ { name: 'ซื้อเข้า', data: buyData }, { name: 'ขายออก', data: sellSeries } ],
-                chart: { type: 'bar', height: '100%', width: calculatedWidth, fontFamily: 'Prompt, sans-serif', toolbar: { show: false }, animations: { enabled: false }, parentHeightOffset: 0, stacked: false, selection: { enabled: false }, zoom: { enabled: false } },
+                series: [
+                    { name: 'ซื้อเข้า', data: buyData },
+                    { name: 'ขายออก', data: sellSeries }
+                ],
+                chart: {
+                    type: 'bar',
+                    height: '100%',
+                    width: calculatedWidth,
+                    fontFamily: 'Prompt, sans-serif',
+                    toolbar: { show: false },
+                    animations: { enabled: false },
+                    parentHeightOffset: 0,
+                    stacked: false,
+                    selection: { enabled: false },
+                    zoom: { enabled: false }
+                },
                 colors: ['#22c55e', '#3b82f6'],
-                plotOptions: { bar: { borderRadius: 4, columnWidth: '80%', dataLabels: { position: 'center' } } },
-                dataLabels: { enabled: true, offsetY: 0, style: { fontSize: '14px', colors: ["#000000"], fontWeight: 700 }, formatter: (val) => val > 0 ? val.toLocaleString() : "" },
+                plotOptions: {
+                    bar: { 
+                        borderRadius: 4, 
+                        columnWidth: '80%',
+                        dataLabels: { position: 'center' } 
+                    }
+                },
+                dataLabels: {
+                    enabled: true, 
+                    offsetY: 0,
+                    style: { fontSize: '14px', colors: ["#000000"], fontWeight: '700' },
+                    formatter: (val) => val > 0 ? val.toLocaleString() : ""
+                },
                 states: { hover: { filter: { type: 'none' } }, active: { filter: { type: 'none' } } },
                 legend: { show: false },
-                xaxis: { categories: categories, labels: { style: { fontSize: '16px', fontWeight: 700, colors: '#64748b' }, formatter: function(val) { if (!val) return ""; if (val.indexOf && val.indexOf('-') > -1) { const d = new Date(val); if (isNaN(d.getTime())) return val; return d.getDate(); } return val; } }, tooltip: { enabled: false }, axisBorder: { show: true }, axisTicks: { show: false }, crosshairs: { show: false } },
+                xaxis: {
+                    categories: categories,
+                    labels: {
+                        style: { fontSize: '16px', fontWeight: 700, colors: '#64748b' },
+                        formatter: function(val) {
+                            if (!val) return "";
+                            if (val.indexOf && val.indexOf('-') > -1) {
+                                const d = new Date(val);
+                                if (isNaN(d.getTime())) return val;
+                                return d.getDate();
+                            }
+                            return val; 
+                        }
+                    },
+                    tooltip: { enabled: false },
+                    axisBorder: { show: true }, axisTicks: { show: false }, crosshairs: { show: false }
+                },
                 yaxis: { show: false, min: 0, max: maxVal, tickAmount: 5 },
-                grid: { show: true, borderColor: '#cbd5e1', strokeDashArray: 4, padding: { top: 0, bottom: 0, left: 20, right: 20 }, xaxis: { lines: { show: true } }, yaxis: { lines: { show: true } } }, 
+                grid: { 
+                    show: true, 
+                    borderColor: '#cbd5e1', 
+                    strokeDashArray: 4, 
+                    padding: { top: 0, bottom: 0, left: 20, right: 20 },
+                    xaxis: { lines: { show: true } },
+                    yaxis: { lines: { show: true } }
+                }, 
                 tooltip: { enabled: false }
             });
             charts.invMain.render();
 
-            if (isScrollable && centerIndex !== -1 && scroller) {
+            if (isScrollable && centerIndex !== -1) {
                 setTimeout(() => {
                     const containerWidth = scroller.clientWidth;
                     const singleBarWidth = containerWidth / 5; 
                     const centerPos = (centerIndex * singleBarWidth) - (containerWidth / 2) + (singleBarWidth / 2);
                     scroller.scrollLeft = centerPos;
                 }, 200);
-            } else if (isScrollable && scroller) { scroller.scrollLeft = 0; }
+            } else if (isScrollable) {
+                scroller.scrollLeft = 0;
+            }
         }
-        
-        // Ensure visitor counter logic and other inits run
-        document.addEventListener('DOMContentLoaded', () => {
-            type();
-            updateVisitorCount();
-        });
     </script>
 </body>
 </html>
-
