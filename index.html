@@ -1183,27 +1183,55 @@
             const overlay = document.getElementById('loading-overlay');
             const loadingText = document.getElementById('loading-text');
             
-            // 1. Start Loading Animation
             loadingText.innerText = 'กำลังบันทึกข้อมูล...';
             overlay.classList.remove('hidden'); 
             overlay.classList.add('flex');
 
             try {
-                await fetch(GOOGLE_SCRIPT_URL, { 
+                const response = await fetch(GOOGLE_SCRIPT_URL, { 
                     method: 'POST', 
-                    mode: 'no-cors', 
+                    mode: 'no-cors', // Note: no-cors means we can't read response in standard fetch easily, 
+                                     // BUT for GAS web app properly deployed, we usually use standard CORS or jsonp. 
+                                     // However, to make UI fast with no-cors constraint, we simulate success.
+                                     // IF you can deploy as "Anyone", cors usually works. 
+                                     // Assuming we rely on the fact that GAS executes successfully.
                     body: JSON.stringify({ action, type, data }), 
                     headers: { 'Content-Type': 'application/json' } 
                 });
 
-                // 3. Wait for data to be processed on server (2 seconds)
-                await delay(2000);
+                // --- KEY CHANGE: Local Update Logic (Optimistic UI) ---
+                // เนื่องจากโหมด no-cors อ่าน response ไม่ได้ เราจะจำลองข้อมูลเพื่ออัปเดตหน้าจอทันที
+                // นี่คือเทคนิคที่ทำให้แอปรู้สึกว่า "เร็วมาก"
+                
+                const simulatedId = "PENDING-" + Date.now(); // สร้าง ID ชั่วคราว
+                const now = new Date();
+                const day = String(now.getDate()); // No pad 0 to match Apps Script logic mostly
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                const year = now.getFullYear() + 543;
+                const time = now.toLocaleTimeString('th-TH', { hour12: false });
+                const simulatedTimestamp = `${day}/${month}/${year}, ${time}`;
 
-                // 4. Refresh Data (fetchData will handle closing the overlay in its finally block)
-                // We await it so the success popup only shows AFTER the new data is loaded
-                await fetchData(); 
+                const newRecord = {
+                    id: simulatedId,
+                    timestamp: simulatedTimestamp,
+                    ...data // ข้อมูลที่กรอกมา (name, quantity, bags, etc.)
+                };
 
-                // 5. Show Success Popup (after loading is gone)
+                // อัปเดตตัวแปร appData ทันทีโดยไม่ต้องรอโหลดใหม่
+                if (type === 'Records') {
+                    appData.records.push(newRecord);
+                    renderInventoryView(); // รีเฟรชตาราง
+                    renderInventoryChart(); // รีเฟรชกราฟ
+                } else if (type === 'Production') {
+                    appData.production.push(newRecord);
+                    renderProductionView(); // รีเฟรชตาราง
+                    renderDailyProductionChart(); // รีเฟรชกราฟ
+                }
+
+                // ปิด Overlay ทันที ไม่ต้องรอ 2 วินาที
+                overlay.classList.add('hidden'); 
+                overlay.classList.remove('flex');
+
                 Swal.fire({
                     title: 'สำเร็จ',
                     text: 'บันทึกข้อมูลเรียบร้อยแล้ว',
@@ -1211,10 +1239,12 @@
                     timer: 1500,
                     showConfirmButton: false
                 });
+                
+                // เอาส่วนที่โหลดข้อมูลซ้ำออก เพื่อไม่ให้หมุนอีกรอบ
+                // setTimeout(() => fetchData(true), 2000); 
 
             } catch (e) { 
                 Swal.fire('Error', e.message, 'error');
-                // Ensure overlay is closed on error
                 overlay.classList.add('hidden'); 
                 overlay.classList.remove('flex');
             }
@@ -1228,21 +1258,45 @@
                 inputPlaceholder: 'รหัสผ่าน',
                 showCancelButton: true,
                 confirmButtonColor: '#ef4444',
-                confirmButtonText: 'ลบข้อมูล'
+                confirmButtonText: 'ลบข้อมูล',
+                cancelButtonText: 'ยกเลิก'
             });
 
             if (password === '4455') {
                 const overlay = document.getElementById('loading-overlay');
-                overlay.classList.remove('hidden'); overlay.classList.add('flex');
+                const loadingText = document.getElementById('loading-text');
+                
+                // 1. เปลี่ยนข้อความและแสดง Loading
+                loadingText.innerText = 'กำลังลบข้อมูล...';
+                overlay.classList.remove('hidden'); 
+                overlay.classList.add('flex');
+                
                 try {
+                    // 2. ส่งคำสั่งลบไปที่ Server (ไม่ต้องรอผลตอบกลับจริงจัง เพราะเป็น no-cors)
                     await fetch(GOOGLE_SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'delete', type, data: { id } }) });
-                    setTimeout(() => { 
-                        fetchData();
-                        Swal.fire({title: 'ลบข้อมูลสำเร็จ', icon: 'success', timer: 1500, showConfirmButton: false});
-                    }, 2000);
+                    
+                    // 3. Optimistic Update: ลบข้อมูลออกจากตัวแปร appData ทันที (ไม่ต้องโหลดใหม่)
+                    if (type === 'Records') {
+                        appData.records = appData.records.filter(r => r.id !== id);
+                        renderInventoryView();
+                        renderInventoryChart();
+                    } else if (type === 'Production') {
+                        appData.production = appData.production.filter(r => r.id !== id);
+                        renderProductionView();
+                        renderDailyProductionChart();
+                    }
+
+                    // 4. ปิด Overlay ทันที
+                    overlay.classList.add('hidden'); 
+                    overlay.classList.remove('flex');
+                    
+                    // 5. แจ้งเตือนความสำเร็จจบเลย
+                    Swal.fire({title: 'ลบข้อมูลสำเร็จ', icon: 'success', timer: 1500, showConfirmButton: false});
+
                 } catch (e) { 
                     Swal.fire('Error', 'ไม่สามารถลบข้อมูลได้', 'error');
                     overlay.classList.add('hidden'); 
+                    overlay.classList.remove('flex');
                 }
             } else if (password) {
                 Swal.fire('รหัสผ่านไม่ถูกต้อง', '', 'error');
