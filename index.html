@@ -213,12 +213,19 @@
             <div class="flex flex-col md:flex-row items-center gap-8 md:gap-16 2xl:gap-24"> 
                 <div class="w-full md:w-1/2 fade-in-up relative group">
                     <div class="absolute inset-0 bg-brand-500 rounded-2xl transform rotate-3 transition-transform group-hover:rotate-6 opacity-20"></div>
-                    <!-- Edit: Changed aspect-video (16:9) to aspect-[4/3] to make the image area taller and bigger -->
+                    <!-- Aspect Ratio adjusted to 4:3 for better visibility -->
                     <div class="relative rounded-2xl shadow-2xl overflow-hidden w-full aspect-[4/3] bg-gray-100 group-hover:scale-[1.01] transition-transform duration-500"> 
                         <div id="standards-carousel" class="w-full h-full relative">
+                            <!-- Image 1 -->
                             <img src="https://i.postimg.cc/Gt1WkVRD/42685.jpg" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-700 opacity-100" data-index="0" alt="Standard Quality">
+                            <!-- Image 2 -->
                             <img src="https://i.postimg.cc/vZGK85YP/Gemini-Generated-Image-hv4j9nhv4j9nhv4j.png" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-700 opacity-0" data-index="1" alt="Microscope Analysis">
+                            <!-- Image 3 -->
                             <img src="https://i.postimg.cc/tg4F2Nyt/S-2179076.jpg" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-700 opacity-0" data-index="2" alt="Quality Control">
+                            <!-- Image 4 (Added) -->
+                            <img src="https://i.postimg.cc/W4WmZyhQ/20260208_132339_865.jpg" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-700 opacity-0" data-index="3" alt="Standard Packing">
+                            <!-- Image 5 (Added) -->
+                            <img src="https://i.postimg.cc/L5zZxQ82/20260208-132630-673.jpg" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-700 opacity-0" data-index="4" alt="Warehouse Standard">
                         </div>
                         <button onclick="changeStandardSlide(-1)" class="absolute left-3 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-brand-600/80 text-white w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center backdrop-blur-sm transition z-20"><i class="fa-solid fa-chevron-left text-sm md:text-base"></i></button>
                         <button onclick="changeStandardSlide(1)" class="absolute right-3 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-brand-600/80 text-white w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center backdrop-blur-sm transition z-20"><i class="fa-solid fa-chevron-right text-sm md:text-base"></i></button>
@@ -226,6 +233,9 @@
                             <button class="w-2 h-2 md:w-2.5 md:h-2.5 rounded-full bg-white transition-all duration-300 standard-dot scale-110 shadow-sm" onclick="setStandardSlide(0)"></button>
                             <button class="w-2 h-2 md:w-2.5 md:h-2.5 rounded-full bg-white/40 hover:bg-white transition-all duration-300 standard-dot shadow-sm" onclick="setStandardSlide(1)"></button>
                             <button class="w-2 h-2 md:w-2.5 md:h-2.5 rounded-full bg-white/40 hover:bg-white transition-all duration-300 standard-dot shadow-sm" onclick="setStandardSlide(2)"></button>
+                            <!-- Dots for Image 4 & 5 -->
+                            <button class="w-2 h-2 md:w-2.5 md:h-2.5 rounded-full bg-white/40 hover:bg-white transition-all duration-300 standard-dot shadow-sm" onclick="setStandardSlide(3)"></button>
+                            <button class="w-2 h-2 md:w-2.5 md:h-2.5 rounded-full bg-white/40 hover:bg-white transition-all duration-300 standard-dot shadow-sm" onclick="setStandardSlide(4)"></button>
                         </div>
                     </div>
                 </div>
@@ -256,37 +266,72 @@
                 <h3 class="text-2xl md:text-4xl 2xl:text-5xl font-bold text-white">ผลการดำเนินงานของ SWK FishScales</h3>
             </div>
             
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 2xl:gap-12 fade-in-up">
-                <!-- Gallery Item 1 -->
-                <div class="aspect-video w-full rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-brand-500/30 transition-all duration-300 transform hover:-translate-y-2 cursor-pointer group relative border-2 border-white/10" onclick="openLightbox('https://i.postimg.cc/zXwWNcG0/42674.jpg')">
-                    <img src="https://i.postimg.cc/zXwWNcG0/42674.jpg" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700">
-                    <div class="absolute inset-0 bg-black/0 group-hover:bg-white/10 transition z-10"></div>
+            <!-- Product Carousel Container (One-way Loop) -->
+            <div class="relative group fade-in-up px-0 md:px-4">
+                
+                <!-- Only Next Button (Right) as requested -->
+                <button id="next-prod" class="absolute -right-2 md:-right-12 top-1/2 -translate-y-1/2 z-20 bg-white/10 hover:bg-white/30 text-white w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center backdrop-blur-md transition-all hover:scale-110 shadow-lg border border-white/20 active:scale-95">
+                    <i class="fa-solid fa-chevron-right text-xl md:text-2xl"></i>
+                </button>
+
+                <!-- Track Container -->
+                <div class="overflow-hidden rounded-2xl">
+                    <!-- Edit: Removed duration class here to handle it in JS for snapping -->
+                    <div id="product-track" class="flex w-full transition-transform ease-in-out gap-4 md:gap-6" style="transition-duration: 700ms;">
+                        
+                        <!-- Column 1 -->
+                        <div class="product-column flex-shrink-0 flex flex-col gap-4 md:gap-6 w-full sm:w-[calc(50%-0.5rem)] lg:w-[calc(33.333%-1rem)]">
+                            <div class="aspect-video w-full rounded-2xl overflow-hidden shadow-lg border-2 border-white/10 relative cursor-pointer group/item hover:border-brand-400 transition-colors" onclick="openLightbox('https://i.postimg.cc/zXwWNcG0/42674.jpg')">
+                                <img src="https://i.postimg.cc/zXwWNcG0/42674.jpg" class="w-full h-full object-cover transform group-hover/item:scale-110 transition duration-700">
+                                <div class="absolute inset-0 bg-black/0 group-hover/item:bg-white/10 transition z-10 flex items-center justify-center opacity-0 group-hover/item:opacity-100"><i class="fa-solid fa-magnifying-glass-plus text-3xl drop-shadow-md"></i></div>
+                            </div>
+                            <div class="aspect-video w-full rounded-2xl overflow-hidden shadow-lg border-2 border-white/10 relative cursor-pointer group/item hover:border-brand-400 transition-colors" onclick="openLightbox('https://i.postimg.cc/J477y6Qp/E2758541-8C3A-43AA-896B-5ADFEF2DE6A0.jpg')">
+                                <img src="https://i.postimg.cc/J477y6Qp/E2758541-8C3A-43AA-896B-5ADFEF2DE6A0.jpg" class="w-full h-full object-cover transform group-hover/item:scale-110 transition duration-700">
+                                <div class="absolute inset-0 bg-black/0 group-hover/item:bg-white/10 transition z-10 flex items-center justify-center opacity-0 group-hover/item:opacity-100"><i class="fa-solid fa-magnifying-glass-plus text-3xl drop-shadow-md"></i></div>
+                            </div>
+                        </div>
+
+                        <!-- Column 2 -->
+                        <div class="product-column flex-shrink-0 flex flex-col gap-4 md:gap-6 w-full sm:w-[calc(50%-0.5rem)] lg:w-[calc(33.333%-1rem)]">
+                            <div class="aspect-video w-full rounded-2xl overflow-hidden shadow-lg border-2 border-white/10 relative cursor-pointer group/item hover:border-brand-400 transition-colors" onclick="openLightbox('https://i.postimg.cc/JnqVM8Sw/52A3B5EF-3A63-4101-9A91-40440D85A2A4.jpg')">
+                                <img src="https://i.postimg.cc/JnqVM8Sw/52A3B5EF-3A63-4101-9A91-40440D85A2A4.jpg" class="w-full h-full object-cover transform group-hover/item:scale-110 transition duration-700">
+                                <div class="absolute inset-0 bg-black/0 group-hover/item:bg-white/10 transition z-10 flex items-center justify-center opacity-0 group-hover/item:opacity-100"><i class="fa-solid fa-magnifying-glass-plus text-3xl drop-shadow-md"></i></div>
+                            </div>
+                            <div class="aspect-video w-full rounded-2xl overflow-hidden shadow-lg border-2 border-white/10 relative cursor-pointer group/item hover:border-brand-400 transition-colors" onclick="openLightbox('https://i.postimg.cc/nL9BycjV/070213EF-16C2-41D4-B2CE-00A406A346CD.jpg')">
+                                <img src="https://i.postimg.cc/nL9BycjV/070213EF-16C2-41D4-B2CE-00A406A346CD.jpg" class="w-full h-full object-cover transform group-hover/item:scale-110 transition duration-700">
+                                <div class="absolute inset-0 bg-black/0 group-hover/item:bg-white/10 transition z-10 flex items-center justify-center opacity-0 group-hover/item:opacity-100"><i class="fa-solid fa-magnifying-glass-plus text-3xl drop-shadow-md"></i></div>
+                            </div>
+                        </div>
+
+                        <!-- Column 3 -->
+                        <div class="product-column flex-shrink-0 flex flex-col gap-4 md:gap-6 w-full sm:w-[calc(50%-0.5rem)] lg:w-[calc(33.333%-1rem)]">
+                            <div class="aspect-video w-full rounded-2xl overflow-hidden shadow-lg border-2 border-white/10 relative cursor-pointer group/item hover:border-brand-400 transition-colors" onclick="openLightbox('https://i.postimg.cc/LXzfsC37/42702-0.jpg')">
+                                <img src="https://i.postimg.cc/LXzfsC37/42702-0.jpg" class="w-full h-full object-cover transform group-hover/item:scale-110 transition duration-700">
+                                <div class="absolute inset-0 bg-black/0 group-hover/item:bg-white/10 transition z-10 flex items-center justify-center opacity-0 group-hover/item:opacity-100"><i class="fa-solid fa-magnifying-glass-plus text-3xl drop-shadow-md"></i></div>
+                            </div>
+                            <div class="aspect-video w-full rounded-2xl overflow-hidden shadow-lg border-2 border-white/10 relative cursor-pointer group/item hover:border-brand-400 transition-colors" onclick="openLightbox('https://i.postimg.cc/1Rrwhdtd/42701-0.jpg')">
+                                <img src="https://i.postimg.cc/1Rrwhdtd/42701-0.jpg" class="w-full h-full object-cover transform group-hover/item:scale-110 transition duration-700">
+                                <div class="absolute inset-0 bg-black/0 group-hover/item:bg-white/10 transition z-10 flex items-center justify-center opacity-0 group-hover/item:opacity-100"><i class="fa-solid fa-magnifying-glass-plus text-3xl drop-shadow-md"></i></div>
+                            </div>
+                        </div>
+
+                        <!-- Column 4 -->
+                        <div class="product-column flex-shrink-0 flex flex-col gap-4 md:gap-6 w-full sm:w-[calc(50%-0.5rem)] lg:w-[calc(33.333%-1rem)]">
+                            <div class="aspect-video w-full rounded-2xl overflow-hidden shadow-lg border-2 border-white/10 relative cursor-pointer group/item hover:border-brand-400 transition-colors" onclick="openLightbox('https://i.postimg.cc/W4WmZyhQ/20260208_132339_865.jpg')">
+                                <img src="https://i.postimg.cc/W4WmZyhQ/20260208_132339_865.jpg" class="w-full h-full object-cover transform group-hover/item:scale-110 transition duration-700">
+                                <div class="absolute inset-0 bg-black/0 group-hover/item:bg-white/10 transition z-10 flex items-center justify-center opacity-0 group-hover/item:opacity-100"><i class="fa-solid fa-magnifying-glass-plus text-3xl drop-shadow-md"></i></div>
+                            </div>
+                            <div class="aspect-video w-full rounded-2xl overflow-hidden shadow-lg border-2 border-white/10 relative cursor-pointer group/item hover:border-brand-400 transition-colors" onclick="openLightbox('https://i.postimg.cc/L5zZxQ82/20260208-132630-673.jpg')">
+                                <img src="https://i.postimg.cc/L5zZxQ82/20260208-132630-673.jpg" class="w-full h-full object-cover transform group-hover/item:scale-110 transition duration-700">
+                                <div class="absolute inset-0 bg-black/0 group-hover/item:bg-white/10 transition z-10 flex items-center justify-center opacity-0 group-hover/item:opacity-100"><i class="fa-solid fa-magnifying-glass-plus text-3xl drop-shadow-md"></i></div>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
-                <!-- Gallery Item 2 -->
-                <div class="aspect-video w-full rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-brand-500/30 transition-all duration-300 transform hover:-translate-y-2 cursor-pointer group relative border-2 border-white/10" onclick="openLightbox('https://i.postimg.cc/J477y6Qp/E2758541-8C3A-43AA-896B-5ADFEF2DE6A0.jpg')">
-                    <img src="https://i.postimg.cc/J477y6Qp/E2758541-8C3A-43AA-896B-5ADFEF2DE6A0.jpg" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700">
-                    <div class="absolute inset-0 bg-black/0 group-hover:bg-white/10 transition z-10"></div>
-                </div>
-                <!-- Gallery Item 3 -->
-                <div class="aspect-video w-full rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-brand-500/30 transition-all duration-300 transform hover:-translate-y-2 cursor-pointer group relative border-2 border-white/10" onclick="openLightbox('https://i.postimg.cc/JnqVM8Sw/52A3B5EF-3A63-4101-9A91-40440D85A2A4.jpg')">
-                    <img src="https://i.postimg.cc/JnqVM8Sw/52A3B5EF-3A63-4101-9A91-40440D85A2A4.jpg" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700">
-                    <div class="absolute inset-0 bg-black/0 group-hover:bg-white/10 transition z-10"></div>
-                </div>
-                <!-- Gallery Item 4 -->
-                <div class="aspect-video w-full rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-brand-500/30 transition-all duration-300 transform hover:-translate-y-2 cursor-pointer group relative border-2 border-white/10" onclick="openLightbox('https://i.postimg.cc/nL9BycjV/070213EF-16C2-41D4-B2CE-00A406A346CD.jpg')">
-                    <img src="https://i.postimg.cc/nL9BycjV/070213EF-16C2-41D4-B2CE-00A406A346CD.jpg" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700">
-                    <div class="absolute inset-0 bg-black/0 group-hover:bg-white/10 transition z-10"></div>
-                </div>
-                <!-- Gallery Item 5 -->
-                <div class="aspect-video w-full rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-brand-500/30 transition-all duration-300 transform hover:-translate-y-2 cursor-pointer group relative border-2 border-white/10" onclick="openLightbox('https://i.postimg.cc/LXzfsC37/42702-0.jpg')">
-                    <img src="https://i.postimg.cc/LXzfsC37/42702-0.jpg" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700">
-                    <div class="absolute inset-0 bg-black/0 group-hover:bg-white/10 transition z-10"></div>
-                </div>
-                <!-- Gallery Item 6 -->
-                <div class="aspect-video w-full rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-brand-500/30 transition-all duration-300 transform hover:-translate-y-2 cursor-pointer group relative border-2 border-white/10" onclick="openLightbox('https://i.postimg.cc/1Rrwhdtd/42701-0.jpg')">
-                    <img src="https://i.postimg.cc/1Rrwhdtd/42701-0.jpg" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700">
-                    <div class="absolute inset-0 bg-black/0 group-hover:bg-white/10 transition z-10"></div>
-                </div>
+                
+                <!-- Pagination Dots -->
+                <div id="product-dots" class="flex justify-center gap-2 mt-6 md:mt-8"></div>
             </div>
         </div>
     </section>
@@ -411,6 +456,36 @@
     <!-- Back to top and Modals... -->
     <button id="back-to-top" onclick="window.scrollTo(0,0)" class="fixed bottom-8 right-8 bg-brand-600 text-white w-12 h-12 rounded-full shadow-lg flex items-center justify-center translate-y-20 opacity-0 transition-all duration-500 hover:bg-brand-700 hover:scale-110 z-40"><i class="fa-solid fa-arrow-up"></i></button>
     
+    <!-- MESSENGER CHAT PLUGIN (Official Facebook) -->
+    <!-- 1. Div สำหรับ Facebook SDK -->
+    <div id="fb-root"></div>
+
+    <!-- 2. Div สำหรับตัว Plugin -->
+    <div id="fb-customer-chat" class="fb-customerchat"></div>
+
+    <!-- 3. Script ติดตั้ง -->
+    <script>
+      var chatbox = document.getElementById('fb-customer-chat');
+      // *** สำคัญ: ต้องเปลี่ยนตัวเลขนี้เป็น Page ID ของเพจคุณ ***
+      chatbox.setAttribute("page_id", "109312634100944"); 
+      chatbox.setAttribute("attribution", "biz_inbox");
+
+      window.fbAsyncInit = function() {
+        FB.init({
+          xfbml            : true,
+          version          : 'v18.0'
+        });
+      };
+
+      (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = 'https://connect.facebook.net/th_TH/sdk/xfbml.customerchat.js';
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+    </script>
+
     <div id="lightbox" class="fixed inset-0 z-[100] hidden bg-black/90 flex items-center justify-center p-4 backdrop-blur-md opacity-0 transition-opacity duration-300" onclick="closeLightbox()"><button class="absolute top-6 right-6 text-white text-5xl hover:text-gray-300 focus:outline-none z-[101]">&times;</button><img id="lightbox-img" src="" class="max-h-[90vh] max-w-[90vw] object-contain rounded-lg shadow-2xl transform scale-95 transition-transform duration-300" onclick="event.stopPropagation()"></div>
 
     <div id="contact-modal" class="fixed inset-0 z-[100] hidden bg-black/80 flex items-center justify-center p-4 backdrop-blur-sm opacity-0 transition-opacity duration-300">
@@ -1151,6 +1226,144 @@
             document.getElementById('admin-image-modal').classList.add('hidden');
         }
 
+        // --- Product Page Carousel Logic (Seamless Circular Loop) ---
+        let prodIndex = 0;
+        let prodInterval;
+        let isTransitioning = false;
+        const prodTrack = document.getElementById('product-track');
+        const nextProdBtn = document.getElementById('next-prod');
+        const prodDotsContainer = document.getElementById('product-dots');
+        
+        // Initial setup for infinite loop: Clone columns
+        // We will do this after DOM load fully
+        let totalRealColumns = 0;
+
+        function initProductCarousel() {
+            const columns = prodTrack.querySelectorAll('.product-column');
+            totalRealColumns = columns.length;
+            
+            // Clone all columns and append to the end for seamless looping
+            columns.forEach(col => {
+                const clone = col.cloneNode(true);
+                clone.classList.add('clone');
+                clone.setAttribute('aria-hidden', 'true');
+                prodTrack.appendChild(clone);
+            });
+            
+            updateProdDots();
+            resetProdTimer();
+        }
+
+        function getItemsPerView() {
+            if (window.innerWidth >= 1024) return 3; // lg
+            if (window.innerWidth >= 640) return 2;  // sm
+            return 1;
+        }
+
+        function updateProductCarousel(enableTransition = true) {
+            // Determine item width including gap
+            const columns = prodTrack.querySelectorAll('.product-column');
+            if(columns.length === 0) return;
+            
+            const colWidth = columns[0].offsetWidth;
+            const gap = parseFloat(window.getComputedStyle(prodTrack).gap) || 0;
+            const moveAmount = (colWidth + gap) * prodIndex;
+            
+            if (enableTransition) {
+                prodTrack.style.transitionDuration = '700ms';
+            } else {
+                prodTrack.style.transitionDuration = '0ms';
+            }
+            
+            prodTrack.style.transform = `translateX(-${moveAmount}px)`;
+            
+            // Update dots based on real index
+            const realIndex = prodIndex % totalRealColumns;
+            updateProdDots(realIndex);
+        }
+
+        function nextProduct() { 
+            if (isTransitioning) return;
+            isTransitioning = true;
+            
+            prodIndex++;
+            updateProductCarousel(true); 
+            
+            // Check if we reached the start of the cloned set
+            if (prodIndex === totalRealColumns) {
+                // Wait for transition to finish, then snap back to 0
+                setTimeout(() => {
+                    prodIndex = 0;
+                    updateProductCarousel(false); // Snap without animation
+                    // Force reflow/repaint
+                    void prodTrack.offsetWidth;
+                    isTransitioning = false;
+                }, 700);
+            } else {
+                setTimeout(() => { isTransitioning = false; }, 700);
+            }
+            
+            resetProdTimer(); 
+        }
+        
+        function resetProdTimer() {
+            clearInterval(prodInterval);
+            prodInterval = setInterval(nextProduct, 5000); 
+        }
+
+        function updateProdDots(activeIndex = prodIndex) {
+            prodDotsContainer.innerHTML = '';
+            // Dots represent the starting position of the slide view (0 to totalRealColumns - itemsPerView)
+            // But for simple "page" feel, let's just show dots for totalRealColumns / itemsPerView?
+            // User requested "slide one column at a time", so dots usually represent index 0..total-view
+            
+            const itemsPerView = getItemsPerView();
+            // We want dots to show progress. 
+            // Since we loop, activeIndex can be 0 to totalRealColumns-1
+            
+            // Only show dots if scrolling is possible
+            if (totalRealColumns <= itemsPerView) return;
+
+            const dotCount = totalRealColumns; // One dot per column? Or per page?
+            // Let's do one dot per column since we slide by column
+            
+            for(let i=0; i < dotCount; i++) {
+               const dot = document.createElement('button');
+               // Highlight logic: if activeIndex is i.
+               // Adjust logic: if we are at the end showing clones, activeIndex passed to this func is 0.
+               const isActive = (i === (activeIndex % totalRealColumns));
+               
+               dot.className = `w-2 h-2 rounded-full transition-all duration-300 ${isActive ? 'bg-brand-500 w-6' : 'bg-gray-500 hover:bg-gray-400'}`;
+               // Click to jump (simple jump, no complex closest path logic for now)
+               dot.onclick = () => { 
+                   prodIndex = i; 
+                   updateProductCarousel(true); 
+                   resetProdTimer(); 
+               };
+               prodDotsContainer.appendChild(dot);
+           }
+        }
+
+        // Init Carousel
+        nextProdBtn.addEventListener('click', nextProduct);
+        
+        // Resize Listener
+        window.addEventListener('resize', () => { 
+            // Re-calculate layout without animation
+            updateProductCarousel(false);
+        });
+        
+        // Initialize after DOM is ready and layout is stable
+        setTimeout(() => {
+            initProductCarousel();
+        }, 100);
+        
+        // Pause on hover
+        const prodSection = document.querySelector('#products .relative');
+        prodSection.addEventListener('mouseenter', () => clearInterval(prodInterval));
+        prodSection.addEventListener('mouseleave', resetProdTimer);
+
+
         // --- Data Logic ---
         
         const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
@@ -1171,7 +1384,9 @@
                     appData.production = result.data.production.map(r => ({
                         ...r, 
                         bags: parseInt(String(r.bags).replace(/,/g, '')) || 0, 
-                        kilos: parseInt(String(r.kilos).replace(/,/g, '')) || 0
+                        kilos: parseInt(String(r.kilos).replace(/,/g, '')) || 0,
+                        // --- Add: Check if accumulation field exists ---
+                        accBags: r['สะสม'] ? parseInt(String(r['สะสม']).replace(/,/g, '')) : 0
                     }));
                     
                     appData.records = result.data.records.map(r => {
@@ -1347,6 +1562,10 @@
                 confirmButtonText: 'ยืนยัน'
             }).then((result) => {
                 if (result.isConfirmed) {
+                    // *** แก้ไข: ส่งค่าสะสมไปด้วย ***
+                    // คำนวณสะสมคร่าวๆ สำหรับ Local Update (ค่าจริง Server จะคำนวณ)
+                    // หรือจะให้ Server คำนวณแล้วเรา Reload ทีหลังก็ได้ แต่นี่เราทำ Optimistic
+                    // ให้ง่ายสุด ส่งไปแค่ข้อมูลดิบ แล้วตอน render ค่อยคำนวณใหม่
                     sendData('add', 'Production', { bags: parseInt(qty), kilos: parseInt(qty) * 10, timestamp: new Date().toISOString() });
                     document.getElementById('input-prod-today').value = '';
                 }
@@ -1436,7 +1655,7 @@
 
         // --- Render Views ---
         function renderProductionView() {
-            // ... (Same logic as before, just ensured parseDate is used)
+            // ... (Variable setup)
             const today = new Date().toDateString();
             const thisMonth = new Date().getMonth();
             const thisYear = new Date().getFullYear();
@@ -1460,17 +1679,42 @@
 
             if(fMonth) {
                 let filtered = filteredRawData.filter(r => parseDate(r.timestamp).getMonth() + 1 == fMonth);
-                filtered.sort((a,b) => parseDate(b.timestamp) - parseDate(a.timestamp));
+                
+                // 1. เรียงจากเก่าไปใหม่ เพื่อคำนวณยอดสะสม (เฉพาะเดือนนี้)
+                filtered.sort((a,b) => parseDate(a.timestamp) - parseDate(b.timestamp));
+                
+                let accBags = 0;
+                let accKilos = 0;
+                
+                // คำนวณยอดสะสมภายในกลุ่มข้อมูลที่ filter มา (Monthly Accumulation)
+                const filteredWithAcc = filtered.map(r => {
+                    accBags += r.bags;
+                    accKilos += r.kilos;
+                    // ใช้ตัวแปรชื่อใหม่เพื่อไม่ให้สับสนกับ globalAcc
+                    return { ...r, monthlyAccBags: accBags, monthlyAccKilos: accKilos };
+                });
 
-                filtered.forEach(r => {
+                // 2. เรียงกลับจากใหม่ไปเก่า เพื่อแสดงผล (ล่าสุดอยู่บน)
+                filteredWithAcc.sort((a,b) => parseDate(b.timestamp) - parseDate(a.timestamp));
+
+                filteredWithAcc.forEach(r => {
                     const d = parseDate(r.timestamp);
                     const ds = `${d.getDate().toString().padStart(2,'0')}/${(d.getMonth()+1).toString().padStart(2,'0')}/${d.getFullYear()+543} ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')} น.`;
+                    
+                    // ใช้ค่าสะสมรายเดือนที่เพิ่งคำนวณ
+                    const showAccBags = r.monthlyAccBags.toLocaleString();
+                    const showAccKilos = r.monthlyAccKilos.toLocaleString();
+
                     const tr = document.createElement('tr');
                     tr.className = 'border-b border-gray-50 hover:bg-gray-50 transition text-base';
                     tr.innerHTML = `
                         <td class="p-4 text-center text-gray-700 align-middle">${ds}</td>
-                        <td class="p-4 text-center text-gray-700 align-middle">${r.bags.toLocaleString()} กระสอบ</td>
-                        <td class="p-4 text-center text-gray-700 align-middle">${r.kilos.toLocaleString()} กิโลกรัม</td>
+                        <td class="p-4 text-center text-gray-700 align-middle">
+                            <span class="font-bold text-gray-800">${r.bags.toLocaleString()} กระสอบ</span>
+                        </td>
+                        <td class="p-4 text-center text-gray-700 align-middle">
+                            <span class="font-bold text-gray-800">${r.kilos.toLocaleString()} กิโลกรัม</span>
+                        </td>
                         <td class="p-4 text-center align-middle">
                             <button onclick="deleteData('${r.id}', 'Production')" class="w-10 h-10 flex items-center justify-center bg-red-100 hover:bg-red-200 text-red-500 hover:text-red-700 rounded-full transition-all duration-200 shadow-sm mx-auto">
                                 <i class="fa-solid fa-trash-can"></i>
@@ -1489,17 +1733,42 @@
                     groups[key].kilos += r.kilos;
                     groups[key].count++;
                 });
-                const sortedGroups = Object.values(groups).sort((a,b) => {
-                    if (a.year !== b.year) return b.year - a.year;
-                    return b.month - a.month;
+                
+                // เรียงข้อมูลเพื่อคำนวณสะสม (เก่า -> ใหม่)
+                let sortedGroups = Object.values(groups).sort((a,b) => {
+                    if (a.year !== b.year) return a.year - b.year;
+                    return a.month - b.month;
                 });
+
+                let accBags = 0;
+                let accKilos = 0;
+                
+                // คำนวณสะสม (รายปี หรือ ทั้งหมดที่ filter มา)
+                sortedGroups = sortedGroups.map(g => {
+                    accBags += g.bags;
+                    accKilos += g.kilos;
+                    return { ...g, accBags, accKilos };
+                });
+
+                // เรียงกลับ (ใหม่ -> เก่า) เพื่อแสดงผล
+                sortedGroups.reverse();
+
                 sortedGroups.forEach(g => {
                     const monthName = getThaiMonthName(g.month + 1);
                     const yearThai = g.year + 543;
                     const ds = `${monthName} ${yearThai}`;
                     const tr = document.createElement('tr');
                     tr.className = 'border-b border-gray-50 hover:bg-gray-50 transition text-base';
-                    tr.innerHTML = `<td class="p-4 text-center text-gray-700 align-middle">${ds}</td><td class="p-4 text-center text-gray-700 align-middle">${g.bags.toLocaleString()} กระสอบ</td><td class="p-4 text-center text-gray-700 align-middle">${g.kilos.toLocaleString()} กิโลกรัม</td><td class="p-4 text-center text-gray-700 align-middle">(${g.count} รายการ)</td>`;
+                    tr.innerHTML = `
+                        <td class="p-4 text-center text-gray-700 align-middle">${ds}</td>
+                        <td class="p-4 text-center text-gray-700 align-middle">
+                            <span class="font-bold text-gray-800">${g.bags.toLocaleString()} กระสอบ</span>
+                        </td>
+                        <td class="p-4 text-center text-gray-700 align-middle">
+                            <span class="font-bold text-gray-800">${g.kilos.toLocaleString()} กิโลกรัม</span>
+                        </td>
+                        <td class="p-4 text-center text-gray-700 align-middle">(${g.count} รายการ)</td>
+                    `;
                     tbody.appendChild(tr);
                 });
             }
