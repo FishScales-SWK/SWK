@@ -169,9 +169,7 @@
         <div class="hero-bg-container"><div class="hero-bg-image animate-pan-slow"></div></div>
         <div class="max-w-[1920px] w-full mx-auto px-4 sm:px-6 lg:px-16 xl:px-24 2xl:px-32 relative z-10 pt-20 pb-10 md:pt-32 md:pb-24"> 
             <div class="md:w-3/4 2xl:w-2/3 fade-in-up">
-                <!-- Edit: Separated into two distinct blocks for strict line breaking and responsive sizing -->
                 <h1 class="font-bold text-white leading-tight mb-4 md:mb-6 drop-shadow-xl"> 
-                    
                     <!-- Line 1: Main Text (Responsive Size) -->
                     <div class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl mb-2">
                         ยกระดับคุณค่า<span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-200 via-white to-sky-200">ทรัพยากรทางทะเล</span>
@@ -277,7 +275,7 @@
                 <!-- Track Container -->
                 <div class="overflow-hidden rounded-2xl">
                     <!-- Edit: Removed duration class here to handle it in JS for snapping -->
-                    <div id="product-track" class="flex w-full transition-transform ease-in-out gap-4 md:gap-6" style="transition-duration: 700ms;">
+                    <div id="product-track" class="flex w-full transition-transform duration-700 ease-in-out gap-4 md:gap-6">
                         
                         <!-- Column 1 -->
                         <div class="product-column flex-shrink-0 flex flex-col gap-4 md:gap-6 w-full sm:w-[calc(50%-0.5rem)] lg:w-[calc(33.333%-1rem)]">
@@ -1181,6 +1179,7 @@
             }
         }
 
+        // --- UPDATED: Image Compression Logic to Speed Up Uploads ---
         function handleImagePreview(input) {
             const container = document.getElementById('image-preview-container');
             const placeholder = document.getElementById('image-upload-placeholder');
@@ -1196,15 +1195,51 @@
                 }
                 placeholder.classList.add('hidden');
                 container.classList.remove('hidden');
+                
                 Array.from(input.files).forEach(file => {
                     const reader = new FileReader();
                     reader.onload = (e) => {
-                        const base64 = e.target.result;
-                        currentInvImages.push(base64);
-                        const div = document.createElement('div');
-                        div.className = 'relative group';
-                        div.innerHTML = `<img src="${base64}" class="w-full h-24 object-cover rounded-xl border border-gray-200">`;
-                        container.appendChild(div);
+                        // Create an image object to load the file
+                        const img = new Image();
+                        img.src = e.target.result;
+                        
+                        img.onload = () => {
+                            // Create canvas for resizing
+                            const canvas = document.createElement('canvas');
+                            let width = img.width;
+                            let height = img.height;
+                            const MAX_WIDTH = 800;  // Limit max width to 800px for speed
+                            const MAX_HEIGHT = 800;
+
+                            // Calculate new dimensions
+                            if (width > height) {
+                                if (width > MAX_WIDTH) {
+                                    height *= MAX_WIDTH / width;
+                                    width = MAX_WIDTH;
+                                }
+                            } else {
+                                if (height > MAX_HEIGHT) {
+                                    width *= MAX_HEIGHT / height;
+                                    height = MAX_HEIGHT;
+                                }
+                            }
+                            
+                            canvas.width = width;
+                            canvas.height = height;
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(img, 0, 0, width, height);
+                            
+                            // Convert to compressed Base64 JPEG (Quality 0.7)
+                            // This reduces file size significantly (e.g. 5MB -> 100KB)
+                            const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
+                            
+                            currentInvImages.push(compressedBase64);
+                            
+                            const div = document.createElement('div');
+                            div.className = 'relative group';
+                            div.innerHTML = `<img src="${compressedBase64}" class="w-full h-24 object-cover rounded-xl border border-gray-200 shadow-sm">`;
+                            container.appendChild(div);
+                        };
                     };
                     reader.readAsDataURL(file);
                 });
@@ -1378,10 +1413,10 @@
         
         const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-        async function fetchData() {
+        async function fetchData(silent = false) {
             const overlay = document.getElementById('loading-overlay');
             // Only show if not already shown (to prevent flickering if called from sendData)
-            if (overlay.classList.contains('hidden')) {
+            if (!silent && overlay.classList.contains('hidden')) {
                 overlay.classList.remove('hidden'); 
                 overlay.classList.add('flex');
             }
@@ -1428,10 +1463,11 @@
                 }
             } catch (error) { console.log('Fetch Failed', error); } 
             finally { 
-                // Always hide overlay when done
-                overlay.classList.add('hidden'); 
-                overlay.classList.remove('flex'); 
-                document.getElementById('loading-text').innerText = 'กำลังดำเนินการ...';
+                if (!silent) {
+                    overlay.classList.add('hidden'); 
+                    overlay.classList.remove('flex'); 
+                    document.getElementById('loading-text').innerText = 'กำลังดำเนินการ...';
+                }
             }
         }
 
@@ -1446,45 +1482,56 @@
             try {
                 const response = await fetch(GOOGLE_SCRIPT_URL, { 
                     method: 'POST', 
-                    mode: 'no-cors', // Note: no-cors means we can't read response in standard fetch easily, 
-                                     // BUT for GAS web app properly deployed, we usually use standard CORS or jsonp. 
-                                     // However, to make UI fast with no-cors constraint, we simulate success.
-                                     // IF you can deploy as "Anyone", cors usually works. 
-                                     // Assuming we rely on the fact that GAS executes successfully.
+                    mode: 'no-cors',
                     body: JSON.stringify({ action, type, data }), 
                     headers: { 'Content-Type': 'application/json' } 
                 });
 
-                // --- KEY CHANGE: Local Update Logic (Optimistic UI) ---
-                // เนื่องจากโหมด no-cors อ่าน response ไม่ได้ เราจะจำลองข้อมูลเพื่ออัปเดตหน้าจอทันที
-                // นี่คือเทคนิคที่ทำให้แอปรู้สึกว่า "เร็วมาก"
+                const simulatedId = "PENDING-" + Date.now(); 
                 
-                const simulatedId = "PENDING-" + Date.now(); // สร้าง ID ชั่วคราว
+                // --- FIX: Force Thai Time (UTC+7) via Locale String ---
+                // วิธีนี้จะแปลงเวลาปัจจุบันให้เป็นสตริงของเวลาไทยก่อน แล้วค่อยดึงค่าออกมา
+                // ทำให้ได้เวลาที่ถูกต้อง 100% ไม่ว่าเครื่องจะตั้งโซนเวลาไหน
                 const now = new Date();
-                const day = String(now.getDate()); // No pad 0 to match Apps Script logic mostly
-                const month = String(now.getMonth() + 1).padStart(2, '0');
-                const year = now.getFullYear() + 543;
-                const time = now.toLocaleTimeString('th-TH', { hour12: false });
-                const simulatedTimestamp = `${day}/${month}/${year}, ${time}`;
+                const thaiTimeString = now.toLocaleString("en-US", { timeZone: "Asia/Bangkok", hour12: false });
+                const thaiDate = new Date(thaiTimeString);
 
+                const d = String(thaiDate.getDate()); // ไม่เติม 0 (เช่น 1, 2, 10)
+                const m = String(thaiDate.getMonth() + 1).padStart(2, '0');
+                const y = thaiDate.getFullYear() + 543; // พ.ศ.
+                
+                const h = String(thaiDate.getHours()).padStart(2, '0');
+                const min = String(thaiDate.getMinutes()).padStart(2, '0');
+                const s = String(thaiDate.getSeconds()).padStart(2, '0');
+                
+                const simulatedTimestamp = `${d}/${m}/${y}, ${h}:${min}:${s}`;
+                // ----------------------------------------------------
+
+                // Find the latest accumulation value from existing data (Optional logic kept for internal consistency, but display removed)
+                let latestAcc = 0;
+                if (type === 'Production' && appData.production.length > 0) {
+                    const lastRec = appData.production[appData.production.length - 1];
+                    latestAcc = lastRec.accBags || 0; 
+                }
+                const newAcc = latestAcc + (parseInt(data.bags) || 0);
+                
                 const newRecord = {
                     id: simulatedId,
                     timestamp: simulatedTimestamp,
-                    ...data // ข้อมูลที่กรอกมา (name, quantity, bags, etc.)
+                    ...data,
+                    accBags: newAcc 
                 };
 
-                // อัปเดตตัวแปร appData ทันทีโดยไม่ต้องรอโหลดใหม่
                 if (type === 'Records') {
                     appData.records.push(newRecord);
-                    renderInventoryView(); // รีเฟรชตาราง
-                    renderInventoryChart(); // รีเฟรชกราฟ
+                    renderInventoryView(); 
+                    renderInventoryChart(); 
                 } else if (type === 'Production') {
                     appData.production.push(newRecord);
-                    renderProductionView(); // รีเฟรชตาราง
-                    renderDailyProductionChart(); // รีเฟรชกราฟ
+                    renderProductionView(); 
+                    renderDailyProductionChart(); 
                 }
 
-                // ปิด Overlay ทันที ไม่ต้องรอ 2 วินาที
                 overlay.classList.add('hidden'); 
                 overlay.classList.remove('flex');
 
@@ -1495,9 +1542,6 @@
                     timer: 1500,
                     showConfirmButton: false
                 });
-                
-                // เอาส่วนที่โหลดข้อมูลซ้ำออก เพื่อไม่ให้หมุนอีกรอบ
-                // setTimeout(() => fetchData(true), 2000); 
 
             } catch (e) { 
                 Swal.fire('Error', e.message, 'error');
@@ -1522,16 +1566,13 @@
                 const overlay = document.getElementById('loading-overlay');
                 const loadingText = document.getElementById('loading-text');
                 
-                // 1. เปลี่ยนข้อความและแสดง Loading
                 loadingText.innerText = 'กำลังลบข้อมูล...';
                 overlay.classList.remove('hidden'); 
                 overlay.classList.add('flex');
                 
                 try {
-                    // 2. ส่งคำสั่งลบไปที่ Server (ไม่ต้องรอผลตอบกลับจริงจัง เพราะเป็น no-cors)
                     await fetch(GOOGLE_SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'delete', type, data: { id } }) });
                     
-                    // 3. Optimistic Update: ลบข้อมูลออกจากตัวแปร appData ทันที (ไม่ต้องโหลดใหม่)
                     if (type === 'Records') {
                         appData.records = appData.records.filter(r => r.id !== id);
                         renderInventoryView();
@@ -1542,11 +1583,9 @@
                         renderDailyProductionChart();
                     }
 
-                    // 4. ปิด Overlay ทันที
                     overlay.classList.add('hidden'); 
                     overlay.classList.remove('flex');
                     
-                    // 5. แจ้งเตือนความสำเร็จจบเลย
                     Swal.fire({title: 'ลบข้อมูลสำเร็จ', icon: 'success', timer: 1500, showConfirmButton: false});
 
                 } catch (e) { 
@@ -1572,11 +1611,7 @@
                 confirmButtonText: 'ยืนยัน'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // *** แก้ไข: ส่งค่าสะสมไปด้วย ***
-                    // คำนวณสะสมคร่าวๆ สำหรับ Local Update (ค่าจริง Server จะคำนวณ)
-                    // หรือจะให้ Server คำนวณแล้วเรา Reload ทีหลังก็ได้ แต่นี่เราทำ Optimistic
-                    // ให้ง่ายสุด ส่งไปแค่ข้อมูลดิบ แล้วตอน render ค่อยคำนวณใหม่
-                    sendData('add', 'Production', { bags: parseInt(qty), kilos: parseInt(qty) * 10, timestamp: new Date().toISOString() });
+                    sendData('add', 'Production', { bags: parseInt(qty), kilos: parseInt(qty) * 10 });
                     document.getElementById('input-prod-today').value = '';
                 }
             });
@@ -1586,7 +1621,7 @@
             e.preventDefault();
             const type = document.getElementById('inv-type').value;
             let name = document.getElementById('inv-name').value;
-            let inputQty = parseFloat(document.getElementById('inv-qty').value); // KG (น้ำหนักจริง)
+            let inputQty = parseFloat(document.getElementById('inv-qty').value); 
             
             if (!type || !name) { return Swal.fire({title: 'ข้อมูลไม่ครบถ้วน', text: 'กรุณากรอกข้อมูลให้ครบ', icon: 'warning', confirmButtonColor: '#0ea5e9'}); }
             
@@ -1604,7 +1639,6 @@
                      return Swal.fire({title: 'ข้อมูลไม่ครบถ้วน', text: 'กรุณาระบุน้ำหนักจริง', icon: 'warning', confirmButtonColor: '#0ea5e9'});
                 }
 
-                // Check Stock
                 const stockBags = calculateReadyStockBags();
                 if (inputBags > stockBags) { 
                     return Swal.fire({
@@ -1615,10 +1649,7 @@
                     }); 
                 }
                 
-                // Logic Update: Use explicit values provided by user
                 bagsVal = inputBags;
-                // ไม่ต้องคูณ 10 แล้ว และไม่ต้องแก้ชื่อ
-                // finalQty = inputQty (ใช้น้ำหนักจริงที่กรอกมาเลย)
                 
                 displayHtml = `
                     <div class="bg-blue-50 p-4 rounded-xl border border-blue-100 mb-2">
@@ -1631,7 +1662,6 @@
                 displayHtml = `<p class="text-lg">ซื้อเข้า: <b>${inputQty.toLocaleString()}</b> กิโลกรัม</p>`;
             }
 
-            // Popup Confirmation
             Swal.fire({
                 title: 'ยืนยันการบันทึก',
                 html: displayHtml,
@@ -1642,12 +1672,11 @@
                 cancelButtonText: 'ยกเลิก'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // Send bags specifically for Sell, or 0/null for Buy
                     sendData('add', 'Records', { 
                         status: type, 
                         name: name, 
-                        quantity: inputQty, // Always save Real Weight
-                        bags: bagsVal,      // Save Real Bags
+                        quantity: inputQty, 
+                        bags: bagsVal,      
                         images: currentInvImages 
                     });
                     e.target.reset();
@@ -1655,7 +1684,6 @@
                     document.getElementById('image-upload-placeholder').classList.remove('hidden');
                     document.getElementById('inv-bags-container').classList.add('hidden'); 
                     currentInvImages = [];
-                    // Force refresh filters
                     document.getElementById('inv-filter-year').value = new Date().getFullYear();
                     document.getElementById('inv-filter-month').value = new Date().getMonth() + 1;
                     document.getElementById('inv-filter-status').value = "";
@@ -1665,7 +1693,6 @@
 
         // --- Render Views ---
         function renderProductionView() {
-            // ... (Variable setup)
             const today = new Date().toDateString();
             const thisMonth = new Date().getMonth();
             const thisYear = new Date().getFullYear();
@@ -1684,37 +1711,22 @@
             const tbody = document.getElementById('table-production-body'); 
             tbody.innerHTML = '';
             
-            let filteredRawData = appData.production;
-            if(fYear) filteredRawData = filteredRawData.filter(r => parseDate(r.timestamp).getFullYear() == fYear);
+            // Edit: Removed global accumulation logic for display
+            let filtered = appData.production;
+            if(fYear) filtered = filtered.filter(r => parseDate(r.timestamp).getFullYear() == fYear);
 
             if(fMonth) {
-                let filtered = filteredRawData.filter(r => parseDate(r.timestamp).getMonth() + 1 == fMonth);
-                
-                // 1. เรียงจากเก่าไปใหม่ เพื่อคำนวณยอดสะสม (เฉพาะเดือนนี้)
-                filtered.sort((a,b) => parseDate(a.timestamp) - parseDate(b.timestamp));
-                
-                let accBags = 0;
-                let accKilos = 0;
-                
-                // คำนวณยอดสะสมภายในกลุ่มข้อมูลที่ filter มา (Monthly Accumulation)
-                const filteredWithAcc = filtered.map(r => {
-                    accBags += r.bags;
-                    accKilos += r.kilos;
-                    // ใช้ตัวแปรชื่อใหม่เพื่อไม่ให้สับสนกับ globalAcc
-                    return { ...r, monthlyAccBags: accBags, monthlyAccKilos: accKilos };
-                });
+                filtered = filtered.filter(r => parseDate(r.timestamp).getMonth() + 1 == fMonth);
+                filtered.sort((a,b) => parseDate(b.timestamp) - parseDate(a.timestamp));
 
-                // 2. เรียงกลับจากใหม่ไปเก่า เพื่อแสดงผล (ล่าสุดอยู่บน)
-                filteredWithAcc.sort((a,b) => parseDate(b.timestamp) - parseDate(a.timestamp));
-
-                filteredWithAcc.forEach(r => {
+                filtered.forEach(r => {
                     const d = parseDate(r.timestamp);
-                    const ds = `${d.getDate().toString().padStart(2,'0')}/${(d.getMonth()+1).toString().padStart(2,'0')}/${d.getFullYear()+543} ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')} น.`;
+                    const h = String(d.getHours()).padStart(2,'0');
+                    const m = String(d.getMinutes()).padStart(2,'0');
+                    const s = String(d.getSeconds()).padStart(2,'0');
+                    const ds = `${d.getDate().toString().padStart(2,'0')}/${(d.getMonth()+1).toString().padStart(2,'0')}/${d.getFullYear()+543} ${h}:${m}:${s} น.`;
                     
-                    // ใช้ค่าสะสมรายเดือนที่เพิ่งคำนวณ
-                    const showAccBags = r.monthlyAccBags.toLocaleString();
-                    const showAccKilos = r.monthlyAccKilos.toLocaleString();
-
+                    // Edit: Removed accumulation display
                     const tr = document.createElement('tr');
                     tr.className = 'border-b border-gray-50 hover:bg-gray-50 transition text-base';
                     tr.innerHTML = `
@@ -1734,34 +1746,21 @@
                     tbody.appendChild(tr);
                 });
             } else {
+                // Summary View
                 const groups = {};
-                filteredRawData.forEach(r => {
-                    const d = parseDate(r.timestamp);
-                    const key = `${d.getFullYear()}-${d.getMonth()}`;
-                    if(!groups[key]) groups[key] = { year: d.getFullYear(), month: d.getMonth(), bags: 0, kilos: 0, count: 0 };
-                    groups[key].bags += r.bags;
-                    groups[key].kilos += r.kilos;
-                    groups[key].count++;
+                filtered.forEach(r => {
+                     const d = parseDate(r.timestamp);
+                     const key = `${d.getFullYear()}-${d.getMonth()}`;
+                     if(!groups[key]) groups[key] = { year: d.getFullYear(), month: d.getMonth(), bags: 0, kilos: 0, count: 0 };
+                     groups[key].bags += r.bags;
+                     groups[key].kilos += r.kilos;
+                     groups[key].count++;
                 });
                 
-                // เรียงข้อมูลเพื่อคำนวณสะสม (เก่า -> ใหม่)
                 let sortedGroups = Object.values(groups).sort((a,b) => {
-                    if (a.year !== b.year) return a.year - b.year;
-                    return a.month - b.month;
+                    if (a.year !== b.year) return b.year - a.year;
+                    return b.month - a.month;
                 });
-
-                let accBags = 0;
-                let accKilos = 0;
-                
-                // คำนวณสะสม (รายปี หรือ ทั้งหมดที่ filter มา)
-                sortedGroups = sortedGroups.map(g => {
-                    accBags += g.bags;
-                    accKilos += g.kilos;
-                    return { ...g, accBags, accKilos };
-                });
-
-                // เรียงกลับ (ใหม่ -> เก่า) เพื่อแสดงผล
-                sortedGroups.reverse();
 
                 sortedGroups.forEach(g => {
                     const monthName = getThaiMonthName(g.month + 1);
@@ -2027,7 +2026,7 @@
         }
 
         function renderInventoryView() {
-            // ... variables setup ...
+            // ... (Variable setup)
             const thisMonth = new Date().getMonth();
             const thisYear = new Date().getFullYear();
             let inKg = 0, outKg = 0;
@@ -2041,15 +2040,14 @@
             document.getElementById('inv-out').innerText = outKg.toLocaleString();
             document.getElementById('inv-stock').innerText = calculateReadyStockBags().toLocaleString();
 
-            // --- คำนวณวัตถุดิบคงเหลือ (Calculate Raw Material Stock) ---
-            // สูตร: 22,719 (ค่าเริ่มต้น) + ยอดซื้อเข้าทั้งหมด - ยอดที่นำไปผลิตทั้งหมด
             const baseRawStock = 22719;
             const totalBuyRaw = appData.records.filter(r => r.status === 'ซื้อเข้า').reduce((sum, r) => sum + (r.quantity || 0), 0);
+            
+            // ใช้ยอดผลิตรวม (ต้องหาจาก Production ทั้งหมดก่อน เหมือนใน renderProductionView)
             const totalUsedRaw = appData.production.reduce((sum, r) => sum + (r.kilos || 0), 0);
             
             const rawStock = baseRawStock + totalBuyRaw - totalUsedRaw;
             document.getElementById('inv-raw-material').innerText = rawStock.toLocaleString();
-            // --------------------------------------------------------------------------
 
             const fYear = document.getElementById('inv-filter-year').value;
             const fMonth = document.getElementById('inv-filter-month').value;
@@ -2062,19 +2060,24 @@
 
             if (fMonth) {
                 filtered.sort((a,b) => parseDate(b.timestamp) - parseDate(a.timestamp));
-                if (filtered.length === 0) {
-                    document.getElementById('table-inv-body').innerHTML = '<tr><td colspan="5" class="p-8 text-center text-gray-500">ไม่พบข้อมูล</td></tr>';
-                    return;
-                }
                 const tbody = document.getElementById('table-inv-body'); 
                 tbody.innerHTML = '';
+                
+                if (filtered.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-gray-500">ไม่พบข้อมูล</td></tr>';
+                    return;
+                }
+
                 filtered.forEach(r => {
                     const d = parseDate(r.timestamp);
-                    const ds = `${d.getDate().toString().padStart(2,'0')}/${(d.getMonth()+1).toString().padStart(2,'0')}/${d.getFullYear()+543} ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')} น.`;
+                    // *** แก้ไข: เพิ่มวินาที (:ss) ***
+                    const h = String(d.getHours()).padStart(2,'0');
+                    const m = String(d.getMinutes()).padStart(2,'0');
+                    const s = String(d.getSeconds()).padStart(2,'0');
+                    const ds = `${d.getDate().toString().padStart(2,'0')}/${(d.getMonth()+1).toString().padStart(2,'0')}/${d.getFullYear()+543} ${h}:${m}:${s} น.`;
                     
                     let detailBtnClass = "text-gray-400 cursor-not-allowed";
                     let detailOnClick = "";
-                    
                     if (r.images && r.images.length > 0) {
                         const imgJson = JSON.stringify(r.images).replace(/"/g, '&quot;');
                         detailBtnClass = "text-brand-600 hover:text-brand-800 hover:underline";
@@ -2084,7 +2087,6 @@
 
                     let amountHtml = '';
                     if (r.status === 'ขายออก') {
-                        // Use r.bags if available, else fallback
                         const bags = r.bags ? r.bags : (r.quantity / 10); 
                         amountHtml = `<span class="font-semibold text-blue-700">${r.quantity.toLocaleString()} กิโลกรัม</span><div class="text-sm text-gray-500 mt-1">(${bags.toLocaleString()} กระสอบ)</div>`;
                     } else {
@@ -2109,11 +2111,8 @@
                     `;
                     tbody.appendChild(tr);
                 });
-            }
-            // ... (Summary view logic remains same, just aggregated) ...
-            else {
-                // ... (Existing summary logic) ...
-                const monthlyData = {};
+            } else {
+                 const monthlyData = {};
                 filtered.forEach(r => {
                     const d = parseDate(r.timestamp);
                     const key = `${d.getFullYear()}-${d.getMonth()}`; 
@@ -2155,7 +2154,7 @@
                 });
             }
         }
-
+        
         function renderInventoryChart() {
             const rawData = appData.records || [];
             
