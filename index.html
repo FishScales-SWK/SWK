@@ -1480,34 +1480,37 @@
             overlay.classList.add('flex');
 
             try {
+                // --- FIX: MANUAL FORCE THAI TIME (Math Calculation) ---
+                const simulatedId = "PENDING-" + Date.now(); 
+                
+                const now = new Date();
+                const utcMs = now.getTime(); 
+                const thaiOffsetMs = 7 * 60 * 60 * 1000;
+                const thaiDate = new Date(utcMs + thaiOffsetMs);
+
+                const d = String(thaiDate.getUTCDate()); // วันที่ (ไม่เติม 0 ตาม Backend)
+                const m = String(thaiDate.getUTCMonth() + 1).padStart(2, '0');
+                const y = thaiDate.getUTCFullYear() + 543; // พ.ศ.
+                
+                const h = String(thaiDate.getUTCHours()).padStart(2, '0');
+                const min = String(thaiDate.getUTCMinutes()).padStart(2, '0');
+                const s = String(thaiDate.getUTCSeconds()).padStart(2, '0');
+                
+                const simulatedTimestamp = `${d}/${m}/${y}, ${h}:${min}:${s}`;
+                
+                // *** เพิ่ม timestamp เข้าไปใน data ที่ส่งไป Server ***
+                const payloadData = { ...data, timestamp: simulatedTimestamp };
+                // ----------------------------------------------------
+
+                // ส่งข้อมูลไปบันทึก
                 const response = await fetch(GOOGLE_SCRIPT_URL, { 
                     method: 'POST', 
                     mode: 'no-cors',
-                    body: JSON.stringify({ action, type, data }), 
+                    body: JSON.stringify({ action, type, data: payloadData }), 
                     headers: { 'Content-Type': 'application/json' } 
                 });
 
-                const simulatedId = "PENDING-" + Date.now(); 
-                
-                // --- FIX: Force Thai Time (UTC+7) via Locale String ---
-                // วิธีนี้จะแปลงเวลาปัจจุบันให้เป็นสตริงของเวลาไทยก่อน แล้วค่อยดึงค่าออกมา
-                // ทำให้ได้เวลาที่ถูกต้อง 100% ไม่ว่าเครื่องจะตั้งโซนเวลาไหน
-                const now = new Date();
-                const thaiTimeString = now.toLocaleString("en-US", { timeZone: "Asia/Bangkok", hour12: false });
-                const thaiDate = new Date(thaiTimeString);
-
-                const d = String(thaiDate.getDate()); // ไม่เติม 0 (เช่น 1, 2, 10)
-                const m = String(thaiDate.getMonth() + 1).padStart(2, '0');
-                const y = thaiDate.getFullYear() + 543; // พ.ศ.
-                
-                const h = String(thaiDate.getHours()).padStart(2, '0');
-                const min = String(thaiDate.getMinutes()).padStart(2, '0');
-                const s = String(thaiDate.getSeconds()).padStart(2, '0');
-                
-                const simulatedTimestamp = `${d}/${m}/${y}, ${h}:${min}:${s}`;
-                // ----------------------------------------------------
-
-                // Find the latest accumulation value from existing data (Optional logic kept for internal consistency, but display removed)
+                // Find the latest accumulation value from existing data
                 let latestAcc = 0;
                 if (type === 'Production' && appData.production.length > 0) {
                     const lastRec = appData.production[appData.production.length - 1];
@@ -1543,6 +1546,13 @@
                     showConfirmButton: false
                 });
 
+                // Sync data silently in background to get Real ID
+                // ปรับให้เร็วขึ้น: 1.5 วินาที
+                setTimeout(() => {
+                    console.log('Syncing real data...');
+                    fetchData(true);
+                }, 1500);
+
             } catch (e) { 
                 Swal.fire('Error', e.message, 'error');
                 overlay.classList.add('hidden'); 
@@ -1550,17 +1560,23 @@
             }
         }
 
-        async function deleteData(id, type) {
-            const { value: password } = await Swal.fire({
-                title: 'ยืนยันการลบ',
-                input: 'password',
-                inputLabel: 'กรุณากรอกรหัสผ่านเพื่อยืนยัน ',
-                inputPlaceholder: 'รหัสผ่าน',
-                showCancelButton: true,
-                confirmButtonColor: '#ef4444',
-                confirmButtonText: 'ลบข้อมูล',
-                cancelButtonText: 'ยกเลิก'
-            });
+        async function deleteData(id, type, skipConfirm = false) {
+            let password = '4455';
+            
+            if (!skipConfirm) {
+                const result = await Swal.fire({
+                    title: 'ยืนยันการลบ',
+                    input: 'password',
+                    inputLabel: 'กรุณากรอกรหัสผ่านเพื่อยืนยัน ',
+                    inputPlaceholder: 'รหัสผ่าน',
+                    showCancelButton: true,
+                    confirmButtonColor: '#ef4444',
+                    confirmButtonText: 'ลบข้อมูล',
+                    cancelButtonText: 'ยกเลิก'
+                });
+                if (!result.isConfirmed) return;
+                password = result.value;
+            }
 
             if (password === '4455') {
                 const overlay = document.getElementById('loading-overlay');
@@ -1570,29 +1586,99 @@
                 overlay.classList.remove('hidden'); 
                 overlay.classList.add('flex');
                 
-                try {
-                    await fetch(GOOGLE_SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'delete', type, data: { id } }) });
-                    
-                    if (type === 'Records') {
-                        appData.records = appData.records.filter(r => r.id !== id);
-                        renderInventoryView();
-                        renderInventoryChart();
-                    } else if (type === 'Production') {
-                        appData.production = appData.production.filter(r => r.id !== id);
-                        renderProductionView();
-                        renderDailyProductionChart();
+                // --- FIX: Smart Delete (Fast & Reliable) ---
+                if (id.toString().startsWith('PENDING-')) {
+                     // 1. จำ Timestamp ของตัวที่จะลบไว้
+                     let targetTimestamp = null;
+                     const dataArray = (type === 'Records') ? appData.records : appData.production;
+                     const rec = dataArray.find(r => r.id === id);
+                     if (rec) targetTimestamp = rec.timestamp;
+
+                     if (targetTimestamp) {
+                         loadingText.innerText = 'กำลังซิงค์ข้อมูลเพื่อลบ...';
+                         
+                         // รอแค่ 1.5 วินาที (เร็วขึ้นตามคำขอ)
+                         await new Promise(r => setTimeout(r, 1500));
+                         
+                         // โหลดข้อมูลล่าสุด
+                         await fetchData(true);
+                         
+                         // ค้นหาตัวจริง
+                         let realRec;
+                         const findReal = () => {
+                             if (type === 'Records') return appData.records.find(r => r.timestamp === targetTimestamp && !r.id.toString().startsWith('PENDING-'));
+                             else return appData.production.find(r => r.timestamp === targetTimestamp && !r.id.toString().startsWith('PENDING-'));
+                         };
+                         
+                         realRec = findReal();
+
+                         if (realRec) {
+                             // เจอตัวจริง: สั่งลบเลย
+                             await deleteData(realRec.id, type, true);
+                             return; 
+                         } else {
+                             // *** ไม่เจอตัวจริง (Server อาจช้า): ลบตัว PENDING ออกก่อนเลย เพื่อความเร็ว ***
+                             if (type === 'Records') appData.records = appData.records.filter(r => r.id !== id);
+                             else appData.production = appData.production.filter(r => r.id !== id);
+
+                             // *** GHOST BUSTER: สั่งดักรอเบื้องหลังอีก 5 วินาที ถ้าตัวจริงโผล่มา ให้ลบทิ้งทันที ***
+                             setTimeout(async () => {
+                                 console.log('Ghost Buster: Checking for late arrival record...');
+                                 await fetchData(true);
+                                 const lateRecord = findReal();
+                                 if (lateRecord) {
+                                     console.log('Ghost Buster: Found it! Deleting...', lateRecord.id);
+                                     // เรียก API ลบเงียบๆ (ไม่ต้องผ่าน deleteData เพื่อไม่ให้ UI กระตุก)
+                                     fetch(GOOGLE_SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'delete', type, data: { id: lateRecord.id } }) })
+                                     .then(() => {
+                                         // ลบออกจาก Memory และ Refresh หน้าจอเงียบๆ
+                                          if (type === 'Records') appData.records = appData.records.filter(r => r.id !== lateRecord.id);
+                                          else appData.production = appData.production.filter(r => r.id !== lateRecord.id);
+                                          
+                                          if (type === 'Records') { renderInventoryView(); renderInventoryChart(); }
+                                          else { renderProductionView(); renderDailyProductionChart(); }
+                                     });
+                                 }
+                             }, 5000);
+                         }
+                     } else {
+                         // Timestamp หาย? ลบตัว local ทิ้งไปเลย
+                         if (type === 'Records') appData.records = appData.records.filter(r => r.id !== id);
+                         else appData.production = appData.production.filter(r => r.id !== id);
+                     }
+                } else {
+                    // --- กรณี ID จริง (ลบปกติ) ---
+                    try {
+                        // ส่งคำสั่งลบ (Fire & Forget)
+                        fetch(GOOGLE_SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'delete', type, data: { id } }) });
+                        
+                        // ลบออกจากหน้าจอทันที
+                        if (type === 'Records') {
+                            appData.records = appData.records.filter(r => r.id !== id);
+                        } else if (type === 'Production') {
+                            appData.production = appData.production.filter(r => r.id !== id);
+                        }
+                    } catch (e) {
+                        console.error("Delete request failed", e);
                     }
-
-                    overlay.classList.add('hidden'); 
-                    overlay.classList.remove('flex');
-                    
-                    Swal.fire({title: 'ลบข้อมูลสำเร็จ', icon: 'success', timer: 1500, showConfirmButton: false});
-
-                } catch (e) { 
-                    Swal.fire('Error', 'ไม่สามารถลบข้อมูลได้', 'error');
-                    overlay.classList.add('hidden'); 
-                    overlay.classList.remove('flex');
                 }
+
+                // --- Update UI & Finish ---
+                if (type === 'Records') {
+                    renderInventoryView();
+                    renderInventoryChart();
+                } else {
+                    renderProductionView();
+                    renderDailyProductionChart();
+                }
+
+                overlay.classList.add('hidden'); 
+                overlay.classList.remove('flex');
+                
+                if (!skipConfirm) {
+                    Swal.fire({title: 'ลบข้อมูลสำเร็จ', icon: 'success', timer: 1000, showConfirmButton: false});
+                }
+
             } else if (password) {
                 Swal.fire('รหัสผ่านไม่ถูกต้อง', '', 'error');
             }
