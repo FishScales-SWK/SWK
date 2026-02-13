@@ -1481,22 +1481,29 @@
 
             try {
                 // --- FIX: MANUAL FORCE THAI TIME (Math Calculation) ---
-                const simulatedId = "PENDING-" + Date.now(); 
-                
-                const now = new Date();
-                const utcMs = now.getTime(); 
-                const thaiOffsetMs = 7 * 60 * 60 * 1000;
-                const thaiDate = new Date(utcMs + thaiOffsetMs);
+                let simulatedId = "PENDING-" + Date.now(); 
+                let simulatedTimestamp;
 
-                const d = String(thaiDate.getUTCDate()); // วันที่ (ไม่เติม 0 ตาม Backend)
-                const m = String(thaiDate.getUTCMonth() + 1).padStart(2, '0');
-                const y = thaiDate.getUTCFullYear() + 543; // พ.ศ.
-                
-                const h = String(thaiDate.getUTCHours()).padStart(2, '0');
-                const min = String(thaiDate.getUTCMinutes()).padStart(2, '0');
-                const s = String(thaiDate.getUTCSeconds()).padStart(2, '0');
-                
-                const simulatedTimestamp = `${d}/${m}/${y}, ${h}:${min}:${s}`;
+                if (action === 'edit' && data.timestamp) {
+                    // For edit, keep existing ID and timestamp (unless timestamp is updated in data)
+                    simulatedId = data.id;
+                    simulatedTimestamp = data.timestamp;
+                } else {
+                    const now = new Date();
+                    const utcMs = now.getTime(); 
+                    const thaiOffsetMs = 7 * 60 * 60 * 1000;
+                    const thaiDate = new Date(utcMs + thaiOffsetMs);
+
+                    const d = String(thaiDate.getUTCDate()); 
+                    const m = String(thaiDate.getUTCMonth() + 1).padStart(2, '0');
+                    const y = thaiDate.getUTCFullYear() + 543; 
+                    
+                    const h = String(thaiDate.getUTCHours()).padStart(2, '0');
+                    const min = String(thaiDate.getUTCMinutes()).padStart(2, '0');
+                    const s = String(thaiDate.getUTCSeconds()).padStart(2, '0');
+                    
+                    simulatedTimestamp = `${d}/${m}/${y}, ${h}:${min}:${s}`;
+                }
                 
                 // *** เพิ่ม timestamp เข้าไปใน data ที่ส่งไป Server ***
                 const payloadData = { ...data, timestamp: simulatedTimestamp };
@@ -1510,27 +1517,36 @@
                     headers: { 'Content-Type': 'application/json' } 
                 });
 
-                // Find the latest accumulation value from existing data
-                let latestAcc = 0;
-                if (type === 'Production' && appData.production.length > 0) {
-                    const lastRec = appData.production[appData.production.length - 1];
-                    latestAcc = lastRec.accBags || 0; 
-                }
-                const newAcc = latestAcc + (parseInt(data.bags) || 0);
-                
-                const newRecord = {
-                    id: simulatedId,
-                    timestamp: simulatedTimestamp,
-                    ...data,
-                    accBags: newAcc 
-                };
-
                 if (type === 'Records') {
-                    appData.records.push(newRecord);
+                    if (action === 'edit') {
+                        // Update existing record
+                        const index = appData.records.findIndex(r => r.id === data.id);
+                        if (index !== -1) appData.records[index] = { ...appData.records[index], ...data };
+                    } else {
+                        // Add new record
+                        const newRecord = { id: simulatedId, timestamp: simulatedTimestamp, ...data };
+                        appData.records.push(newRecord);
+                    }
                     renderInventoryView(); 
                     renderInventoryChart(); 
                 } else if (type === 'Production') {
-                    appData.production.push(newRecord);
+                    if (action === 'edit') {
+                        // Update existing record
+                        const index = appData.production.findIndex(r => r.id === data.id);
+                        if (index !== -1) appData.production[index] = { ...appData.production[index], ...data };
+                    } else {
+                        // Add new record
+                        // Calculate Accumulation just for UI consistency (though not strictly displayed)
+                        let latestAcc = 0;
+                        if (appData.production.length > 0) {
+                            const lastRec = appData.production[appData.production.length - 1];
+                            latestAcc = lastRec.accBags || 0; 
+                        }
+                        const newAcc = latestAcc + (parseInt(data.bags) || 0);
+                        
+                        const newRecord = { id: simulatedId, timestamp: simulatedTimestamp, ...data, accBags: newAcc };
+                        appData.production.push(newRecord);
+                    }
                     renderProductionView(); 
                     renderDailyProductionChart(); 
                 }
@@ -1558,6 +1574,259 @@
                 overlay.classList.add('hidden'); 
                 overlay.classList.remove('flex');
             }
+        }
+
+        async function handleProductionOptions(id) {
+            // 1. Find Data
+            const record = appData.production.find(r => r.id === id);
+            if (!record) return;
+
+            // 2. Password Prompt
+            const { value: password } = await Swal.fire({
+                title: 'ยืนยันตัวตน',
+                input: 'password',
+                inputLabel: 'กรุณากรอกรหัสผ่าน ',
+                inputPlaceholder: 'รหัสผ่าน',
+                showCancelButton: true,
+                confirmButtonColor: '#0ea5e9',
+                confirmButtonText: 'ยืนยัน',
+                cancelButtonText: 'ยกเลิก'
+            });
+
+            if (password !== '4455') {
+                if (password) Swal.fire('รหัสผ่านไม่ถูกต้อง', '', 'error');
+                return;
+            }
+
+            // 3. Selection Prompt
+            const { isConfirmed, isDenied } = await Swal.fire({
+                title: 'จัดการรายการ',
+                text: 'เลือกการดำเนินการที่ต้องการ',
+                icon: 'info',
+                showDenyButton: true,
+                showCancelButton: true,
+                confirmButtonText: '<i class="fa-solid fa-pen-to-square"></i> แก้ไข',
+                confirmButtonColor: '#f59e0b', // Amber for edit
+                denyButtonText: '<i class="fa-solid fa-trash-can"></i> ลบ',
+                denyButtonColor: '#ef4444',   // Red for delete
+                cancelButtonText: 'ยกเลิก',
+                reverseButtons: true
+            });
+
+            if (isDenied) {
+                // Delete Action (Skip password since we just checked)
+                deleteData(id, 'Production', true);
+            } else if (isConfirmed) {
+                // Edit Action
+                openEditProductionModal(record);
+            }
+        }
+
+        function openEditProductionModal(record) {
+            const d = parseDate(record.timestamp);
+            // Format for input type="date" (YYYY-MM-DD)
+            const dateStr = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+            // Format for input type="time" (HH:mm)
+            const timeStr = String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+
+            Swal.fire({
+                title: 'แก้ไขรายการผลิต',
+                html: `
+                    <div class="flex flex-col gap-4 text-left">
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">วันที่</label>
+                            <input type="date" id="edit-date" class="w-full border border-gray-300 p-2 rounded-lg outline-none focus:ring-2 focus:ring-brand-500" value="${dateStr}">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">เวลา</label>
+                            <input type="time" id="edit-time" class="w-full border border-gray-300 p-2 rounded-lg outline-none focus:ring-2 focus:ring-brand-500" value="${timeStr}">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">จำนวน (กระสอบ)</label>
+                            <input type="number" id="edit-bags" class="w-full border border-gray-300 p-2 rounded-lg outline-none focus:ring-2 focus:ring-brand-500" value="${record.bags}">
+                        </div>
+                    </div>
+                `,
+                showCancelButton: true,
+                confirmButtonText: 'บันทึกการแก้ไข',
+                confirmButtonColor: '#059669',
+                cancelButtonText: 'ยกเลิก',
+                preConfirm: () => {
+                    const newDate = document.getElementById('edit-date').value;
+                    const newTime = document.getElementById('edit-time').value;
+                    const newBags = document.getElementById('edit-bags').value;
+                    if(!newDate || !newTime || !newBags) {
+                        Swal.showValidationMessage('กรุณากรอกข้อมูลให้ครบ');
+                    }
+                    return { newDate, newTime, newBags };
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    saveProductionEdit(record.id, result.value);
+                }
+            });
+        }
+
+        function saveProductionEdit(id, values) {
+            const { newDate, newTime, newBags } = values;
+            
+            // Construct Thai timestamp format manually to match backend expectation
+            // Input date is YYYY-MM-DD
+            const [y, m, d] = newDate.split('-').map(Number);
+            const thaiYear = y + 543;
+            // Input time is HH:mm
+            const [hr, min] = newTime.split(':');
+            const sec = '00'; // Default seconds to 00 if not editing seconds
+            
+            const newTimestamp = `${d}/${String(m).padStart(2,'0')}/${thaiYear}, ${hr}:${min}:${sec}`;
+            const bagsInt = parseInt(newBags);
+            const kilosInt = bagsInt * 10;
+
+            sendData('edit', 'Production', { 
+                id: id, 
+                timestamp: newTimestamp, 
+                bags: bagsInt, 
+                kilos: kilosInt 
+            });
+        }
+
+        // --- NEW: Inventory Options Logic (Copy of Production Logic) ---
+        async function handleInventoryOptions(id) {
+            // 1. Find Data
+            const record = appData.records.find(r => r.id === id);
+            if (!record) return;
+
+            // 2. Password Prompt
+            const { value: password } = await Swal.fire({
+                title: 'ยืนยันตัวตน',
+                input: 'password',
+                inputLabel: 'กรุณากรอกรหัสผ่าน ',
+                inputPlaceholder: 'รหัสผ่าน',
+                showCancelButton: true,
+                confirmButtonColor: '#0ea5e9',
+                confirmButtonText: 'ยืนยัน',
+                cancelButtonText: 'ยกเลิก'
+            });
+
+            if (password !== '4455') {
+                if (password) Swal.fire('รหัสผ่านไม่ถูกต้อง', '', 'error');
+                return;
+            }
+
+            // 3. Selection Prompt
+            const { isConfirmed, isDenied } = await Swal.fire({
+                title: 'จัดการรายการสินค้า',
+                text: 'เลือกการดำเนินการที่ต้องการ',
+                icon: 'info',
+                showDenyButton: true,
+                showCancelButton: true,
+                confirmButtonText: '<i class="fa-solid fa-pen-to-square"></i> แก้ไข',
+                confirmButtonColor: '#f59e0b', // Amber for edit
+                denyButtonText: '<i class="fa-solid fa-trash-can"></i> ลบ',
+                denyButtonColor: '#ef4444',   // Red for delete
+                cancelButtonText: 'ยกเลิก',
+                reverseButtons: true
+            });
+
+            if (isDenied) {
+                // Delete Action (Skip password since we just checked)
+                deleteData(id, 'Records', true);
+            } else if (isConfirmed) {
+                // Edit Action
+                openEditInventoryModal(record);
+            }
+        }
+
+        function openEditInventoryModal(record) {
+            const d = parseDate(record.timestamp);
+            const dateStr = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+            const timeStr = String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+
+            // Check if status is "ซื้อเข้า" (Buy In)
+            const isBuyIn = record.status === 'ซื้อเข้า';
+            
+            // Generate Bags input HTML conditionally
+            let bagsInputHtml = '';
+            if (!isBuyIn) {
+                bagsInputHtml = `
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">จำนวน (กระสอบ)</label>
+                        <input type="number" id="edit-inv-bags" class="w-full border border-gray-300 p-2 rounded-lg outline-none focus:ring-2 focus:ring-brand-500" value="${record.bags || 0}">
+                    </div>
+                `;
+            }
+
+            Swal.fire({
+                title: 'แก้ไขรายการสินค้า',
+                html: `
+                    <div class="flex flex-col gap-4 text-left">
+                        <div class="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                            <p class="text-sm text-gray-500">ชื่อรายการ</p>
+                            <p class="font-bold text-gray-800">${record.name} (${record.status})</p>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">วันที่</label>
+                                <input type="date" id="edit-inv-date" class="w-full border border-gray-300 p-2 rounded-lg outline-none focus:ring-2 focus:ring-brand-500" value="${dateStr}">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">เวลา</label>
+                                <input type="time" id="edit-inv-time" class="w-full border border-gray-300 p-2 rounded-lg outline-none focus:ring-2 focus:ring-brand-500" value="${timeStr}">
+                            </div>
+                        </div>
+                        <div class="grid ${isBuyIn ? 'grid-cols-1' : 'grid-cols-2'} gap-4">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">จำนวน (KG)</label>
+                                <input type="number" id="edit-inv-qty" step="0.01" class="w-full border border-gray-300 p-2 rounded-lg outline-none focus:ring-2 focus:ring-brand-500" value="${record.quantity}">
+                            </div>
+                            ${bagsInputHtml}
+                        </div>
+                    </div>
+                `,
+                showCancelButton: true,
+                confirmButtonText: 'บันทึกการแก้ไข',
+                confirmButtonColor: '#059669',
+                cancelButtonText: 'ยกเลิก',
+                preConfirm: () => {
+                    const newDate = document.getElementById('edit-inv-date').value;
+                    const newTime = document.getElementById('edit-inv-time').value;
+                    const newQty = document.getElementById('edit-inv-qty').value;
+                    
+                    // Safely get value if element exists, otherwise default to 0
+                    const bagsInput = document.getElementById('edit-inv-bags');
+                    const newBags = bagsInput ? bagsInput.value : 0;
+                    
+                    if(!newDate || !newTime || !newQty) {
+                        Swal.showValidationMessage('กรุณากรอกข้อมูลให้ครบ');
+                    }
+                    return { newDate, newTime, newQty, newBags };
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    saveInventoryEdit(record.id, result.value);
+                }
+            });
+        }
+
+        function saveInventoryEdit(id, values) {
+            const { newDate, newTime, newQty, newBags } = values;
+            
+            // Construct Timestamp
+            const [y, m, d] = newDate.split('-').map(Number);
+            const thaiYear = y + 543;
+            const [hr, min] = newTime.split(':');
+            const sec = '00';
+            
+            const newTimestamp = `${d}/${String(m).padStart(2,'0')}/${thaiYear}, ${hr}:${min}:${sec}`;
+            const qtyFloat = parseFloat(newQty);
+            const bagsInt = parseInt(newBags) || 0;
+
+            sendData('edit', 'Records', { 
+                id: id, 
+                timestamp: newTimestamp, 
+                quantity: qtyFloat,
+                bags: bagsInt
+            });
         }
 
         async function deleteData(id, type, skipConfirm = false) {
@@ -1812,7 +2081,7 @@
                     const s = String(d.getSeconds()).padStart(2,'0');
                     const ds = `${d.getDate().toString().padStart(2,'0')}/${(d.getMonth()+1).toString().padStart(2,'0')}/${d.getFullYear()+543} ${h}:${m}:${s} น.`;
                     
-                    // Edit: Removed accumulation display
+                    // Edit: Updated to use Settings Button with Gear Icon
                     const tr = document.createElement('tr');
                     tr.className = 'border-b border-gray-50 hover:bg-gray-50 transition text-base';
                     tr.innerHTML = `
@@ -1824,8 +2093,8 @@
                             <span class="font-bold text-gray-800">${r.kilos.toLocaleString()} กิโลกรัม</span>
                         </td>
                         <td class="p-4 text-center align-middle">
-                            <button onclick="deleteData('${r.id}', 'Production')" class="w-10 h-10 flex items-center justify-center bg-red-100 hover:bg-red-200 text-red-500 hover:text-red-700 rounded-full transition-all duration-200 shadow-sm mx-auto">
-                                <i class="fa-solid fa-trash-can"></i>
+                            <button onclick="handleProductionOptions('${r.id}')" class="w-10 h-10 flex items-center justify-center bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-800 rounded-full transition-all duration-200 shadow-sm mx-auto">
+                                <i class="fa-solid fa-gear"></i>
                             </button>
                         </td>
                     `;
@@ -2192,7 +2461,9 @@
                         <td class="p-4 text-center align-middle">${amountHtml}</td>
                         <td class="p-4 text-center align-middle">${detailBtn}</td>
                         <td class="p-4 text-center align-middle">
-                            <button onclick="deleteData('${r.id}', 'Records')" class="w-10 h-10 flex items-center justify-center bg-red-100 hover:bg-red-200 text-red-500 hover:text-red-700 rounded-full transition-all duration-200 shadow-sm mx-auto"><i class="fa-solid fa-trash-can"></i></button>
+                            <button onclick="handleInventoryOptions('${r.id}')" class="w-10 h-10 flex items-center justify-center bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-800 rounded-full transition-all duration-200 shadow-sm mx-auto">
+                                <i class="fa-solid fa-gear"></i>
+                            </button>
                         </td>
                     `;
                     tbody.appendChild(tr);
